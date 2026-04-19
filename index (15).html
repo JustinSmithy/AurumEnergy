@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurum Energy — Operations Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amber:#e8a020;--amber-dim:#b87c18;--amber-pale:rgba(232,160,32,0.12);
+  --bg:#07090c;--surface:#0e1318;--surface2:#141b22;
+  --border:rgba(255,255,255,0.07);--border-hi:rgba(232,160,32,0.4);
+  --text:#e2e8f0;--text-2:#8899aa;--text-3:#4a5568;
+  --green:#22c55e;--red:#ef4444;--orange:#f97316;--blue:#3b82f6;--purple:#a855f7;
+  --r:8px;--rl:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;}
+::selection{background:var(--amber-pale);color:var(--amber);}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(232,160,32,0.3);}
+
+/* ── AUTH ── */
+.auth-wrap{position:fixed;inset:0;z-index:9100;display:flex;align-items:flex-start;justify-content:center;background:var(--bg);overflow-y:auto;padding:24px 0;}
+.auth-noise{position:absolute;inset:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");}
+.auth-orb{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(232,160,32,.05) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;}
+.auth-card{width:440px;position:relative;z-index:2;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:42px;box-shadow:0 40px 90px rgba(0,0,0,.55);animation:fadeUp .4s cubic-bezier(.16,1,.3,1);margin:auto;}
+.auth-card::before{content:'';position:absolute;inset:-1px;border-radius:19px;background:linear-gradient(145deg,rgba(232,160,32,.15),transparent 55%);pointer-events:none;z-index:-1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.brand{text-align:center;margin-bottom:28px;}
+.brand .ey{font-size:10px;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:8px;}
+.brand h1{font-family:'Space Grotesk',sans-serif;font-size:27px;font-weight:700;letter-spacing:-.5px;}
+.brand h1 .au{color:var(--amber);}
+.brand h1 .en{color:var(--text-2);font-weight:400;}
+.brand p{font-size:11px;color:var(--text-3);margin-top:5px;letter-spacing:1px;text-transform:uppercase;}
+.auth-tabs{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:3px;margin-bottom:22px;gap:3px;}
+.atab{flex:1;padding:8px;text-align:center;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;color:var(--text-3);transition:all .15s;font-family:'Space Grotesk',sans-serif;}
+.atab.on{background:var(--amber);color:#000;}
+.af{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.af label{font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.5px;}
+.af input,.af select,.af textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;}
+.af input:focus,.af select:focus,.af textarea:focus{border-color:var(--border-hi);box-shadow:0 0 0 3px rgba(232,160,32,.07);}
+.af input::placeholder,.af textarea::placeholder{color:var(--text-3);}
+.af select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a5568'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.af select option{background:var(--surface2);color:var(--text);}
+.af-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.af-btn{width:100%;background:var(--amber);color:#000;border:none;padding:11px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;margin-top:6px;}
+.af-btn:hover{background:#f0b030;box-shadow:0 4px 18px rgba(232,160,32,.3);}
+.af-btn.sec{background:var(--surface2);color:var(--text-2);border:1px solid var(--border);}
+.af-btn.sec:hover{background:var(--surface);border-color:var(--border-hi);color:var(--amber);}
+.af-err{font-size:11px;color:var(--red);padding:8px 12px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:var(--r);display:none;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.af-ok{font-size:11px;color:var(--green);padding:8px 12px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:var(--r);display:none;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.af-foot{text-align:center;margin-top:16px;font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+.af-link{color:var(--amber);cursor:pointer;text-decoration:underline;}
+.af-divider{display:flex;align-items:center;gap:10px;margin:12px 0;color:var(--text-3);font-size:11px;}
+.af-divider::before,.af-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── APP ── */
+#app{display:none;height:100vh;overflow:hidden;}
+#app.on{display:flex;}
+
+/* ── SIDEBAR ── */
+.sb{width:220px;min-width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+.sb-logo{padding:18px 18px 14px;border-bottom:1px solid var(--border);}
+.sb-logo .ey{font-size:9px;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.sb-logo h2{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;line-height:1;}
+.sb-logo h2 .au{color:var(--amber);}
+.sb-pill{display:inline-flex;align-items:center;gap:5px;margin-top:7px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:20px;padding:2px 8px;font-size:10px;color:var(--green);font-family:'JetBrains Mono',monospace;}
+.sb-pill::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;box-shadow:0 0 5px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sb-sec{font-size:9px;letter-spacing:2.5px;color:var(--text-3);text-transform:uppercase;padding:12px 18px 4px;font-family:'JetBrains Mono',monospace;}
+.si{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-2);transition:all .15s;position:relative;user-select:none;}
+.si:hover{color:var(--text);background:rgba(255,255,255,.03);}
+.si.on{color:var(--amber);background:var(--amber-pale);}
+.si.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber);}
+.si .ico{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.si .chip{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:600;padding:1px 6px;border-radius:10px;font-family:'JetBrains Mono',monospace;animation:chipP 2s infinite;}
+@keyframes chipP{0%,100%{opacity:1}50%{opacity:.5}}
+.sb-foot{margin-top:auto;padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px;}
+.sb-av{width:32px;height:32px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#000;flex-shrink:0;}
+.sb-uname{font-size:13px;font-weight:600;color:var(--text);}
+.sb-urole{font-size:10px;color:var(--amber-dim);font-family:'JetBrains Mono',monospace;}
+.sb-out{margin-left:auto;background:none;border:none;color:var(--text-3);cursor:pointer;font-size:15px;transition:color .15s;flex-shrink:0;}
+.sb-out:hover{color:var(--red);}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);z-index:5;}
+.tb-l{display:flex;flex-direction:column;gap:1px;}
+.tb-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);}
+.tb-crumb{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
+.tb-crumb span{color:var(--amber);}
+.tb-r{display:flex;align-items:center;gap:10px;}
+.tb-s{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:6px 12px;width:180px;}
+.tb-s:focus-within{border-color:var(--border-hi);}
+.tb-s input{background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--text);width:100%;}
+.tb-s input::placeholder{color:var(--text-3);}
+.ftabs{display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:3px;}
+.ftab{padding:4px 10px;font-size:11px;font-weight:500;border-radius:5px;cursor:pointer;color:var(--text-3);transition:all .15s;font-family:'JetBrains Mono',monospace;}
+.ftab:hover{color:var(--text);}
+.ftab.on{background:var(--amber);color:#000;}
+.btn-p{display:flex;align-items:center;gap:6px;background:var(--amber);color:#000;border:none;padding:7px 14px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-p:hover{background:#f0b030;transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,160,32,.3);}
+.btn-s{background:transparent;color:var(--text-2);border:1px solid var(--border);padding:7px 14px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-s:hover{border-color:var(--border-hi);color:var(--amber);}
+
+/* ── PAGES ── */
+.page{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.page.on{display:flex;animation:pIn .22s ease;}
+@keyframes pIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes rowIn{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:none}}
+
+/* ── STAT CARDS ── */
+.sc-strip{display:grid;gap:10px;padding:14px 24px 0;flex-shrink:0;}
+.c4{grid-template-columns:repeat(4,1fr);}
+.c3{grid-template-columns:repeat(3,1fr);}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s;}
+.sc:hover{border-color:rgba(232,160,32,.2);}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.35;}
+.sc-l{font-size:10px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'JetBrains Mono',monospace;}
+.sc-v{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1;}
+.sc-s{font-size:10px;color:var(--text-3);margin-top:3px;}
+.sc-i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:24px;opacity:.06;}
+
+/* ── NOTICE ── */
+.notice{margin:12px 24px 0;background:rgba(232,160,32,.05);border:1px solid rgba(232,160,32,.18);border-radius:var(--r);padding:9px 14px;font-size:12px;color:var(--text-2);line-height:1.6;flex-shrink:0;}
+.notice strong{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;margin-right:5px;}
+.admin-notice{margin:12px 24px 0;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:var(--r);padding:9px 14px;font-size:12px;color:var(--text-2);line-height:1.6;flex-shrink:0;}
+.admin-notice strong{color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;margin-right:5px;}
+
+/* ── TABLE ── */
+.tbl-wrap{flex:1;overflow:auto;padding:12px 24px 18px;}
+.tbl-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);}
+th{padding:9px 13px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text-3);text-transform:uppercase;white-space:nowrap;font-weight:400;}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .12s;}
+tbody tr:hover{background:rgba(255,255,255,.02);}
+tbody tr[onclick]:hover{background:rgba(232,160,32,.05);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
+
+/* ── TD ATOMS ── */
+.mono{font-family:'JetBrains Mono',monospace;font-size:11px;}
+.dn{font-size:13px;font-weight:600;}
+.dc{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.veh{display:inline-flex;align-items:center;gap:5px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:5px;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#93c5fd;}
+.tag{display:inline-flex;align-items:center;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:.3px;white-space:nowrap;}
+.tag.green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green);}
+.tag.orange{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25);color:var(--orange);}
+.tag.red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:var(--red);}
+.tag.blue{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:var(--blue);}
+.tag.amber{background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.25);color:var(--amber);}
+.tag.purple{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:var(--purple);}
+.tag.dim{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-3);}
+.fbar-w{display:flex;align-items:center;gap:7px;}
+.fbar{width:48px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+.fbar-f{height:100%;border-radius:2px;}
+.fbar-f.hi{background:var(--green);}
+.fbar-f.mid{background:var(--orange);}
+.fbar-f.lo{background:var(--red);}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.dot.on{background:var(--green);box-shadow:0 0 6px var(--green);}
+.dot.off{background:var(--text-3);}
+.btn-sm{background:transparent;border:1px solid var(--border);border-radius:5px;padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);cursor:pointer;transition:all .15s;}
+.btn-sm:hover{border-color:var(--border-hi);color:var(--amber);}
+.btn-sm.danger:hover{border-color:rgba(239,68,68,.4);color:var(--red);}
+.btn-sm.ok:hover{border-color:rgba(34,197,94,.4);color:var(--green);}
+
+/* ── EMPTY ── */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 20px;gap:11px;text-align:center;}
+.empty-ico{font-size:38px;opacity:.14;}
+.empty-t{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text-2);}
+.empty-s{font-size:12px;color:var(--text-3);}
+.empty-btn{margin-top:4px;background:var(--amber);color:#000;border:none;padding:8px 18px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.empty-btn:hover{background:#f0b030;}
+
+/* ── FORMS ── */
+.f-area{flex:1;overflow-y:auto;padding:14px 24px 10px;}
+.f-sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;}
+.f-sec-t{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg label{font-size:10px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace;}
+.fg label .req{color:var(--amber);margin-left:2px;}
+.fg input,.fg select,.fg textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--text-3);font-size:12px;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--border-hi);box-shadow:0 0 0 3px rgba(232,160,32,.07);}
+.fg select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a5568'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.fg select option{background:var(--surface2);color:var(--text);}
+.fg textarea{resize:vertical;min-height:85px;line-height:1.6;}
+.fg-hint{font-size:10px;color:var(--text-3);font-style:italic;}
+.fgrid{display:grid;gap:12px;}
+.fgrid.c2{grid-template-columns:1fr 1fr;}
+.fgrid.c3{grid-template-columns:1fr 1fr 1fr;}
+.fgrid.c1{grid-template-columns:1fr;}
+.f-actions{display:flex;align-items:center;gap:10px;padding:0 24px 18px;flex-shrink:0;}
+.btn-save{background:var(--amber);color:#000;border:none;padding:10px 22px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-save:hover{background:#f0b030;transform:translateY(-1px);}
+.btn-can{background:transparent;color:var(--text-3);border:1px solid var(--border);padding:10px 18px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.btn-can:hover{border-color:var(--border-hi);color:var(--text);}
+.btn-prev{background:var(--surface2);color:var(--text-2);border:1px solid var(--border);padding:10px 18px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.btn-prev:hover{border-color:var(--border-hi);color:var(--text);}
+
+/* ── CARDS ── */
+.card-area{flex:1;overflow-y:auto;padding:12px 24px 18px;}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.icard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:15px 17px;transition:border-color .15s,transform .15s;position:relative;overflow:hidden;}
+.icard:hover{border-color:rgba(232,160,32,.25);transform:translateY(-1px);}
+.icard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.3;}
+.icard-t{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.icard-s{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-bottom:9px;}
+.icard-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:12px;}
+.icard-row .k{color:var(--text-3);font-family:'JetBrains Mono',monospace;font-size:10px;}
+.icard-actions{display:flex;gap:7px;margin-top:10px;padding-top:9px;border-top:1px solid var(--border);}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:4000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:flex;animation:pIn .18s ease;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);width:500px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);}
+.modal-box.wide{width:600px;}
+.modal-head{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.modal-t{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);}
+.modal-x{background:none;border:none;color:var(--text-3);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .15s;flex-shrink:0;}
+.modal-x:hover{color:var(--red);}
+.modal-body{padding:16px 20px;}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+
+/* ── MAP ── */
+.map-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1;}
+#gta-map{flex:1;width:100%;min-height:200px;}
+
+/* ── PLACEHOLDER ── */
+.ph-page{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;}
+.ph-ico{font-size:44px;opacity:.1;}
+.ph-t{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--text-3);}
+.ph-s{font-size:12px;color:var(--text-3);opacity:.4;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--surface2);border:1px solid var(--green);border-radius:var(--rl);padding:11px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+.toast.show{transform:none;opacity:1;}
+
+/* ── SHIFT ── */
+.shift-board{flex:1;overflow-y:auto;padding:14px 24px 18px;}
+.clocks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;text-align:center;position:relative;overflow:hidden;}
+.clock-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.35;}
+.clock-val{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:500;color:var(--amber);letter-spacing:3px;line-height:1;}
+.clock-lbl{font-size:10px;color:var(--text-3);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+.shift-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;}
+.shift-panel-t{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.sh-stat-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.sh-info-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;}
+.sh-info-meta{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.sh-btns{display:flex;gap:9px;}
+.sh-btn{padding:8px 18px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent;}
+.sh-btn.start{background:var(--green);color:#000;}
+.sh-btn.start:hover{background:#16a34a;}
+.sh-btn.end{background:var(--red);color:#fff;}
+.sh-btn.end:hover{background:#dc2626;}
+.sh-btn.brk{background:transparent;color:var(--orange);border-color:var(--orange);}
+.sh-btn.brk:hover{background:rgba(249,115,22,.1);}
+.sh-meta-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.sh-mc .sm-l{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.sh-mc .sm-v{font-size:15px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+
+/* ── STATS ── */
+.stats-board{flex:1;overflow-y:auto;padding:12px 24px 18px;}
+.lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.lb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;}
+.lb-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.lb-head-t{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;}
+.lb-head-s{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
+.lb-row{display:flex;align-items:center;gap:9px;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.03);}
+.lb-row:last-child{border-bottom:none;}
+.lb-rank{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;width:18px;color:var(--text-3);}
+.lb-rank.g{color:var(--amber);}.lb-rank.s{color:#94a3b8;}.lb-rank.b{color:#cd7f32;}
+.lb-name{flex:1;font-size:13px;font-weight:500;}
+.lb-bg{height:3px;background:rgba(255,255,255,.05);border-radius:2px;flex:1;overflow:hidden;}
+.lb-fill{height:100%;background:var(--amber);border-radius:2px;transition:width .5s ease;}
+.lb-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--amber);}
+.ov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.ov-cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;}
+.ov-v{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--amber);}
+.ov-l{font-size:10px;color:var(--text-3);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+/* ── MY STATS ── */
+.my-board{flex:1;overflow-y:auto;padding:14px 24px 18px;}
+.my-header{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
+.my-av{width:52px;height:52px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#000;flex-shrink:0;}
+.my-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
+.my-role{font-size:11px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.my-badge{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.my-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.3;}
+.kpi-v{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--amber);}
+.kpi-l{font-size:10px;color:var(--text-3);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+.my-recent{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;}
+.my-recent-t{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+
+/* ── INFO PAGES ── */
+.info-area{flex:1;overflow-y:auto;padding:14px 24px 18px;}
+.info-sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;}
+.info-sec-t{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.sop{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;}
+.sop:last-child{margin-bottom:0;}
+.sop-l{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:1px;margin-bottom:3px;}
+.sop-t{font-size:12px;color:var(--text-2);line-height:1.7;}
+.rank-row{display:grid;grid-template-columns:150px 1fr;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;align-items:center;}
+
+/* ── APPLICATION ── */
+.appl-board{flex:1;overflow-y:auto;padding:14px 24px 18px;}
+.appl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;}
+
+/* ── PAGE FOOTER ── */
+.page-footer{flex-shrink:0;height:28px;display:flex;align-items:center;justify-content:center;border-top:1px solid var(--border);background:var(--surface);position:relative;}
+.page-footer-text{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-3);opacity:.5;}
+.page-footer-text .au{color:var(--amber);opacity:.7;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ AUTH SCREEN ══════════════════ -->
+<div id="authWrap" class="auth-wrap">
+  <div class="auth-noise"></div>
+  <div class="auth-orb"></div>
+  <div class="auth-card" id="authCard">
+    <div class="brand">
+      <div class="ey">GTA World RP · Faction Portal</div>
+      <h1><span class="au">Aurum</span> <span class="en">Energy</span></h1>
+      <p>Operations Portal</p>
+    </div>
+
+    <!-- AUTH TABS -->
+    <div class="auth-tabs" id="authTabs">
+      <div class="atab on" onclick="authTab('login')">Sign In</div>
+      <div class="atab" onclick="authTab('register')">Create Account</div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="formLogin">
+      <div class="af"><label>Username</label><input type="text" id="lUser" placeholder="Your username" autocomplete="off"></div>
+      <div class="af"><label>Password</label><input type="password" id="lPass" placeholder="Your password"></div>
+      <div class="af-err" id="lErr">⚠ Invalid credentials or account pending verification.</div>
+      <button class="af-btn" onclick="doLogin()">Sign In</button>
+      <div class="af-divider">or</div>
+      <button class="af-btn sec" onclick="authTab('recover')">Forgot Password?</button>
+      <button class="af-btn sec" onclick="authTab('apply')" style="margin-top:4px;border-color:rgba(232,160,32,0.3);color:var(--amber)">📝 Apply to Join Aurum Energy</button>
+      <div class="af-foot">Aurum Energy · Authorized Personnel Only</div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="formRegister" style="display:none">
+      <div class="af-grid">
+        <div class="af"><label>Full Name</label><input type="text" id="rName" placeholder="Your full name"></div>
+        <div class="af"><label>Username</label><input type="text" id="rUser" placeholder="Choose a username"></div>
+        <div class="af"><label>Password</label><input type="password" id="rPass" placeholder="Choose a password"></div>
+        <div class="af"><label>Badge Number</label><input type="text" id="rBadge" placeholder="e.g. 3477"></div>
+      </div>
+      <div class="af" style="margin-top:2px"><label>Role</label>
+        <select id="rRole"><option value="">Select your role</option><optgroup label="Aurum Energy — Operations"><option>Field Operator (AE-FO1)</option><option>Trucker (AE-T1)</option><option>Foreman (AE-FO2)</option><option>OFFSHORE — Entry Level Rig Worker (AEO-W1)</option><option>OFFSHORE — Senior Rig Worker (AEO-W2)</option><option>OFFSHORE — Supervisor (AEO-S1)</option><option>Energy Intern (AE-I1)</option></optgroup><optgroup label="Aurum Corporation"><option>Human Resources Representative (AC-HR1)</option><option>Marketing Specialist (AC-MA1)</option><option>Environmental Researcher (AC-ER1)</option><option>Scientist (AC-SC1)</option><option>Corporation Intern (AC-I1)</option></optgroup></select>
+      </div>
+      <div class="af-err" id="rErr">⚠ Please fill in all fields.</div>
+      <div class="af-ok" id="rOk">✓ Account request submitted! Awaiting Manager/Supervisor approval.</div>
+      <button class="af-btn" onclick="doRegister()">Request Account</button>
+      <div class="af-foot">Aurum Energy · Authorized Personnel Only</div>
+    </div>
+
+    <!-- RECOVER PASSWORD -->
+    <div id="formRecover" style="display:none">
+      <div style="text-align:center;margin-bottom:16px;font-size:13px;color:var(--text-2);line-height:1.6">Enter your username and badge number to request a password reset. A Manager or Supervisor will reset it for you.</div>
+      <div class="af-grid">
+        <div class="af"><label>Username</label><input type="text" id="recUser" placeholder="Your username"></div>
+        <div class="af"><label>Badge Number</label><input type="text" id="recBadge" placeholder="Your badge #"></div>
+      </div>
+      <div class="af-err" id="recErr">⚠ Username and badge not found.</div>
+      <div class="af-ok" id="recOk">✓ Reset request submitted. A manager will update your password.</div>
+      <button class="af-btn" onclick="doRecoverRequest()">Submit Reset Request</button>
+      <div class="af-divider">or</div>
+      <button class="af-btn sec" onclick="authTab('login')">← Back to Sign In</button>
+    </div>
+
+    <!-- APPLY -->
+    <div id="formApply" style="display:none">
+      <!-- Division selector -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;text-align:center">Select Division</div>
+        <div class="auth-tabs" id="apDivTabs" style="margin-bottom:0">
+          <div class="atab on" onclick="switchApplyDiv('ops')">⚡ Aurum Energy — Operations</div>
+          <div class="atab" onclick="switchApplyDiv('corp')">🏢 Aurum Corporation</div>
+        </div>
+      </div>
+
+      <!-- Operations Division Info -->
+      <div id="apDivOpsInfo" style="background:rgba(232,160,32,.06);border:1px solid rgba(232,160,32,.2);border-radius:var(--r);padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--text-2);line-height:1.6">
+        <strong style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;display:block;margin-bottom:3px">⚡ AURUM ENERGY — OPERATIONS</strong>
+        The boots on the ground for Aurum Energy. Positions range from electricians and truckers to oil rig workers and offshore crew. If you work in the field, you belong here.
+      </div>
+
+      <!-- Corporation Division Info -->
+      <div id="apDivCorpInfo" style="display:none;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:var(--r);padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--text-2);line-height:1.6">
+        <strong style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;display:block;margin-bottom:3px">🏢 AURUM CORPORATION</strong>
+        The corporate arm of Aurum — board of directors, research &amp; development, and all support staff. <span style="color:var(--orange);font-weight:600">Corporation staff are required to undergo an LSPD background check and must sign a Non-Disclosure Agreement (NDA) before commencing employment.</span>
+      </div>
+
+      <input type="hidden" id="apDivision" value="ops">
+
+      <div class="af-grid">
+        <div class="af"><label>Full Name</label><input type="text" id="apName" placeholder="Your character name"></div>
+        <div class="af"><label>In-Game Phone</label><input type="text" id="apPhone" placeholder="e.g. 555-0123"></div>
+        <div class="af"><label>Age</label><input type="text" id="apAge" placeholder="Character age"></div>
+        <div class="af"><label>Nationality</label><input type="text" id="apNat" placeholder="e.g. American"></div>
+      </div>
+
+      <div class="af" style="margin-top:2px"><label>Position Applying For</label>
+        <select id="apRole">
+          <option value="">Select position</option>
+          <optgroup label="— Aurum Energy Operations —" id="apRoleOpsGroup">
+            <option value="Field Operator (AE-FO1)">Field Operator — AE-FO1</option>
+            <option value="Trucker (AE-T1)">Trucker — AE-T1</option>
+            <option value="Foreman (AE-FO2)">Foreman — AE-FO2</option>
+            <option value="OFFSHORE — Entry Level Rig Worker (AEO-W1)">OFFSHORE — Entry Level Rig Worker — AEO-W1</option>
+            <option value="OFFSHORE — Senior Rig Worker (AEO-W2)">OFFSHORE — Senior Rig Worker — AEO-W2</option>
+            <option value="OFFSHORE — Supervisor (AEO-S1)">OFFSHORE — Supervisor — AEO-S1</option>
+            <option value="Energy Intern (AE-I1)">Energy Intern — AE-I1</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="af"><label>Previous Experience</label><textarea id="apExp" style="min-height:55px" placeholder="Any previous experience relevant to the position..."></textarea></div>
+      <div class="af"><label>Why do you want to join Aurum?</label><textarea id="apWhy" style="min-height:55px" placeholder="Tell us why you'd be a good fit..."></textarea></div>
+
+      <!-- Corp-only fields -->
+      <div id="apCorpFields" style="display:none">
+        <div class="af" style="background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.15);border-radius:var(--r);padding:10px 12px;margin-bottom:2px">
+          <label style="color:var(--purple)">LSPD Background Check Consent <span class="req">*</span></label>
+          <select id="apBgCheck">
+            <option value="">Select</option>
+            <option value="yes">Yes — I consent to a background check</option>
+            <option value="no">No — I do not consent</option>
+          </select>
+        </div>
+        <div class="af" style="background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.15);border-radius:var(--r);padding:10px 12px;margin-bottom:2px">
+          <label style="color:var(--purple)">NDA Agreement <span class="req">*</span></label>
+          <select id="apNda">
+            <option value="">Select</option>
+            <option value="yes">Yes — I agree to sign the NDA</option>
+            <option value="no">No — I do not agree</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="af"><label>Additional Notes</label><textarea id="apNotes" style="min-height:45px" placeholder="Anything else you'd like us to know..."></textarea></div>
+      <div class="af-err" id="apErr">⚠ Please fill in all required fields.</div>
+      <div class="af-ok" id="apOk">✓ Application submitted! We'll be in touch soon.</div>
+      <button class="af-btn" onclick="submitApplication()">Submit Application</button>
+      <div class="af-divider">or</div>
+      <button class="af-btn sec" onclick="authTab('login')">← Back to Sign In</button>
+      <div class="af-foot">Aurum Energy · GTA World RP</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ APP ══════════════════ -->
+<div id="app">
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="ey">GTA World RP</div>
+      <h2><span class="au">Aurum</span> Energy</h2>
+      <div class="sb-pill">Online</div>
+    </div>
+
+    <div class="sb-sec">Navigation</div>
+    <div class="si" data-page="map"><span class="ico">🗺️</span>Map</div>
+    <div class="si" data-page="ph-faq"><span class="ico">❓</span>FAQ</div>
+    <div class="si" data-page="procedures"><span class="ico">📄</span>Procedures & Policy</div>
+    <div class="si" data-page="information"><span class="ico">ℹ️</span>Information</div>
+    <div class="si" data-page="clients"><span class="ico">🤝</span>Active Clients</div>
+    <div class="si" data-page="fleet"><span class="ico">🚛</span>Active Fleet</div>
+    <div class="si" data-page="orders"><span class="ico">📦</span>Company Orders</div>
+
+    <div class="sb-sec">Operations</div>
+    <div class="si on" data-page="delivery-logs"><span class="ico">📋</span>Delivery Logs</div>
+    <div class="si" data-page="shift"><span class="ico">⏱️</span>Shift System</div>
+    <div class="si" data-page="field-reports"><span class="ico">🛑</span>Field Reports</div>
+    <div class="si" data-page="incident-reports"><span class="ico">🚨</span>Incident Reports</div>
+    <div class="si" data-page="maintenance"><span class="ico">🔩</span>Maintenance</div>
+
+    <div class="sb-sec">My Profile</div>
+    <div class="si" data-page="my-stats"><span class="ico">📈</span>My Stats</div>
+    <div class="si" data-page="my-shifts"><span class="ico">📅</span>My Shifts</div>
+
+    <div class="sb-sec">Company</div>
+    <div class="si" data-page="stats"><span class="ico">📊</span>Company Overview</div>
+    <div class="si" data-page="leaderboard"><span class="ico">🏆</span>Leaderboard</div>
+
+    <div id="adminNav" style="display:none">
+      <div class="sb-sec">Admin</div>
+      <div class="si" data-page="admin-shifts"><span class="ico">🗓️</span>Assign Shifts</div>
+      <div class="si" data-page="admin-accounts"><span class="ico">👥</span>Accounts <span class="chip" id="accChip" style="display:none">0</span></div>
+      <div class="si" data-page="admin-applications"><span class="ico">📝</span>Applications <span class="chip" id="appChip" style="display:none">0</span></div>
+      <div class="si" data-page="admin-roles"><span class="ico">🎖️</span>Roles & Permissions</div>
+      <div class="si" data-page="admin-role-logs"><span class="ico">📜</span>Role Change Logs</div>
+    </div>
+
+    <div class="sb-foot">
+      <div class="sb-av" id="sbAv">?</div>
+      <div><div class="sb-uname" id="sbName">—</div><div class="sb-urole" id="sbRole">—</div></div>
+      <button class="sb-out" onclick="doLogout()" title="Logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="main">
+
+    <!-- ══ DELIVERY LOGS ══ -->
+    <div id="page-delivery-logs" class="page on">
+      <div class="topbar">
+        <div class="tb-l"><div class="tb-title">Delivery Logs</div></div>
+        <div class="tb-r">
+          <div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="dlSrch" placeholder="Search..."></div>
+          <div class="ftabs"><div class="ftab on">All</div><div class="ftab">Week <span id="dlWC">0</span></div><div class="ftab">Month <span id="dlMC">0</span></div></div>
+          <button class="btn-p" onclick="showPage('delivery-form')">+ New Log</button>
+        </div>
+      </div>
+      <div class="notice"><strong>Notice</strong>Using other drivers' log information in-game is considered <strong style="color:var(--red)">metagaming</strong>.</div>
+      <div class="sc-strip c4">
+        <div class="sc"><div class="sc-l">Total Deliveries</div><div class="sc-v" id="dlST">0</div><div class="sc-s">All time</div><div class="sc-i">📦</div></div>
+        <div class="sc"><div class="sc-l">This Month</div><div class="sc-v" id="dlSM">0</div><div class="sc-s">Deliveries</div><div class="sc-i">📅</div></div>
+        <div class="sc"><div class="sc-l">Fleet Available</div><div class="sc-v" id="dlSF">0</div><div class="sc-s">Operational vehicles</div><div class="sc-i">🚛</div></div>
+        <div class="sc"><div class="sc-l">Damage Reports</div><div class="sc-v" id="dlSD" style="color:var(--orange)">0</div><div class="sc-s">Pending review</div><div class="sc-i">⚠️</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="dlWrap"></div></div>
+    </div>
+
+    <!-- ══ DELIVERY FORM ══ -->
+    <div id="page-delivery-form" class="page">
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Delivery Logs <span>›</span> Create</div><div class="tb-title">New Delivery Log</div></div></div>
+      <div class="f-area">
+        <div class="f-sec"><div class="f-sec-t">Driver Information</div>
+          <div class="fgrid c2">
+            <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="dl-badge"></div>
+            <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="dl-name"></div>
+            <div class="fg"><label>Role <span class="req">*</span></label><select id="dl-rank"><option value="">Select</option></select></div>
+            <div class="fg"><label>Total Deliveries (from /stats) <span class="req">*</span></label><input type="number" id="dl-total"></div>
+          </div>
+        </div>
+        <div class="f-sec"><div class="f-sec-t">Vehicle & Shift</div>
+          <div class="fgrid c2">
+            <div class="fg"><label>Vehicle <span class="req">*</span></label><select id="dl-vehicle"><option value="">Select vehicle</option></select></div>
+            <div class="fg"><label>Usage Purpose <span class="req">*</span></label><select id="dl-usage"><option value="">Select</option><option>Delivery</option><option>Transport</option><option>Other</option></select></div>
+            <div class="fg"><label>Fuel Level <span class="req">*</span></label><select id="dl-fuel"><option value="">Select</option><option>&lt;25%</option><option>25–50%</option><option>50–75%</option><option>&gt;75%</option></select></div>
+            <div class="fg"><label>Dashcam Installed? <span class="req">*</span></label><div class="fg-hint" style="margin-bottom:4px">Use P or /viv to check</div><select id="dl-dashcam"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+            <div class="fg"><label>Repair Needed? <span class="req">*</span></label><select id="dl-repair"><option value="">Select</option><option>No Damage</option><option>Slight Damage</option><option>Heavy Damage</option></select></div>
+            <div class="fg"><label>Maintenance Status <span class="req">*</span></label><select id="dl-maint"><option value="">Select</option><option>Green</option><option>Orange</option><option>Red</option></select></div>
+          </div>
+        </div>
+        <div class="f-sec"><div class="f-sec-t">Notes</div>
+          <div class="fgrid c2">
+            <div class="fg"><label>General Notes</label><textarea id="dl-notes" placeholder="Info for supervisors. Use N/A if none."></textarea></div>
+            <div class="fg"><label>Operations Notes</label><textarea id="dl-fleet-notes" placeholder="Damages, issues etc. Use N/A if none."></textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="f-actions"><button class="btn-save" onclick="submitDelivery()">Submit Log</button><button class="btn-prev" onclick="previewFormData('delivery')">👁 Preview</button><button class="btn-can" onclick="showPage('delivery-logs')">Cancel</button></div>
+    </div>
+
+    <!-- ══ FIELD REPORTS ══ -->
+    <div id="page-field-reports" class="page">
+      <div class="topbar"><div class="tb-title">Field Reports</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="frSrch" placeholder="Search..."></div><button class="btn-p" onclick="showPage('field-report-form')">+ New Report</button></div></div>
+      <div class="sc-strip c4">
+        <div class="sc"><div class="sc-l">Total Reports</div><div class="sc-v" id="frST">0</div><div class="sc-i">📄</div></div>
+        <div class="sc"><div class="sc-l">Refinery</div><div class="sc-v" id="frSTow">0</div><div class="sc-i">🏭</div></div>
+        <div class="sc"><div class="sc-l">Incidents</div><div class="sc-v" id="frSInc" style="color:var(--red)">0</div><div class="sc-i">⚠️</div></div>
+        <div class="sc"><div class="sc-l">Mechanical</div><div class="sc-v" id="frSAss" style="color:var(--blue)">0</div><div class="sc-i">🔧</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="frWrap"></div></div>
+    </div>
+
+    <!-- ══ FIELD REPORT FORM ══ -->
+    <div id="page-field-report-form" class="page">
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Field Reports <span>›</span> Create</div><div class="tb-title">New Field Report</div></div></div>
+      <div class="f-area">
+        <div class="f-sec"><div class="f-sec-t">Officer Information</div><div class="fgrid c2">
+          <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="fr-badge"></div>
+          <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="fr-name"></div>
+          <div class="fg"><label>Role <span class="req">*</span></label><select id="fr-rank"><option value="">Select</option></select></div>
+          <div class="fg"><label>Date &amp; Time <span class="req">*</span></label><input type="datetime-local" id="fr-datetime"></div>
+        </div></div>
+        <div class="f-sec"><div class="f-sec-t">Incident Details</div><div class="fgrid c2">
+          <div class="fg"><label>Report Type <span class="req">*</span></label><select id="fr-type"><option value="">Select</option><option>Refinery Operation</option><option>Refinery Incident</option><option>Incident / Accident</option><option>Road Obstruction</option><option>Mechanical Failure</option><option>Other</option></select></div>
+          <div class="fg"><label>Location <span class="req">*</span></label><input type="text" id="fr-location"></div>
+          <div class="fg"><label>Vehicle Plate <span class="req">*</span></label><input type="text" id="fr-vehicle"></div>
+          <div class="fg"><label>Other Parties</label><input type="text" id="fr-parties"></div>
+          <div class="fg"><label>Outcome <span class="req">*</span></label><select id="fr-outcome"><option value="">Select</option><option>Resolved — No Issues</option><option>Vehicle Towed</option><option>Repaired On-Site</option><option>Emergency Services Called</option><option>Pending Review</option></select></div>
+          <div class="fg"><label>Vehicle Damage?</label><select id="fr-damage"><option value="">Select</option><option>No Damage</option><option>Slight Damage</option><option>Heavy Damage</option></select></div>
+        </div></div>
+        <div class="f-sec"><div class="f-sec-t">Narrative</div><div class="fgrid c2">
+          <div class="fg"><label>Description <span class="req">*</span></label><textarea id="fr-desc" style="min-height:100px"></textarea></div>
+          <div class="fg"><label>Notes for Supervisors</label><textarea id="fr-notes"></textarea></div>
+        </div></div>
+      </div>
+      <div class="f-actions"><button class="btn-save" onclick="submitFieldReport()">Submit Report</button><button class="btn-prev" onclick="previewFormData('field')">👁 Preview</button><button class="btn-can" onclick="showPage('field-reports')">Cancel</button></div>
+    </div>
+
+    <!-- ══ INCIDENT REPORTS ══ -->
+    <div id="page-incident-reports" class="page">
+      <div class="topbar"><div class="tb-title">Incident Reports</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="irSrch" placeholder="Search..."></div><button class="btn-p" onclick="showPage('incident-form')">+ New Incident</button></div></div>
+      <div class="sc-strip c4">
+        <div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="irST">0</div><div class="sc-i">🚨</div></div>
+        <div class="sc"><div class="sc-l">Open</div><div class="sc-v" id="irSO" style="color:var(--orange)">0</div><div class="sc-i">🔍</div></div>
+        <div class="sc"><div class="sc-l">Resolved</div><div class="sc-v" id="irSR" style="color:var(--green)">0</div><div class="sc-i">✅</div></div>
+        <div class="sc"><div class="sc-l">Police Involved</div><div class="sc-v" id="irSP" style="color:var(--red)">0</div><div class="sc-i">🚔</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="irWrap"></div></div>
+    </div>
+
+    <!-- ══ INCIDENT FORM ══ -->
+    <div id="page-incident-form" class="page">
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Incident Reports <span>›</span> Create</div><div class="tb-title">New Incident Report</div></div></div>
+      <div class="f-area">
+        <div class="f-sec"><div class="f-sec-t">Reporter</div><div class="fgrid c2">
+          <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="ir-badge"></div>
+          <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="ir-name"></div>
+          <div class="fg"><label>Role <span class="req">*</span></label><select id="ir-rank"><option value="">Select</option></select></div>
+        </div></div>
+        <div class="f-sec"><div class="f-sec-t">Incident Details</div><div class="fgrid c2">
+          <div class="fg"><label>Type <span class="req">*</span></label><select id="ir-type"><option value="">Select</option><option>Vehicle Collision</option><option>Cargo Loss</option><option>Vehicle Theft</option><option>Road Rage</option><option>Police Stop</option><option>Other</option></select></div>
+          <div class="fg"><label>Severity <span class="req">*</span></label><select id="ir-severity"><option value="">Select</option><option>Minor</option><option>Moderate</option><option>Severe</option><option>Critical</option></select></div>
+          <div class="fg"><label>Location <span class="req">*</span></label><input type="text" id="ir-location"></div>
+          <div class="fg"><label>Vehicle <span class="req">*</span></label><input type="text" id="ir-vehicle"></div>
+          <div class="fg"><label>Emergency Services?</label><select id="ir-police"><option value="">Select</option><option>No</option><option>LSPD Called</option><option>EMS Called</option><option>Both Called</option></select></div>
+          <div class="fg"><label>Other Parties</label><input type="text" id="ir-parties"></div>
+          <div class="fg"><label>Vehicle Damage?</label><select id="ir-damage"><option value="">Select</option><option>No Damage</option><option>Slight Damage</option><option>Heavy Damage</option><option>Total Loss</option></select></div>
+          <div class="fg"><label>Status</label><select id="ir-status"><option>Open — Under Review</option><option>Resolved</option><option>Escalated</option></select></div>
+        </div></div>
+        <div class="f-sec"><div class="f-sec-t">Narrative</div><div class="fgrid c2">
+          <div class="fg"><label>Description <span class="req">*</span></label><textarea id="ir-desc" style="min-height:100px"></textarea></div>
+          <div class="fg"><label>Management Notes</label><textarea id="ir-notes"></textarea></div>
+        </div></div>
+      </div>
+      <div class="f-actions"><button class="btn-save" onclick="submitIR()">File Report</button><button class="btn-prev" onclick="previewFormData('incident')">👁 Preview</button><button class="btn-can" onclick="showPage('incident-reports')">Cancel</button></div>
+    </div>
+
+    <!-- ══ SHIFT SYSTEM ══ -->
+    <div id="page-shift" class="page">
+      <div class="topbar"><div class="tb-title">Shift System</div></div>
+      <div class="shift-board">
+        <div class="clocks">
+          <div class="clock-card"><div class="clock-val" id="shClock">00:00:00</div><div class="clock-lbl">Current Time</div></div>
+          <div class="clock-card"><div class="clock-val" id="shDur">00:00:00</div><div class="clock-lbl">Active Duration</div></div>
+          <div class="clock-card"><div class="clock-val" id="shTotC" style="font-size:26px">0</div><div class="clock-lbl">Shifts Completed</div></div>
+        </div>
+        <div class="shift-panel">
+          <div class="shift-panel-t">Active Shift</div>
+          <div id="shInactive">
+            <div style="text-align:center;padding:16px 0">
+              <div style="font-size:32px;opacity:.12;margin-bottom:10px">⏱️</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text-2);margin-bottom:4px">No Active Shift</div>
+              <div style="font-size:12px;color:var(--text-3);margin-bottom:16px">Start a shift to begin tracking your session.</div>
+              <div id="assignedBanner" style="display:none;background:rgba(232,160,32,.07);border:1px solid rgba(232,160,32,.25);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;text-align:left">
+                <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:4px">ASSIGNED SHIFT</div>
+                <div style="font-size:13px;font-weight:600" id="assignedInfo">—</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px" id="assignedTask">—</div>
+              </div>
+              <button class="sh-btn start" onclick="showStartForm()">▶ Start Shift</button>
+            </div>
+          </div>
+          <div id="shActive" style="display:none">
+            <div class="sh-stat-row">
+              <div><div class="sh-info-name" id="shActName">—</div><div class="sh-info-meta">Started: <span id="shActStart">—</span> · Badge: <span id="shActBadge">—</span></div></div>
+              <div class="sh-btns">
+                <button class="sh-btn brk" id="shBrkBtn" onclick="toggleBreak()">⏸ Break</button>
+                <button class="sh-btn end" onclick="endShift()">⏹ End Shift</button>
+              </div>
+            </div>
+            <div class="sh-meta-row">
+              <div class="sh-mc"><div class="sm-l">Status</div><div class="sm-v"><span class="tag green" id="shStatusTag">On Duty</span></div></div>
+              <div class="sh-mc"><div class="sm-l">Deliveries</div><div class="sm-v" id="shDelC" style="color:var(--amber)">0</div></div>
+              <div class="sh-mc"><div class="sm-l">Field Reports</div><div class="sm-v" id="shFRC" style="color:var(--blue)">0</div></div>
+              <div class="sh-mc"><div class="sm-l">Break Time</div><div class="sm-v" id="shBrkT" style="color:var(--orange)">0m</div></div>
+              <div class="sh-mc" id="shTaskMeta" style="display:none"><div class="sm-l">Assigned Task</div><div class="sm-v" style="font-size:12px;max-width:200px" id="shTaskLbl">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="shStartForm" style="display:none" class="shift-panel">
+          <div class="shift-panel-t">Start Shift</div>
+          <div class="fgrid c2" style="gap:12px">
+            <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="sf-name"></div>
+            <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="sf-badge"></div>
+            <div class="fg"><label>Role <span class="req">*</span></label><select id="sf-role"><option value="">Select</option></select></div>
+            <div class="fg"><label>Vehicle</label><select id="sf-vehicle"><option value="">None assigned</option></select></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button class="btn-save" onclick="confirmShiftStart()">Begin Shift</button>
+            <button class="btn-can" onclick="document.getElementById('shStartForm').style.display='none'">Cancel</button>
+          </div>
+        </div>
+        <div class="shift-panel">
+          <div class="shift-panel-t">All Shift History</div>
+          <div id="shHistWrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MY SHIFTS ══ -->
+    <div id="page-my-shifts" class="page">
+      <div class="topbar"><div class="tb-title">My Shifts</div></div>
+      <div class="shift-board">
+        <div class="shift-panel"><div class="shift-panel-t">Assigned Shifts — Upcoming & Active</div><div id="myAssignedWrap"></div></div>
+        <div class="shift-panel"><div class="shift-panel-t">My Shift History</div><div id="myHistWrap"></div></div>
+      </div>
+    </div>
+
+    <!-- ══ MY STATS ══ -->
+    <div id="page-my-stats" class="page">
+      <div class="topbar"><div class="tb-title">My Stats</div></div>
+      <div class="my-board">
+        <div class="my-header">
+          <div class="my-av" id="msAv">?</div>
+          <div><div class="my-name" id="msName">—</div><div class="my-role" id="msRole">—</div><div class="my-badge" id="msBadge">—</div></div>
+        </div>
+        <div class="my-kpi" style="grid-template-columns:repeat(5,1fr)">
+          <div class="kpi"><div class="kpi-v" id="msD">0</div><div class="kpi-l">Deliveries</div></div>
+          <div class="kpi"><div class="kpi-v" id="msS">0</div><div class="kpi-l">Shifts Completed</div></div>
+          <div class="kpi"><div class="kpi-v" id="msH">0h</div><div class="kpi-l">Total Hours</div></div>
+          <div class="kpi"><div class="kpi-v" id="msR">0</div><div class="kpi-l">Reports Filed</div></div>
+          <div class="kpi"><div class="kpi-v" id="msMaint" style="color:var(--green)">0</div><div class="kpi-l">Maintenance Logs</div></div>
+        </div>
+        <div class="my-recent"><div class="my-recent-t">Recent Activity</div><div id="msActivity"></div></div>
+      </div>
+    </div>
+
+    <!-- ══ COMPANY OVERVIEW ══ -->
+    <div id="page-stats" class="page">
+      <div class="topbar"><div class="tb-title">Company Overview</div></div>
+      <div class="stats-board">
+        <div class="ov-grid">
+          <div class="ov-cell"><div class="ov-v" id="ovDL">0</div><div class="ov-l">Delivery Logs</div></div>
+          <div class="ov-cell"><div class="ov-v" id="ovFR">0</div><div class="ov-l">Field Reports</div></div>
+          <div class="ov-cell"><div class="ov-v" id="ovIR">0</div><div class="ov-l">Incident Reports</div></div>
+          <div class="ov-cell"><div class="ov-v" id="ovSH">0</div><div class="ov-l">Shifts Logged</div></div>
+        </div>
+        <div class="lb-grid">
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">👥 Active Employees</div><div class="lb-head-s">Verified accounts</div></div><div id="ovEmp"></div></div>
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">🚛 Fleet Status</div><div class="lb-head-s">Current vehicles</div></div><div id="ovFleet"></div></div>
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">📦 Orders Pipeline</div><div class="lb-head-s">Active orders</div></div><div id="ovOrders"></div></div>
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">📅 Shifts This Week</div><div class="lb-head-s">Last 7 days</div></div><div id="ovWeek"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LEADERBOARD ══ -->
+    <div id="page-leaderboard" class="page">
+      <div class="topbar"><div class="tb-title">Leaderboard</div></div>
+      <div class="stats-board">
+        <div class="lb-grid">
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">📦 Most Deliveries</div><div class="lb-head-s">All time</div></div><div id="lbDel"></div></div>
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">⏱️ Most Hours</div><div class="lb-head-s">All time</div></div><div id="lbHrs"></div></div>
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">📋 Most Reports</div><div class="lb-head-s">Field + Incident</div></div><div id="lbRep"></div></div>
+          <div class="lb-card"><div class="lb-head"><div class="lb-head-t">🔄 Most Shifts</div><div class="lb-head-s">All time</div></div><div id="lbSh"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CLIENTS ══ -->
+    <div id="page-clients" class="page">
+      <div class="topbar"><div class="tb-title">Active Clients</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="clSrch" placeholder="Search..."></div><button class="btn-p" onclick="openModal('clientModal')">+ Add Client</button></div></div>
+      <div class="sc-strip c3"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="clST">0</div></div><div class="sc"><div class="sc-l">Active</div><div class="sc-v" id="clSA" style="color:var(--green)">0</div></div><div class="sc"><div class="sc-l">Pending</div><div class="sc-v" id="clSP" style="color:var(--orange)">0</div></div></div>
+      <div class="card-area"><div class="card-grid" id="clientGrid"></div></div>
+    </div>
+
+    <!-- ══ FLEET ══ -->
+    <div id="page-fleet" class="page">
+      <div class="topbar"><div class="tb-title">Active Fleet</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="flSrch" placeholder="Search..."></div><button class="btn-p" onclick="openModal('fleetModal')">+ Add Vehicle</button></div></div>
+      <div class="sc-strip c4"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="flST">0</div></div><div class="sc"><div class="sc-l">Operational</div><div class="sc-v" id="flSOp" style="color:var(--green)">0</div></div><div class="sc"><div class="sc-l">Maintenance</div><div class="sc-v" id="flSMaint" style="color:var(--orange)">0</div></div><div class="sc"><div class="sc-l">Off Duty</div><div class="sc-v" id="flSOff">0</div></div></div>
+      <div class="tbl-wrap"><div class="tbl-box" id="fleetWrap"></div></div>
+    </div>
+
+    <!-- ══ ORDERS ══ -->
+    <div id="page-orders" class="page">
+      <div class="topbar"><div class="tb-title">Company Orders</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="orSrch" placeholder="Search..."></div><button class="btn-p" onclick="openModal('orderModal')">+ New Order</button></div></div>
+      <div class="sc-strip c4"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="orST">0</div></div><div class="sc"><div class="sc-l">Pending</div><div class="sc-v" id="orSP" style="color:var(--orange)">0</div></div><div class="sc"><div class="sc-l">In Transit</div><div class="sc-v" id="orSI" style="color:var(--blue)">0</div></div><div class="sc"><div class="sc-l">Completed</div><div class="sc-v" id="orSD" style="color:var(--green)">0</div></div></div>
+      <div class="tbl-wrap"><div class="tbl-box" id="orderWrap"></div></div>
+    </div>
+
+    <!-- ══ MAP ══ -->
+    <div id="page-map" class="page">
+      <div class="topbar"><div class="tb-title">Los Santos — Map</div><div class="tb-r"><span style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px">INTERACTIVE MAP</span></div></div>
+      <div class="map-wrap" style="position:relative;flex:1;display:flex;flex-direction:column;">
+        <iframe src="https://gta-5-map.com/" style="flex:1;width:100%;border:none;min-height:0;" allowfullscreen loading="lazy" title="GTA V Los Santos Map"></iframe>
+      </div>
+    </div>
+
+    <!-- ══ PROCEDURES / INFO ══ -->
+    <div id="page-procedures" class="page">
+      <div class="topbar"><div class="tb-title">Procedures & Policy</div></div>
+      <div class="info-area">
+        <div class="info-sec"><div class="info-sec-t">Standard Operating Procedures</div>
+          <div class="sop"><div class="sop-l">SOP-01 · VEHICLE USAGE</div><div class="sop-t">All company vehicles must be logged before and after every shift. A Delivery Log or Field Report must be submitted each session. Unauthorised vehicle use is prohibited.</div></div>
+          <div class="sop"><div class="sop-l">SOP-02 · SHIFT SYSTEM</div><div class="sop-t">All employees must clock in via the Shift System. Shifts without a corresponding log may not count toward quotas. Break times must be accurately recorded.</div></div>
+          <div class="sop"><div class="sop-l">SOP-03 · COMMUNICATION</div><div class="sop-t">Professional radio etiquette at all times. Client communications must be logged. Do not discuss company info in public channels.</div></div>
+          <div class="sop"><div class="sop-l">SOP-04 · INCIDENT REPORTING</div><div class="sop-t">Any on-road incident, vehicle damage, or interaction with emergency services must be reported within the same session. Failure to report is a disciplinary offence.</div></div>
+          <div class="sop"><div class="sop-l">SOP-05 · METAGAMING POLICY</div><div class="sop-t">Information from portal logs must never be used in-game unless your character was present. Any breach results in immediate suspension.</div></div>
+          <div class="sop"><div class="sop-l">SOP-06 · CONDUCT</div><div class="sop-t">Professional conduct is expected at all times. Uniform must be worn while on duty.</div></div>
+        </div>
+      </div>
+    </div>
+    <div id="page-information" class="page">
+      <div class="topbar"><div class="tb-title">Information</div></div>
+      <div class="info-area">
+        <div class="info-sec"><div class="info-sec-t">About Aurum Energy</div><p style="font-size:13px;color:var(--text-2);line-height:1.8">Aurum Energy is a premier logistics and energy distribution company operating throughout Los Santos and Blaine County on GTA World RP.</p></div>
+        <div class="info-sec"><div class="info-sec-t">Role Structure</div><div id="infoRoles"></div></div>
+        <div class="info-sec"><div class="info-sec-t">Key Contacts</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="sop"><div class="sop-l">Head Manager</div><div class="sop-t">Justin Driver — Driver Logistics Division</div></div><div class="sop"><div class="sop-l">Operations</div><div class="sop-t">Operations Department — Shift & Fleet Management</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN: ASSIGN SHIFTS ══ -->
+    <div id="page-admin-shifts" class="page">
+      <div class="topbar"><div class="tb-title">Assign Shifts</div><div class="tb-r"><button class="btn-p" onclick="openModal('assignShiftModal')">+ Assign Shift</button></div></div>
+      <div class="admin-notice"><strong>Admin</strong>Assigned shifts appear on the employee's My Shifts page and Shift System start screen.</div>
+      <div class="tbl-wrap"><div class="tbl-box" id="assignedWrap"></div></div>
+    </div>
+
+    <!-- ══ ADMIN: ACCOUNTS ══ -->
+    <div id="page-admin-accounts" class="page">
+      <div class="topbar"><div class="tb-title">Account Management</div></div>
+      <div class="admin-notice"><strong>Admin</strong>Review and verify new account requests. Only verified accounts can log in. Password resets can be managed here.</div>
+      <div class="sc-strip c3" style="padding-top:14px">
+        <div class="sc"><div class="sc-l">Total Accounts</div><div class="sc-v" id="acST">0</div></div>
+        <div class="sc"><div class="sc-l">Verified</div><div class="sc-v" id="acSV" style="color:var(--green)">0</div></div>
+        <div class="sc"><div class="sc-l">Pending</div><div class="sc-v" id="acSP" style="color:var(--orange)">0</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="accWrap"></div></div>
+    </div>
+
+    <!-- ══ ADMIN: APPLICATIONS ══ -->
+    <div id="page-admin-applications" class="page">
+      <div class="topbar"><div class="tb-title">Job Applications</div></div>
+      <div class="admin-notice"><strong>Admin</strong>Review applications submitted from the login screen. Accept to create a pending account, or reject to remove.</div>
+      <div class="sc-strip c4" style="padding-top:14px">
+        <div class="sc"><div class="sc-l">Total Applications</div><div class="sc-v" id="apST">0</div></div>
+        <div class="sc"><div class="sc-l">Pending Review</div><div class="sc-v" id="apSP" style="color:var(--orange)">0</div></div>
+        <div class="sc"><div class="sc-l">⚡ Operations</div><div class="sc-v" id="apSOps" style="color:var(--amber)">0</div></div>
+        <div class="sc"><div class="sc-l">🏢 Corporation</div><div class="sc-v" id="apSCorp" style="color:var(--purple)">0</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="applWrap"></div></div>
+    </div>
+
+    <!-- ══ ADMIN: ROLES ══ -->
+    <div id="page-admin-roles" class="page">
+      <div class="topbar"><div class="tb-title">Roles & Permissions</div><div class="tb-r"><button class="btn-p" onclick="openModal('addRoleModal')">+ Create Role</button></div></div>
+      <div class="admin-notice"><strong>Admin</strong>Manage company roles. Built-in roles cannot be deleted. Custom roles can be created and assigned to employees.</div>
+      <div class="tbl-wrap"><div class="tbl-box" id="rolesWrap"></div></div>
+    </div>
+
+    <div id="page-ph-faq" class="page"><div class="ph-page"><div class="ph-ico">❓</div><div class="ph-t">FAQ</div><div class="ph-s">Coming Soon</div></div></div>
+
+    <!-- ══ MAINTENANCE ══ -->
+    <div id="page-maintenance" class="page">
+      <div class="topbar">
+        <div class="tb-l"><div class="tb-title">Maintenance</div></div>
+        <div class="tb-r">
+          <div class="ftabs" id="maintTabs">
+            <div class="ftab on" onclick="switchMaintTab('damage')">Damage Reports</div>
+            <div class="ftab" onclick="switchMaintTab('service')">Service Logs</div>
+          </div>
+          <button class="btn-p" id="maintAddBtn" onclick="openModal('maintServiceModal')">+ Log Service</button>
+        </div>
+      </div>
+      <div class="admin-notice"><strong>Notice</strong>Damage reports are auto-captured from Delivery Logs where damage was reported. Service Logs track repairs, services, and washes performed on fleet vehicles.</div>
+      <!-- Damage Reports view -->
+      <div id="maintDamageView">
+        <div class="sc-strip c4">
+          <div class="sc"><div class="sc-l">Total Damaged</div><div class="sc-v" id="mdST" style="color:var(--red)">0</div><div class="sc-i">💥</div></div>
+          <div class="sc"><div class="sc-l">Heavy Damage</div><div class="sc-v" id="mdSH" style="color:var(--red)">0</div><div class="sc-i">🔴</div></div>
+          <div class="sc"><div class="sc-l">Slight Damage</div><div class="sc-v" id="mdSS" style="color:var(--orange)">0</div><div class="sc-i">🟠</div></div>
+          <div class="sc"><div class="sc-l">Serviced</div><div class="sc-v" id="mdSSvc" style="color:var(--green)">0</div><div class="sc-i">✅</div></div>
+        </div>
+        <div class="tbl-wrap"><div class="tbl-box" id="maintDmgWrap"></div></div>
+      </div>
+      <!-- Service Logs view -->
+      <div id="maintServiceView" style="display:none">
+        <div class="sc-strip c4">
+          <div class="sc"><div class="sc-l">Total Logs</div><div class="sc-v" id="msST">0</div><div class="sc-i">🔧</div></div>
+          <div class="sc"><div class="sc-l">Repairs</div><div class="sc-v" id="msSR" style="color:var(--red)">0</div><div class="sc-i">🛠️</div></div>
+          <div class="sc"><div class="sc-l">Services</div><div class="sc-v" id="mssSvc" style="color:var(--blue)">0</div><div class="sc-i">⚙️</div></div>
+          <div class="sc"><div class="sc-l">Washes</div><div class="sc-v" id="msSW" style="color:var(--amber)">0</div><div class="sc-i">🚿</div></div>
+        </div>
+        <div class="tbl-wrap"><div class="tbl-box" id="maintSvcWrap"></div></div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN: ROLE CHANGE LOGS ══ -->
+    <div id="page-admin-role-logs" class="page">
+      <div class="topbar"><div class="tb-title">Role Change Logs</div><div class="tb-r"><button class="btn-s" onclick="clearRoleLogs()" style="color:var(--red);border-color:rgba(239,68,68,.3)">🗑 Clear Logs</button></div></div>
+      <div class="admin-notice"><strong>Admin</strong>All role assignments, promotions, demotions, and removals are automatically logged here with timestamp and actor.</div>
+      <div class="sc-strip c3" style="padding-top:14px">
+        <div class="sc"><div class="sc-l">Total Events</div><div class="sc-v" id="rlST">0</div></div>
+        <div class="sc"><div class="sc-l">Promotions</div><div class="sc-v" id="rlSP" style="color:var(--green)">0</div></div>
+        <div class="sc"><div class="sc-l">Demotions / Removals</div><div class="sc-v" id="rlSD" style="color:var(--red)">0</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="roleLogsWrap"></div></div>
+    </div>
+
+    <!-- ══ PAGE FOOTER ══ -->
+    <div class="page-footer">
+      <span class="page-footer-text"><span class="au">Aurum</span> Energy — Operations Portal</span>
+      <span style="position:absolute;right:18px;font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--text-3);opacity:.35;letter-spacing:.5px">Designed by Justin Smithy</span>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ══════════ MODALS ══════════ -->
+<!-- Client -->
+<div class="modal-overlay" id="clientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Client</div><button class="modal-x" onclick="closeModal('clientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="cl-name"></div><div class="fg"><label>Company</label><input type="text" id="cl-company"></div><div class="fg"><label>Contract Type <span class="req">*</span></label><select id="cl-contract"><option value="">Select</option><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other</option></select></div><div class="fg"><label>Status <span class="req">*</span></label><select id="cl-status"><option value="">Select</option><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes (contact numbers, details etc.)</label><textarea id="cl-notes" style="min-height:70px" placeholder="Phone numbers, addresses, delivery preferences..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('clientModal')">Cancel</button><button class="btn-save" onclick="addClient()">Add</button></div></div></div>
+<div class="modal-overlay" id="editClientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Client</div><button class="modal-x" onclick="closeModal('editClientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="ecl-idx"><div class="fg"><label>Name</label><input type="text" id="ecl-name"></div><div class="fg"><label>Company</label><input type="text" id="ecl-company"></div><div class="fg"><label>Contract</label><select id="ecl-contract"><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other</option></select></div><div class="fg"><label>Status</label><select id="ecl-status"><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes</label><textarea id="ecl-notes" style="min-height:70px" placeholder="Contact numbers, delivery details..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editClientModal')">Cancel</button><button class="btn-save" onclick="saveClient()">Save</button></div></div></div>
+<!-- Fleet -->
+<div class="modal-overlay" id="fleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Vehicle</div><button class="modal-x" onclick="closeModal('fleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Plate <span class="req">*</span></label><input type="text" id="fl-plate"></div><div class="fg"><label>Usage Category <span class="req">*</span></label><select id="fl-category"><option value="">Select</option><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Vehicle Type <span class="req">*</span></label><select id="fl-type"><option value="">Select</option><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option>Other</option></select></div><div class="fg"><label>Status <span class="req">*</span></label><select id="fl-status"><option value="">Select</option><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition <span class="req">*</span></label><select id="fl-condition"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance <span class="req">*</span></label><select id="fl-maint"><option value="">Select</option><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel <span class="req">*</span></label><select id="fl-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('fleetModal')">Cancel</button><button class="btn-save" onclick="addVehicle()">Add</button></div></div></div>
+<div class="modal-overlay" id="editFleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Vehicle</div><button class="modal-x" onclick="closeModal('editFleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="efl-idx"><div class="fg"><label>Plate</label><input type="text" id="efl-plate"></div><div class="fg"><label>Usage Category</label><select id="efl-category"><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Type</label><select id="efl-type"><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option>Other</option></select></div><div class="fg"><label>Status</label><select id="efl-status"><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition</label><select id="efl-condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance</label><select id="efl-maint"><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel</label><select id="efl-fuel"><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editFleetModal')">Cancel</button><button class="btn-save" onclick="saveVehicle()">Save</button></div></div></div>
+<!-- Orders -->
+<div class="modal-overlay" id="orderModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">New Company Order</div><button class="modal-x" onclick="closeModal('orderModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Title <span class="req">*</span></label><input type="text" id="ord-title"></div><div class="fg"><label>Client <span class="req">*</span></label><input type="text" id="ord-client"></div><div class="fg"><label>Type <span class="req">*</span></label><select id="ord-type"><option value="">Select</option><option>Fuel Delivery</option><option>Cargo Transport</option><option>Supply Run</option><option>Special Order</option><option>Other</option></select></div><div class="fg"><label>Priority</label><select id="ord-priority"><option>Normal</option><option>Low</option><option>High</option><option>Urgent</option></select></div><div class="fg"><label>Assigned To</label><select id="ord-driver"><option value="">Unassigned</option></select></div><div class="fg"><label>Status</label><select id="ord-status"><option>Pending</option><option>In Transit</option><option>Completed</option></select></div><div class="fg" style="grid-column:1/-1"><label>Details</label><textarea id="ord-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('orderModal')">Cancel</button><button class="btn-save" onclick="addOrder()">Create</button></div></div></div>
+<!-- Assign Shift -->
+<div class="modal-overlay" id="assignShiftModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Assign Shift</div><button class="modal-x" onclick="closeModal('assignShiftModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Employee <span class="req">*</span></label><select id="as-emp"><option value="">Select employee</option></select></div><div class="fg"><label>Date <span class="req">*</span></label><input type="date" id="as-date"></div><div class="fg"><label>Start Time <span class="req">*</span></label><input type="time" id="as-start"></div><div class="fg"><label>End Time <span class="req">*</span></label><input type="time" id="as-end"></div><div class="fg"><label>Vehicle</label><select id="as-vehicle"><option value="">No vehicle</option></select></div><div class="fg"><label>Order / Task</label><select id="as-order"><option value="">No specific task</option></select></div><div class="fg" style="grid-column:1/-1"><label>Instructions</label><textarea id="as-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('assignShiftModal')">Cancel</button><button class="btn-save" onclick="assignShift()">Assign</button></div></div></div>
+<!-- Add Role -->
+<div class="modal-overlay" id="addRoleModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Create Role</div><button class="modal-x" onclick="closeModal('addRoleModal')">✕</button></div><div class="modal-body"><div class="fgrid c1" style="gap:12px"><div class="fg"><label>Role Name <span class="req">*</span></label><input type="text" id="role-name" placeholder="e.g. Senior Trucker"></div><div class="fg"><label>Access Level</label><select id="role-access"><option value="employee">Employee — Standard access</option><option value="supervisor">Supervisor — Can assign shifts, manage accounts</option><option value="manager">Manager — Full access</option></select></div><div class="fg"><label>Description</label><textarea id="role-desc" style="min-height:70px" placeholder="What does this role do?"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('addRoleModal')">Cancel</button><button class="btn-save" onclick="addRole()">Create Role</button></div></div></div>
+<!-- Reset Password (Admin) -->
+<div class="modal-overlay" id="resetPwModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Reset Password</div><button class="modal-x" onclick="closeModal('resetPwModal')">✕</button></div><div class="modal-body"><input type="hidden" id="rpIdx"><div class="fg"><label>New Password <span class="req">*</span></label><input type="password" id="rpNew" placeholder="Set new password for this account"></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('resetPwModal')">Cancel</button><button class="btn-save" onclick="doResetPw()">Set Password</button></div></div></div>
+<!-- Change Role Modal -->
+<div class="modal-overlay" id="changeRoleModal">
+  <div class="modal-box">
+    <div class="modal-head"><div class="modal-t">Change Role</div><button class="modal-x" onclick="closeModal('changeRoleModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="crIdx">
+      <div style="margin-bottom:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r)">
+        <div style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:4px">EMPLOYEE</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600" id="crName">—</div>
+        <div style="font-size:11px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px">Current role: <span id="crCurrent">—</span></div>
+      </div>
+      <div class="fg">
+        <label>Assign New Role <span class="req">*</span></label>
+        <select id="crRole"><option value="">Select role...</option></select>
+      </div>
+      <div class="fg" style="margin-top:10px">
+        <label>Reason (optional)</label>
+        <input type="text" id="crReason" placeholder="e.g. Promotion for performance">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-can" onclick="closeModal('changeRoleModal')">Cancel</button>
+      <button class="btn-save" onclick="confirmChangeRole()">Confirm Role Change</button>
+    </div>
+  </div>
+</div>
+<!-- Application Preview -->
+<div class="modal-overlay" id="applPrevModal"><div class="modal-box wide"><div class="modal-head"><div class="modal-t">Application Preview</div><button class="modal-x" onclick="closeModal('applPrevModal')">✕</button></div><div class="modal-body" id="applPrevBody"></div><div class="modal-foot" id="applPrevFoot"></div></div></div>
+<!-- Generic Preview -->
+<div class="modal-overlay" id="prevModal"><div class="modal-box wide"><div class="modal-head"><div class="modal-t" id="prevTitle">Preview</div><button class="modal-x" onclick="closeModal('prevModal')">✕</button></div><div class="modal-body" id="prevBody"></div></div></div>
+<!-- Maintenance Service Log Modal -->
+<div class="modal-overlay" id="maintServiceModal"><div class="modal-box wide"><div class="modal-head"><div class="modal-t">Log Maintenance Service</div><button class="modal-x" onclick="closeModal('maintServiceModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px">
+  <div class="fg"><label>Vehicle Plate <span class="req">*</span></label><select id="ms-plate"><option value="">Select vehicle</option></select></div>
+  <div class="fg"><label>Service Type <span class="req">*</span></label><select id="ms-type"><option value="">Select</option><option>Repair</option><option>Service / Maintenance</option><option>Wash</option><option>Inspection</option><option>Tyre Change</option><option>Other</option></select></div>
+  <div class="fg"><label>Performed By <span class="req">*</span></label><input type="text" id="ms-tech" placeholder="Technician / employee name"></div>
+  <div class="fg"><label>Cost (if applicable)</label><input type="text" id="ms-cost" placeholder="e.g. $500"></div>
+  <div class="fg"><label>Fuel Status <span class="req">*</span></label><select id="ms-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div>
+  <div class="fg"><label>Mileage / Odometer</label><input type="text" id="ms-mileage" placeholder="e.g. 142,300 mi"></div>
+  <div class="fg"><label>Parts Replaced</label><input type="text" id="ms-parts" placeholder="e.g. Front bumper, tyres"></div>
+  <div class="fg"><label>Status After <span class="req">*</span></label><select id="ms-status"><option value="">Select</option><option>Operational</option><option>Still Under Repair</option><option>Off Duty</option></select></div>
+  <div class="fg" style="grid-column:1/-1"><label>Work Description <span class="req">*</span></label><textarea id="ms-desc" style="min-height:80px" placeholder="Describe the work carried out..."></textarea></div>
+  <div class="fg" style="grid-column:1/-1"><label>Notes for Management</label><textarea id="ms-notes" style="min-height:55px" placeholder="Optional additional notes..."></textarea></div>
+</div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('maintServiceModal')">Cancel</button><button class="btn-save" onclick="submitMaintService()">Log Service</button></div></div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastIco" style="font-size:16px">✅</span><span id="toastMsg" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);letter-spacing:.5px">Done!</span></div>
+
+<script>
+// ════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════
+const accounts=[{username:'justin',password:'logistics',name:'Justin Driver',badge:'4721',role:'Manager',status:'verified',initials:'JD'}];
+const pendingResets=[];
+const applications=[];
+const deliveryLogs=[],fieldReports=[],incidentReports=[],clients=[],fleet=[],orders=[],shiftHistory=[],assignedShifts=[];
+const customRoles=[];
+const maintenanceServiceLogs=[];
+const roleLogs=[];
+const BUILTIN_ROLES=[
+  // ── Management ──
+  {name:'Manager',code:'',access:'manager',desc:'Full portal access. Approves hires, sets policy, and oversees all departments.',builtin:true},
+  {name:'Supervisor',code:'',access:'supervisor',desc:'Manages day-to-day operations. Assigns shifts, reviews logs, and supports employees.',builtin:true},
+
+  // ── Aurum Corporation ──
+  {name:'Human Resources Representative',code:'AC-HR1',access:'employee',desc:'Aurum Corporation — Specialist that deals with hiring personnel and supporting them throughout their employment.',builtin:true},
+  {name:'Marketing Specialist',code:'AC-MA1',access:'employee',desc:'Aurum Corporation — Arranges campaigns, designs posters, organises events and manages the public image of Aurum.',builtin:true},
+  {name:'Environmental Researcher',code:'AC-ER1',access:'employee',desc:'Aurum Corporation — Educated professional with a degree in geography or a relevant field. Keeps check on the environment Aurum Energy operates in, researches anomalies and reports issues.',builtin:true},
+  {name:'Scientist',code:'AC-SC1',access:'employee',desc:'Aurum Corporation — Educated professional with a degree in physics or chemistry. Researches energy technology in the broadest sense.',builtin:true},
+  {name:'Corporation Intern',code:'AC-I1',access:'employee',desc:'Aurum Corporation — Work experience position within the corporate office.',builtin:true},
+
+  // ── Aurum Energy — Operations ──
+  {name:'Field Operator',code:'AE-FO1',access:'employee',desc:'Aurum Energy — Technician responsible for maintaining energy infrastructure, from oil well to wind turbine. Part-time possible.',builtin:true},
+  {name:'Trucker',code:'AE-T1',access:'employee',desc:'Aurum Energy — Responsible for transporting equipment and fuel. Also supplies gas stations with commercial fuels.',builtin:true},
+  {name:'Foreman',code:'AE-FO2',access:'supervisor',desc:'Aurum Energy — Experienced technician that leads others in the field. Sets up work schedules, writes work manuals and liaises with other entities when needed.',builtin:true},
+  {name:'OFFSHORE — Entry Level Rig Worker',code:'AEO-W1',access:'employee',desc:'Aurum Energy Offshore — Starting position on an oil rig. Handles general rig operations and learns core offshore procedures.',builtin:true},
+  {name:'OFFSHORE — Senior Rig Worker',code:'AEO-W2',access:'employee',desc:'Aurum Energy Offshore — Experienced rig worker with advanced knowledge of offshore operations.',builtin:true},
+  {name:'OFFSHORE — Supervisor',code:'AEO-S1',access:'supervisor',desc:'Aurum Energy Offshore — Supervising position on the rig. Responsible for crew safety and operational standards.',builtin:true},
+  {name:'Energy Intern',code:'AE-I1',access:'employee',desc:'Aurum Energy — Work experience programme. Learn what Aurum Energy does across all operational departments.',builtin:true},
+];
+let currentUser=null,activeShift=null,totalBreakMs=0,breakStart=null;
+
+// ════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════
+const nowDate=()=>new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const nowTime=()=>new Date().toTimeString().slice(0,8);
+const V=id=>{const el=document.getElementById(id);return el?el.value.trim():'';}
+const fc=p=>p>50?'hi':p>25?'mid':'lo';
+const repL={none:'No Damage',slight:'Slight Damage',heavy:'Heavy Damage'};
+const repC={none:'green',slight:'orange',heavy:'red'};
+const typeC={'Tow Job':'blue','Vehicle Assist':'amber','Incident / Accident':'red','Mechanical Failure':'orange','Refinery Operation':'purple','Refinery Incident':'red','Road Obstruction':'orange'};
+const sevCol={'Minor':'var(--text-2)','Moderate':'var(--orange)','Severe':'var(--red)','Critical':'#ff1744'};
+const condCol={'Excellent':'var(--green)','Good':'var(--green)','Fair':'var(--orange)','Poor':'var(--orange)','Damaged':'var(--red)'};
+const fuelPctMap={'<25% — Critical':12,'25–50% — Low':37,'50–75% — Adequate':62,'>75% — Full':87};
+const mK=m=>(m||'').startsWith('Green')?'green':(m||'').startsWith('Orange')?'orange':'red';
+const mS=m=>(m||'').split(' — ')[0]||m||'—';
+const fS=f=>(f||'').split(' — ')[0]||f||'—';
+const fmtDur=ms=>{const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;};
+const fmtShort=ms=>{const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}h ${m}m`:`${m}m`;};
+const isAdmin=()=>currentUser&&['Manager','Supervisor'].includes(currentUser.role);
+function pRow(l,v){return`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px"><div style="font-size:9px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:2px;margin-bottom:3px">${l}</div><div style="font-size:13px;color:var(--text)">${v||'—'}</div></div>`;}
+function pGrid(...rows){return`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">${rows.join('')}</div>`;}
+function allRoles(){return[...BUILTIN_ROLES,...customRoles];}
+
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+function authTab(tab){
+  ['login','register','apply','recover'].forEach(t=>{
+    const el=document.getElementById('form'+t.charAt(0).toUpperCase()+t.slice(1));
+    if(el)el.style.display=t===tab?'block':'none';
+  });
+  // Only highlight tabs for login/register (apply is now a button under login)
+  const tabMap={'login':0,'register':1};
+  document.querySelectorAll('.atab').forEach((a,i)=>{
+    a.classList.toggle('on', tabMap[tab]===i || (tab==='recover'&&i===0));
+  });
+  ['lErr','rErr','rOk','recErr','recOk','apErr','apOk'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+}
+function doLogin(){
+  const u=document.getElementById('lUser').value.trim().toLowerCase();
+  const p=document.getElementById('lPass').value;
+  const acc=accounts.find(a=>a.username===u&&a.password===p&&a.status==='verified');
+  if(!acc){document.getElementById('lErr').style.display='block';return;}
+  document.getElementById('lErr').style.display='none';
+  document.getElementById('authWrap').style.display='none';
+  document.getElementById('app').classList.add('on');
+  currentUser=acc;
+  document.getElementById('sbAv').textContent=acc.initials;
+  document.getElementById('sbName').textContent=acc.name;
+  document.getElementById('sbRole').textContent=acc.role+' · #'+acc.badge;
+  document.getElementById('adminNav').style.display=isAdmin()?'block':'none';
+  updateChips();populateRoleSelects();refreshAll();
+  ['dl-badge','fr-badge','ir-badge','sf-badge'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=acc.badge;});
+  ['dl-name','fr-name','ir-name','sf-name'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=acc.name;});
+  ['dl-rank','fr-rank','ir-rank','sf-role'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.role;});
+}
+['lPass','lUser'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});});
+
+function doRegister(){
+  const name=V('rName'),user=V('rUser').toLowerCase(),pass=V('rPass'),badge=V('rBadge'),role=V('rRole');
+  const err=document.getElementById('rErr');
+  if(!name||!user||!pass||!badge||!role){err.textContent='⚠ Please fill in all fields.';err.style.display='block';return;}
+  if(accounts.find(a=>a.username===user)){err.textContent='⚠ Username already taken.';err.style.display='block';return;}
+  const initials=(name.split(' ').map(w=>w[0]).join('')).toUpperCase().slice(0,2);
+  accounts.push({username:user,password:pass,name,badge,role,status:'pending',initials});
+  err.style.display='none';document.getElementById('rOk').style.display='block';
+  ['rName','rUser','rPass','rBadge'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rRole').selectedIndex=0;
+  updateChips();
+}
+
+function doRecoverRequest(){
+  const user=V('recUser').toLowerCase();const badge=V('recBadge');
+  const acc=accounts.find(a=>a.username===user&&a.badge===badge);
+  const err=document.getElementById('recErr');const ok=document.getElementById('recOk');
+  if(!acc){err.style.display='block';ok.style.display='none';return;}
+  if(!pendingResets.find(r=>r.username===user))pendingResets.push({username:user,name:acc.name,badge,requestedAt:nowDate()});
+  err.style.display='none';ok.style.display='block';
+}
+
+function doLogout(){
+  currentUser=null;activeShift=null;totalBreakMs=0;
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('authWrap').style.display='flex';
+  document.getElementById('lUser').value='';document.getElementById('lPass').value='';
+  authTab('login');
+}
+
+function updateChips(){
+  const pending=accounts.filter(a=>a.status==='pending').length;
+  const ap=applications.filter(a=>a.status==='pending').length;
+  const c=document.getElementById('accChip');if(c){c.style.display=pending>0?'inline':'none';c.textContent=pending;}
+  const ac=document.getElementById('appChip');if(ac){ac.style.display=ap>0?'inline':'none';ac.textContent=ap;}
+}
+
+// ════════════════════════════════════════════
+// ROLES
+// ════════════════════════════════════════════
+function populateRoleSelects(){
+  const all=allRoles();
+  ['dl-rank','fr-rank','ir-rank','sf-role'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value;
+    el.innerHTML='<option value="">Select</option>'+all.map(r=>`<option value="${r.name}"${r.name===cur?' selected':''}>${r.name}${r.code?' ('+r.code+')':''}</option>`).join('');
+  });
+}
+function renderRoles(){
+  const w=document.getElementById('rolesWrap');if(!w)return;
+  const all=allRoles();
+  // Group by division for display
+  const mgmt=all.filter(r=>r.name==='Manager'||r.name==='Supervisor');
+  const corp=all.filter(r=>r.code&&r.code.startsWith('AC'));
+  const energy=all.filter(r=>r.code&&r.code.startsWith('AE'));
+  const custom=all.filter(r=>!r.builtin);
+  function sectionRows(rows){return rows.map((r,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.03}s both">
+    <td>
+      <div class="dn">${r.name}</div>
+      ${r.code?`<div class="dc" style="color:var(--amber)">${r.code}</div>`:''}
+    </td>
+    <td><span class="tag ${r.access==='manager'?'amber':r.access==='supervisor'?'purple':'blue'}">${r.access.charAt(0).toUpperCase()+r.access.slice(1)}</span></td>
+    <td style="font-size:12px;color:var(--text-2);max-width:260px;white-space:normal;line-height:1.5">${r.desc||'—'}</td>
+    <td><span class="tag ${r.builtin?'dim':'green'}">${r.builtin?'Built-in':'Custom'}</span></td>
+    <td>${!r.builtin?`<button class="btn-sm danger" onclick="deleteRole(${customRoles.indexOf(r)})">Delete</button>`:'<span style="font-size:11px;color:var(--text-3)">Protected</span>'}</td>
+  </tr>`).join('');}
+  function sectionHeader(label,color){return`<tr><td colspan="5" style="background:${color};padding:7px 13px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:#fff;text-transform:uppercase;font-weight:600">${label}</td></tr>`;}
+  w.innerHTML=`<table><thead><tr><th>Role / Code</th><th>Access Level</th><th>Description</th><th>Type</th><th>Actions</th></tr></thead><tbody>
+    ${sectionHeader('Management','rgba(232,160,32,.25)')}${sectionRows(mgmt)}
+    ${sectionHeader('Aurum Corporation','rgba(168,85,247,.2)')}${sectionRows(corp)}
+    ${sectionHeader('Aurum Energy — Operations','rgba(232,160,32,.18)')}${sectionRows(energy)}
+    ${custom.length?sectionHeader('Custom Roles','rgba(34,197,94,.15)')+sectionRows(custom):''}
+  </tbody></table>`;
+  // Update info page roles list
+  const ir=document.getElementById('infoRoles');
+  if(ir){
+    function infoSection(label,rows,color){
+      return`<div style="margin-bottom:14px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:${color};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">${label}</div>${rows.map(r=>`<div class="rank-row"><div><div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;color:${r.access==='manager'?'var(--amber)':r.access==='supervisor'?'#94a3b8':'var(--text-2)'}">${r.name}</div>${r.code?`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--amber);margin-top:1px">${r.code}</div>`:''}</div><div style="font-size:11px;color:var(--text-2);line-height:1.5">${r.desc||'—'}</div></div>`).join('')}</div>`;
+    }
+    ir.innerHTML=infoSection('Management','var(--amber)',mgmt)+infoSection('Aurum Corporation','var(--purple)',corp)+infoSection('Aurum Energy — Operations','var(--amber)',energy)+(custom.length?infoSection('Custom Roles','var(--green)',custom):'');
+  }
+}
+function addRole(){
+  if(!V('role-name')){toast('⚠️','Enter a role name.','var(--orange)');return;}
+  customRoles.push({name:V('role-name'),access:V('role-access')||'employee',desc:V('role-desc'),builtin:false});
+  logRoleEvent('Role Created',V('role-name'),'—',V('role-name'),currentUser?.name||'System');
+  document.getElementById('role-name').value='';document.getElementById('role-desc').value='';
+  closeModal('addRoleModal');renderRoles();populateRoleSelects();toast('✅','Role created!');
+}
+function deleteRole(i){
+  const name=customRoles[i]?.name||'—';
+  logRoleEvent('Role Deleted',name,name,'—',currentUser?.name||'System');
+  customRoles.splice(i,1);renderRoles();populateRoleSelects();toast('🗑','Role deleted.','var(--text-3)');
+}
+
+// ════════════════════════════════════════════
+// PAGE ROUTER
+// ════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('on');
+  document.querySelectorAll('.si').forEach(n=>n.classList.toggle('on',n.dataset.page===id));
+  if(id==='map')setTimeout(initMap,100);
+  if(id==='delivery-logs'||id==='delivery-form')populateVehicleSelect();
+  if(id==='stats')renderCompanyOverview();
+  if(id==='leaderboard')renderLeaderboard();
+  if(id==='my-stats')renderMyStats();
+  if(id==='my-shifts')renderMyShifts();
+  if(id==='shift'){populateShiftVehicle();renderShiftHistory(shiftHistory);checkAssignedShift();}
+  if(id==='admin-accounts'){renderAccounts();}
+  if(id==='admin-applications'){renderApplications();}
+  if(id==='admin-shifts'){populateAssignForm();renderAssignedShifts();}
+  if(id==='admin-roles')renderRoles();
+  if(id==='admin-role-logs')renderRoleLogs();
+  if(id==='maintenance'){renderMaintDamage();renderMaintService();populateMaintVehicleSelect();}
+  if(id==='orders'){populateOrderDriverSelect();renderOrders(orders);}
+  if(id==='information')renderRoles();
+}
+document.querySelectorAll('.si[data-page]').forEach(n=>n.addEventListener('click',()=>showPage(n.dataset.page)));
+document.querySelectorAll('.ftabs').forEach(tabs=>tabs.querySelectorAll('.ftab').forEach(tab=>tab.addEventListener('click',()=>{tabs.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));tab.classList.add('on');})));
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='maintServiceModal'){
+    populateMaintVehicleSelect();
+    const techEl=document.getElementById('ms-tech');
+    if(techEl&&currentUser&&!techEl.value)techEl.value=currentUser.name;
+  }
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+function toast(ico,msg,color='var(--green)'){
+  const t=document.getElementById('toast');
+  document.getElementById('toastIco').textContent=ico;
+  document.getElementById('toastMsg').textContent=msg;
+  document.getElementById('toastMsg').style.color=color;
+  t.style.borderColor=color;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ════════════════════════════════════════════
+// FORM PREVIEW
+// ════════════════════════════════════════════
+function previewFormData(type){
+  let title='',body='';
+  if(type==='delivery'){
+    title='Delivery Log Preview';
+    const rM={'No Damage':'none','Slight Damage':'slight','Heavy Damage':'heavy'};
+    const rep=rM[V('dl-repair')]||'none';
+    body=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('dl-name')||'—'}</div>
+      <div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('dl-badge')} · ${V('dl-rank')} · ${nowDate()} at ${nowTime()}</div>
+    </div>
+    ${pGrid(pRow('VEHICLE','🚛 '+(V('dl-vehicle')||'—')),pRow('USAGE',V('dl-usage')),pRow('FUEL LEVEL',V('dl-fuel')),pRow('DASHCAM',V('dl-dashcam')==='Yes'?'✓ Installed':'Not specified'),pRow('DAMAGE',repL[rep]||'—'),pRow('MAINTENANCE',(V('dl-maint')||'—').toUpperCase()))}
+    ${V('dl-notes')?pRow('GENERAL NOTES',V('dl-notes')):''}
+    ${V('dl-fleet-notes')?`<div style="margin-top:8px">`+pRow('OPERATIONS NOTES',V('dl-fleet-notes'))+`</div>`:''}`;
+  } else if(type==='field'){
+    title='Field Report Preview';
+    body=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('fr-name')||'—'}</div>
+      <div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('fr-badge')} · ${nowDate()} at ${nowTime()}</div>
+    </div>
+    ${pGrid(pRow('TYPE',V('fr-type')),pRow('LOCATION',V('fr-location')),pRow('VEHICLE',V('fr-vehicle')),pRow('OUTCOME',V('fr-outcome')),pRow('OTHER PARTIES',V('fr-parties')||'None'),pRow('DAMAGE',V('fr-damage')||'—'))}
+    ${V('fr-desc')?pRow('DESCRIPTION',V('fr-desc')):''}`;
+  } else if(type==='incident'){
+    title='Incident Report Preview';
+    body=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between">
+      <div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('ir-name')||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('ir-badge')} · ${V('ir-rank')}</div></div>
+      <span style="font-size:11px;font-weight:700;color:${sevCol[V('ir-severity')]||'var(--text-2)'};border:1px solid currentColor;border-radius:5px;padding:2px 8px">${V('ir-severity')||'—'}</span>
+    </div>
+    ${pGrid(pRow('TYPE',V('ir-type')),pRow('LOCATION',V('ir-location')),pRow('VEHICLE',V('ir-vehicle')),pRow('EMERGENCY SVC',V('ir-police')||'—'),pRow('OTHER PARTIES',V('ir-parties')||'None'),pRow('DAMAGE',V('ir-damage')||'—'))}
+    ${V('ir-desc')?pRow('DESCRIPTION',V('ir-desc')):''}`;
+  }
+  document.getElementById('prevTitle').textContent=title;
+  document.getElementById('prevBody').innerHTML=body;
+  openModal('prevModal');
+}
+
+// ════════════════════════════════════════════
+// DELIVERY LOGS
+// ════════════════════════════════════════════
+function populateVehicleSelect(){
+  const sel=document.getElementById('dl-vehicle');if(!sel)return;
+  const cur=sel.value;sel.innerHTML='<option value="">Select vehicle</option>';
+  if(!fleet.length){sel.innerHTML+='<option value="" disabled>— No fleet vehicles registered —</option>';return;}
+  fleet.forEach(f=>sel.innerHTML+=`<option value="${f.plate}"${f.plate===cur?' selected':''}>${f.plate} — ${f.type} (${f.category})</option>`);
+}
+function renderDL(data){
+  const w=document.getElementById('dlWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📋</div><div class="empty-t">No Delivery Logs</div><div class="empty-s">Submitted logs appear here.</div><button class="empty-btn" onclick="showPage('delivery-form')">+ New Log</button></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Time</th><th>Badge</th><th>Driver</th><th>Vehicle</th><th>Fuel</th><th>Cam</th><th>Damage</th><th>Maint.</th><th></th></tr></thead><tbody>${data.map((r,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewDL(${deliveryLogs.indexOf(r)})" title="Click to view">
+    <td><span class="mono" style="display:block;color:var(--text)">${r.date}</span><span class="mono" style="font-size:10px;color:var(--text-3)">${r.time}</span></td>
+    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
+    <td><div class="dn">${r.name}</div><div class="dc">${r.rank}</div></td>
+    <td><span class="veh">🚛 ${r.vehicle}</span></td>
+    <td><div class="fbar-w"><div class="fbar"><div class="fbar-f ${fc(r.fp)}" style="width:${r.fp}%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">${r.fuel}</span></div></td>
+    <td><span class="dot ${r.cam?'on':'off'}"></span></td>
+    <td><span class="tag ${repC[r.rep]}">${repL[r.rep]}</span></td>
+    <td><span class="tag ${r.maint}">${r.maint.charAt(0).toUpperCase()+r.maint.slice(1)}</span></td>
+    <td><button class="btn-sm" onclick="event.stopPropagation();viewDL(${deliveryLogs.indexOf(r)})">View</button></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function updateDLStats(){
+  const now=new Date(),mon=now.getMonth(),wa=new Date(now-7*24*60*60*1000);
+  document.getElementById('dlST').textContent=deliveryLogs.length;
+  document.getElementById('dlSM').textContent=deliveryLogs.filter(r=>new Date(r.date).getMonth()===mon).length;
+  document.getElementById('dlSD').textContent=deliveryLogs.filter(r=>r.rep!=='none').length;
+  document.getElementById('dlSF').textContent=fleet.filter(f=>f.status==='Operational').length;
+  document.getElementById('dlWC').textContent=deliveryLogs.filter(r=>new Date(r.date)>=wa).length;
+  document.getElementById('dlMC').textContent=deliveryLogs.filter(r=>new Date(r.date).getMonth()===mon).length;
+}
+function submitDelivery(){
+  if(!V('dl-badge')||!V('dl-name')||!V('dl-rank')||!V('dl-vehicle')||!V('dl-usage')||!V('dl-fuel')||!V('dl-dashcam')||!V('dl-repair')||!V('dl-maint')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  const rM={'No Damage':'none','Slight Damage':'slight','Heavy Damage':'heavy'};
+  const fP={'<25%':15,'25–50%':38,'50–75%':62,'>75%':82};
+  deliveryLogs.unshift({date:nowDate(),time:nowTime(),badge:V('dl-badge'),name:V('dl-name'),rank:V('dl-rank'),vehicle:V('dl-vehicle'),usage:V('dl-usage'),fuel:V('dl-fuel'),fp:fP[V('dl-fuel')]||62,cam:V('dl-dashcam')==='Yes',rep:rM[V('dl-repair')]||'none',maint:V('dl-maint').toLowerCase(),notes:V('dl-notes'),fleetNotes:V('dl-fleet-notes')});
+  ['dl-total','dl-notes','dl-fleet-notes'].forEach(id=>document.getElementById(id).value='');
+  ['dl-usage','dl-fuel','dl-dashcam','dl-repair','dl-maint'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  if(activeShift){activeShift.deliveries++;document.getElementById('shDelC').textContent=activeShift.deliveries;}
+  updateDLStats();renderDL(deliveryLogs);toast('✅','Delivery log submitted!');showPage('delivery-logs');
+}
+document.getElementById('dlSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderDL(deliveryLogs.filter(r=>r.name.toLowerCase().includes(q)||r.badge.includes(q)||r.vehicle.toLowerCase().includes(q)));});
+function viewDL(idx){
+  const r=deliveryLogs[idx];if(!r)return;
+  document.getElementById('prevTitle').textContent='Delivery Log';
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.rank} · ${r.date} at ${r.time}</div></div>${pGrid(pRow('VEHICLE','🚛 '+r.vehicle),pRow('USAGE',r.usage),pRow('FUEL',r.fuel),pRow('DASHCAM',r.cam?'✓ Installed':'✕ Not Installed'),pRow('DAMAGE',repL[r.rep]),pRow('MAINTENANCE',r.maint.toUpperCase()))}${r.notes&&r.notes!=='N/A'?pRow('NOTES',r.notes):''}${r.fleetNotes&&r.fleetNotes!=='N/A'?`<div style="margin-top:8px">`+pRow('OPERATIONS NOTES',r.fleetNotes)+`</div>`:''}`;
+  openModal('prevModal');
+}
+
+// ════════════════════════════════════════════
+// FIELD REPORTS
+// ════════════════════════════════════════════
+function renderFR(data){
+  const w=document.getElementById('frWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🛑</div><div class="empty-t">No Field Reports</div><div class="empty-s">Submitted reports appear here.</div><button class="empty-btn" onclick="showPage('field-report-form')">+ New Report</button></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Time</th><th>Badge</th><th>Name</th><th>Type</th><th>Location</th><th>Vehicle</th><th>Outcome</th><th></th></tr></thead><tbody>${data.map((r,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewFR(${fieldReports.indexOf(r)})" title="Click to view">
+    <td><span class="mono" style="display:block;color:var(--text)">${r.date}</span><span class="mono" style="font-size:10px;color:var(--text-3)">${r.time}</span></td>
+    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
+    <td><div class="dn">${r.name}</div></td>
+    <td><span class="tag ${typeC[r.type]||'dim'}">${r.type}</span></td>
+    <td style="font-size:12px;color:var(--text-2)">${r.location}</td>
+    <td><span class="veh">🚛 ${r.vehicle}</span></td>
+    <td style="font-size:11px;color:var(--text-2);max-width:130px;overflow:hidden;text-overflow:ellipsis">${r.outcome}</td>
+    <td><button class="btn-sm" onclick="event.stopPropagation();viewFR(${fieldReports.indexOf(r)})">View</button></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function updateFRStats(){
+  document.getElementById('frST').textContent=fieldReports.length;
+  document.getElementById('frSTow').textContent=fieldReports.filter(r=>r.type==='Refinery Operation'||r.type==='Refinery Incident').length;
+  document.getElementById('frSInc').textContent=fieldReports.filter(r=>r.type==='Incident / Accident').length;
+  document.getElementById('frSAss').textContent=fieldReports.filter(r=>r.type==='Mechanical Failure').length;
+}
+function submitFieldReport(){
+  if(!V('fr-badge')||!V('fr-name')||!V('fr-type')||!V('fr-location')||!V('fr-vehicle')||!V('fr-outcome')||!V('fr-desc')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  fieldReports.unshift({date:nowDate(),time:nowTime(),badge:V('fr-badge'),name:V('fr-name'),rank:V('fr-rank'),type:V('fr-type'),location:V('fr-location'),vehicle:V('fr-vehicle'),outcome:V('fr-outcome'),parties:V('fr-parties'),fullDesc:V('fr-desc'),notes:V('fr-notes')});
+  ['fr-location','fr-vehicle','fr-parties','fr-desc','fr-notes'].forEach(id=>document.getElementById(id).value='');
+  ['fr-type','fr-outcome','fr-damage'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  if(activeShift){activeShift.fieldReports++;document.getElementById('shFRC').textContent=activeShift.fieldReports;}
+  updateFRStats();renderFR(fieldReports);toast('✅','Field report submitted!');showPage('field-reports');
+}
+document.getElementById('frSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderFR(fieldReports.filter(r=>r.name.toLowerCase().includes(q)||r.type.toLowerCase().includes(q)||r.location.toLowerCase().includes(q)));});
+function viewFR(idx){
+  const r=fieldReports[idx];if(!r)return;
+  document.getElementById('prevTitle').textContent='Field Report';
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.date} at ${r.time}</div></div>${pGrid(pRow('TYPE',r.type),pRow('LOCATION',r.location),pRow('VEHICLE',r.vehicle),pRow('OUTCOME',r.outcome),pRow('OTHER PARTIES',r.parties||'None'),'')}${pRow('DESCRIPTION',r.fullDesc)}${r.notes?`<div style="margin-top:8px">`+pRow('NOTES',r.notes)+`</div>`:''}`;
+  openModal('prevModal');
+}
+
+// ════════════════════════════════════════════
+// INCIDENT REPORTS
+// ════════════════════════════════════════════
+function renderIR(data){
+  const w=document.getElementById('irWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🚨</div><div class="empty-t">No Incident Reports</div><div class="empty-s">Filed reports appear here.</div><button class="empty-btn" onclick="showPage('incident-form')">+ New Incident</button></div>`;return;}
+  const stC={'Open — Under Review':'orange','Resolved':'green','Escalated':'red'};
+  w.innerHTML=`<table><thead><tr><th>Time</th><th>Badge</th><th>Reporter</th><th>Type</th><th>Severity</th><th>Location</th><th>Status</th><th></th></tr></thead><tbody>${data.map((r,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewIR(${incidentReports.indexOf(r)})" title="Click to view">
+    <td><span class="mono" style="display:block;color:var(--text)">${r.date}</span><span class="mono" style="font-size:10px;color:var(--text-3)">${r.time}</span></td>
+    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
+    <td><div class="dn">${r.name}</div></td>
+    <td><span class="tag red" style="font-size:10px">${r.type}</span></td>
+    <td><span style="font-size:11px;font-weight:700;color:${sevCol[r.severity]||'var(--text-2)'}">${r.severity}</span></td>
+    <td style="font-size:12px;color:var(--text-2)">${r.location}</td>
+    <td><span class="tag ${stC[r.status]||'orange'}" style="font-size:10px">${r.status}</span></td>
+    <td><button class="btn-sm" onclick="event.stopPropagation();viewIR(${incidentReports.indexOf(r)})">View</button></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function updateIRStats(){
+  document.getElementById('irST').textContent=incidentReports.length;
+  document.getElementById('irSO').textContent=incidentReports.filter(r=>r.status==='Open — Under Review').length;
+  document.getElementById('irSR').textContent=incidentReports.filter(r=>r.status==='Resolved').length;
+  document.getElementById('irSP').textContent=incidentReports.filter(r=>r.police&&r.police!=='No'&&r.police!=='').length;
+}
+function submitIR(){
+  if(!V('ir-badge')||!V('ir-name')||!V('ir-rank')||!V('ir-type')||!V('ir-severity')||!V('ir-location')||!V('ir-vehicle')||!V('ir-desc')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  incidentReports.unshift({date:nowDate(),time:nowTime(),badge:V('ir-badge'),name:V('ir-name'),rank:V('ir-rank'),type:V('ir-type'),severity:V('ir-severity'),location:V('ir-location'),vehicle:V('ir-vehicle'),police:V('ir-police'),parties:V('ir-parties'),damage:V('ir-damage'),status:V('ir-status')||'Open — Under Review',fullDesc:V('ir-desc'),notes:V('ir-notes')});
+  ['ir-location','ir-vehicle','ir-parties','ir-desc','ir-notes'].forEach(id=>document.getElementById(id).value='');
+  ['ir-type','ir-severity','ir-police','ir-damage','ir-status'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  updateIRStats();renderIR(incidentReports);toast('🚨','Incident report filed!','var(--red)');showPage('incident-reports');
+}
+document.getElementById('irSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderIR(incidentReports.filter(r=>r.name.toLowerCase().includes(q)||r.type.toLowerCase().includes(q)||r.location.toLowerCase().includes(q)));});
+function viewIR(idx){
+  const r=incidentReports[idx];if(!r)return;
+  document.getElementById('prevTitle').textContent='Incident Report';
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between"><div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.rank} · ${r.date} at ${r.time}</div></div><span style="font-size:11px;font-weight:700;color:${sevCol[r.severity]};border:1px solid currentColor;border-radius:5px;padding:2px 8px;white-space:nowrap">${r.severity}</span></div>${pGrid(pRow('TYPE',r.type),pRow('LOCATION',r.location),pRow('VEHICLE',r.vehicle),pRow('EMERGENCY SVC',r.police||'None'),pRow('OTHER PARTIES',r.parties||'None'),pRow('DAMAGE',r.damage||'N/A'))}${pRow('DESCRIPTION',r.fullDesc)}${r.notes?`<div style="margin-top:8px">`+pRow('NOTES',r.notes)+`</div>`:''}`;
+  openModal('prevModal');
+}
+
+// ════════════════════════════════════════════
+// SHIFT
+// ════════════════════════════════════════════
+setInterval(()=>{
+  const now=new Date();
+  const ce=document.getElementById('shClock');
+  if(ce)ce.textContent=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  if(activeShift&&!activeShift.onBreak){const de=document.getElementById('shDur');if(de)de.textContent=fmtDur(Date.now()-activeShift.startMs-totalBreakMs);}
+},1000);
+function populateShiftVehicle(){
+  const sel=document.getElementById('sf-vehicle');if(!sel)return;
+  sel.innerHTML='<option value="">None assigned</option>';
+  fleet.forEach(f=>sel.innerHTML+=`<option value="${f.plate}">${f.plate} — ${f.type}</option>`);
+}
+function checkAssignedShift(){
+  if(!currentUser)return;
+  const s=assignedShifts.find(a=>a.employeeName===currentUser.name&&a.status==='assigned');
+  const banner=document.getElementById('assignedBanner');
+  if(s&&banner){
+    banner.style.display='block';
+    document.getElementById('assignedInfo').textContent=`${s.date} · ${s.startTime} — ${s.endTime}${s.vehicle?' · 🚛 '+s.vehicle:''}`;
+    document.getElementById('assignedTask').textContent=s.orderTitle?`Task: ${s.orderTitle}`:(s.notes||'No specific task');
+  } else if(banner)banner.style.display='none';
+}
+function showStartForm(){
+  document.getElementById('shStartForm').style.display='block';
+  if(currentUser){
+    const sf=document.getElementById('sf-name');if(sf&&!sf.value)sf.value=currentUser.name;
+    const sb=document.getElementById('sf-badge');if(sb&&!sb.value)sb.value=currentUser.badge;
+    const sr=document.getElementById('sf-role');if(sr)sr.value=currentUser.role;
+    const s=assignedShifts.find(a=>a.employeeName===currentUser.name&&a.status==='assigned');
+    if(s&&s.vehicle){const sv=document.getElementById('sf-vehicle');if(sv)sv.value=s.vehicle;}
+  }
+}
+function confirmShiftStart(){
+  if(!V('sf-name')||!V('sf-badge')||!V('sf-role')){toast('⚠️','Fill in name, badge and role.','var(--orange)');return;}
+  const assigned=assignedShifts.find(s=>s.employeeName===V('sf-name')&&s.status==='assigned');
+  activeShift={name:V('sf-name'),badge:V('sf-badge'),role:V('sf-role'),vehicle:V('sf-vehicle'),startMs:Date.now(),deliveries:0,fieldReports:0,onBreak:false,assignedShift:assigned||null};
+  totalBreakMs=0;if(assigned)assigned.status='in-progress';
+  document.getElementById('shStartForm').style.display='none';
+  document.getElementById('shInactive').style.display='none';
+  document.getElementById('shActive').style.display='block';
+  document.getElementById('shActName').textContent=activeShift.name+' ('+activeShift.role+')';
+  document.getElementById('shActBadge').textContent=activeShift.badge;
+  document.getElementById('shActStart').textContent=nowTime();
+  document.getElementById('shDelC').textContent='0';
+  document.getElementById('shFRC').textContent='0';
+  document.getElementById('shBrkT').textContent='0m';
+  document.getElementById('shTotC').textContent=shiftHistory.length;
+  if(assigned&&assigned.orderTitle){document.getElementById('shTaskMeta').style.display='block';document.getElementById('shTaskLbl').textContent=assigned.orderTitle;}
+  toast('▶','Shift started!','var(--green)');
+}
+function toggleBreak(){
+  if(!activeShift)return;
+  if(!activeShift.onBreak){
+    activeShift.onBreak=true;breakStart=Date.now();
+    document.getElementById('shBrkBtn').textContent='▶ Resume';
+    document.getElementById('shStatusTag').className='tag orange';document.getElementById('shStatusTag').textContent='On Break';
+    document.getElementById('shDur').style.color='var(--orange)';toast('⏸','Break started.','var(--orange)');
+  } else {
+    const bms=Date.now()-breakStart;totalBreakMs+=bms;activeShift.onBreak=false;activeShift.breakMs=(activeShift.breakMs||0)+bms;
+    document.getElementById('shBrkBtn').textContent='⏸ Break';
+    document.getElementById('shStatusTag').className='tag green';document.getElementById('shStatusTag').textContent='On Duty';
+    document.getElementById('shDur').style.color='var(--amber)';
+    document.getElementById('shBrkT').textContent=fmtShort(totalBreakMs);toast('▶','Break ended.','var(--green)');
+  }
+}
+function endShift(){
+  if(!activeShift)return;
+  if(activeShift.onBreak)toggleBreak();
+  const dur=Date.now()-activeShift.startMs-totalBreakMs;
+  const entry={name:activeShift.name,badge:activeShift.badge,role:activeShift.role,vehicle:activeShift.vehicle||'—',date:nowDate(),startTime:document.getElementById('shActStart').textContent,endTime:nowTime(),durationMs:dur,duration:fmtDur(dur),durationShort:fmtShort(dur),deliveries:activeShift.deliveries,fieldReports:activeShift.fieldReports,breakMs:totalBreakMs,breakShort:fmtShort(totalBreakMs),status:'Completed'};
+  shiftHistory.unshift(entry);
+  if(activeShift.assignedShift)activeShift.assignedShift.status='completed';
+  activeShift=null;totalBreakMs=0;
+  document.getElementById('shActive').style.display='none';
+  document.getElementById('shInactive').style.display='block';
+  document.getElementById('shTaskMeta').style.display='none';
+  document.getElementById('shDur').textContent='00:00:00';
+  document.getElementById('shDur').style.color='var(--amber)';
+  document.getElementById('shTotC').textContent=shiftHistory.length;
+  renderShiftHistory(shiftHistory);renderAssignedShifts();renderMyShifts();
+  toast('⏹',`Shift ended — ${entry.durationShort}`,'var(--amber)');
+}
+function renderShiftHistory(data){
+  const w=document.getElementById('shHistWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML=`<div class="empty" style="padding:28px"><div class="empty-ico" style="font-size:30px">📂</div><div class="empty-t" style="font-size:13px">No Shifts Yet</div></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Name</th><th>Badge</th><th>Vehicle</th><th>Start</th><th>End</th><th>Duration</th><th>Break</th><th>Deliveries</th><th>Reports</th></tr></thead><tbody>${data.map((s,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewShift(${shiftHistory.indexOf(s)})" title="Click to view">
+    <td class="mono" style="font-size:12px">${s.date}</td>
+    <td><div class="dn">${s.name}</div><div class="dc">${s.role}</div></td>
+    <td><span class="mono" style="color:var(--amber)">${s.badge}</span></td>
+    <td>${s.vehicle!=='—'?`<span class="veh">🚛 ${s.vehicle}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.startTime}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.endTime}</td>
+    <td><span class="mono" style="color:var(--amber);font-weight:600">${s.duration}</span></td>
+    <td class="mono" style="font-size:11px;color:var(--orange)">${s.breakShort}</td>
+    <td style="font-size:13px;font-weight:600;color:var(--amber)">${s.deliveries}</td>
+    <td style="font-size:13px;font-weight:600;color:var(--blue)">${s.fieldReports||0}</td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function viewShift(i){
+  const s=shiftHistory[i];if(!s)return;
+  document.getElementById('prevTitle').textContent='Shift — '+s.name;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${s.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${s.badge} · ${s.role}</div></div>${pGrid(pRow('DATE',s.date),pRow('VEHICLE',s.vehicle!=='—'?'🚛 '+s.vehicle:'—'),pRow('START TIME',s.startTime),pRow('END TIME',s.endTime),pRow('DURATION',s.duration),pRow('BREAK TIME',s.breakShort),pRow('DELIVERIES',String(s.deliveries)),pRow('FIELD REPORTS',String(s.fieldReports||0)))}`;
+  openModal('prevModal');
+}
+
+// ════════════════════════════════════════════
+// MY SHIFTS
+// ════════════════════════════════════════════
+function renderMyShifts(){
+  if(!currentUser)return;
+  const aw=document.getElementById('myAssignedWrap');
+  const myA=assignedShifts.filter(s=>s.employeeName===currentUser.name);
+  if(!myA.length){aw.innerHTML=`<div class="empty" style="padding:24px"><div class="empty-ico" style="font-size:28px">📅</div><div class="empty-t" style="font-size:13px">No Assigned Shifts</div><div class="empty-s">Your supervisor will assign shifts here.</div></div>`;}
+  else{aw.innerHTML=`<table><thead><tr><th>Date</th><th>Start</th><th>End</th><th>Vehicle</th><th>Task</th><th>Instructions</th><th>Status</th></tr></thead><tbody>${myA.map((s,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both">
+    <td class="mono" style="font-size:12px">${s.date}</td>
+    <td class="mono" style="font-size:11px;color:var(--amber)">${s.startTime}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.endTime}</td>
+    <td>${s.vehicle?`<span class="veh">🚛 ${s.vehicle}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}</td>
+    <td style="font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${s.orderTitle||'—'}</td>
+    <td style="font-size:11px;color:var(--text-2);max-width:160px;overflow:hidden;text-overflow:ellipsis">${s.notes||'—'}</td>
+    <td><span class="tag ${s.status==='completed'?'green':s.status==='in-progress'?'amber':'blue'}">${s.status==='assigned'?'Upcoming':s.status==='in-progress'?'Active':'Completed'}</span></td>
+  </tr>`).join('')}</tbody></table>`;}
+  const hw=document.getElementById('myHistWrap');
+  const myH=shiftHistory.filter(s=>s.badge===currentUser.badge||s.name===currentUser.name);
+  if(!myH.length){hw.innerHTML=`<div class="empty" style="padding:24px"><div class="empty-ico" style="font-size:28px">📂</div><div class="empty-t" style="font-size:13px">No Past Shifts</div><div class="empty-s">Your completed shifts appear here.</div></div>`;}
+  else{hw.innerHTML=`<table><thead><tr><th>Date</th><th>Vehicle</th><th>Start</th><th>End</th><th>Duration</th><th>Break</th><th>Deliveries</th><th>Reports</th></tr></thead><tbody>${myH.map((s,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both">
+    <td class="mono" style="font-size:12px">${s.date}</td>
+    <td>${s.vehicle!=='—'?`<span class="veh">🚛 ${s.vehicle}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.startTime}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.endTime}</td>
+    <td><span class="mono" style="color:var(--amber);font-weight:600">${s.duration}</span></td>
+    <td class="mono" style="font-size:11px;color:var(--orange)">${s.breakShort}</td>
+    <td style="font-size:13px;font-weight:600;color:var(--amber)">${s.deliveries}</td>
+    <td style="font-size:13px;font-weight:600;color:var(--blue)">${s.fieldReports||0}</td>
+  </tr>`).join('')}</tbody></table>`;}
+}
+
+// ════════════════════════════════════════════
+// MY STATS
+// ════════════════════════════════════════════
+function renderMyStats(){
+  if(!currentUser)return;
+  document.getElementById('msAv').textContent=currentUser.initials;
+  document.getElementById('msName').textContent=currentUser.name;
+  document.getElementById('msRole').textContent=currentUser.role;
+  document.getElementById('msBadge').textContent='Badge #'+currentUser.badge;
+  const myDL=deliveryLogs.filter(r=>r.badge===currentUser.badge||r.name===currentUser.name);
+  const myFR=fieldReports.filter(r=>r.badge===currentUser.badge||r.name===currentUser.name);
+  const myIR=incidentReports.filter(r=>r.badge===currentUser.badge||r.name===currentUser.name);
+  const myS=shiftHistory.filter(s=>s.badge===currentUser.badge||s.name===currentUser.name);
+  const myMaint=maintenanceServiceLogs.filter(s=>
+    s.techUser===currentUser.name ||
+    s.tech===currentUser.name ||
+    s.tech===currentUser.badge
+  );
+  const totalMs=myS.reduce((a,s)=>a+s.durationMs,0);
+  document.getElementById('msD').textContent=myDL.length;
+  document.getElementById('msS').textContent=myS.length;
+  document.getElementById('msH').textContent=fmtShort(totalMs)||'0m';
+  document.getElementById('msR').textContent=myFR.length+myIR.length;
+  document.getElementById('msMaint').textContent=myMaint.length;
+  const recent=[
+    ...myDL.map(r=>({ts:r.date+' '+r.time,type:'📦 Delivery Log',detail:`Vehicle: ${r.vehicle} · ${repL[r.rep]}`})),
+    ...myFR.map(r=>({ts:r.date+' '+r.time,type:'🛑 Field Report',detail:`${r.type} · ${r.location}`})),
+    ...myIR.map(r=>({ts:r.date+' '+r.time,type:'🚨 Incident',detail:`${r.type} · ${r.severity}`})),
+    ...myS.map(s=>({ts:s.date+' '+s.startTime,type:'⏱️ Shift',detail:`${s.durationShort} · ${s.deliveries} deliveries`})),
+    ...myMaint.map(s=>({ts:s.date+' '+s.time,type:'🔧 Maintenance',detail:`${s.type} · ${s.plate} · ${s.statusAfter}`}))
+  ].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,10);
+  const aw=document.getElementById('msActivity');
+  if(!recent.length){aw.innerHTML=`<div style="font-size:12px;color:var(--text-3);text-align:center;padding:20px">No activity yet. Start a shift and submit logs.</div>`;return;}
+  aw.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">${recent.map(a=>`<div style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px"><span style="font-size:14px">${a.type.split(' ')[0]}</span><div><div style="font-size:12px;font-weight:500">${a.type.replace(/^[^ ]+ /,'')}</div><div style="font-size:11px;color:var(--text-3)">${a.detail}</div></div><div class="mono" style="margin-left:auto;font-size:10px;color:var(--text-3)">${a.ts}</div></div>`).join('')}</div>`;
+}
+
+// ════════════════════════════════════════════
+// COMPANY OVERVIEW & LEADERBOARD
+// ════════════════════════════════════════════
+function renderCompanyOverview(){
+  document.getElementById('ovDL').textContent=deliveryLogs.length;
+  document.getElementById('ovFR').textContent=fieldReports.length;
+  document.getElementById('ovIR').textContent=incidentReports.length;
+  document.getElementById('ovSH').textContent=shiftHistory.length;
+  const verified=accounts.filter(a=>a.status==='verified');
+  const ee=document.getElementById('ovEmp');if(ee)ee.innerHTML=verified.length?verified.map(a=>`<div class="lb-row"><div style="width:28px;height:28px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#000">${a.initials}</div><div style="flex:1;margin-left:2px"><div style="font-size:13px;font-weight:500">${a.name}</div><div style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace">${a.role}</div></div><span class="tag ${['Manager','Supervisor'].includes(a.role)?'amber':'blue'}">${a.role}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No employees</div>`;
+  const fe=document.getElementById('ovFleet');if(fe)fe.innerHTML=fleet.length?fleet.slice(0,5).map(f=>`<div class="lb-row"><span class="veh" style="font-size:10px">🚛 ${f.plate}</span><span style="font-size:11px;color:var(--text-2);flex:1;margin-left:8px">${f.type}</span><span class="tag ${f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim'}" style="font-size:10px">${f.status}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No vehicles</div>`;
+  const oe=document.getElementById('ovOrders');if(oe){const ao=orders.filter(o=>o.status!=='Completed');oe.innerHTML=ao.length?ao.slice(0,5).map(o=>`<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis">${o.title}</div><div style="font-size:10px;color:var(--text-3)">${o.client}</div></div><span class="tag ${o.status==='In Transit'?'blue':'orange'}" style="font-size:10px">${o.status}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No active orders</div>`;}
+  const wa=new Date(Date.now()-7*24*60*60*1000);const ws=shiftHistory.filter(s=>new Date(s.date)>=wa);
+  const we=document.getElementById('ovWeek');if(we)we.innerHTML=ws.length?ws.slice(0,5).map(s=>`<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500">${s.name}</div><div style="font-size:10px;color:var(--text-3)">${s.date}</div></div><span class="mono" style="font-size:11px;color:var(--amber)">${s.durationShort}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No shifts this week</div>`;
+}
+function renderLeaderboard(){
+  const dlM={},hrM={},rpM={},shM={};
+  deliveryLogs.forEach(r=>{dlM[r.name]=(dlM[r.name]||0)+1;});
+  fieldReports.forEach(r=>{rpM[r.name]=(rpM[r.name]||0)+1;});
+  incidentReports.forEach(r=>{rpM[r.name]=(rpM[r.name]||0)+1;});
+  shiftHistory.forEach(s=>{shM[s.name]=(shM[s.name]||0)+1;hrM[s.name]=(hrM[s.name]||0)+s.durationMs;});
+  function buildLB(map,unit,id){
+    const sorted=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const max=sorted[0]?sorted[0][1]:1;const rc=['g','s','b','',''];
+    const el=document.getElementById(id);if(!el)return;
+    if(!sorted.length){el.innerHTML=`<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No data yet</div>`;return;}
+    el.innerHTML=sorted.map(([n,v],i)=>`<div class="lb-row"><span class="lb-rank ${rc[i]||''}">${i+1}</span><span class="lb-name">${n}</span><div class="lb-bg"><div class="lb-fill" style="width:${Math.round((v/max)*100)}%"></div></div><span class="lb-val">${unit==='time'?fmtShort(v):v}</span></div>`).join('');
+  }
+  buildLB(dlM,'','lbDel');buildLB(hrM,'time','lbHrs');buildLB(rpM,'','lbRep');buildLB(shM,'','lbSh');
+}
+
+// ════════════════════════════════════════════
+// ADMIN: ACCOUNTS
+// ════════════════════════════════════════════
+function renderAccounts(){
+  const w=document.getElementById('accWrap');if(!w)return;
+  document.getElementById('acST').textContent=accounts.length;
+  document.getElementById('acSV').textContent=accounts.filter(a=>a.status==='verified').length;
+  document.getElementById('acSP').textContent=accounts.filter(a=>a.status==='pending').length;
+  // Pending resets notice
+  const resets=pendingResets.filter(r=>accounts.find(a=>a.username===r.username));
+  const hasResets=resets.length>0;
+  w.innerHTML=`${hasResets?`<div style="background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.25);border-radius:var(--r);padding:10px 14px;margin:12px;font-size:12px;color:var(--orange)"><strong style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px">⚠ PASSWORD RESET REQUESTS</strong><br>${resets.map(r=>`${r.name} (${r.username}) — badge #${r.badge} — Requested: ${r.requestedAt}`).join('<br>')}</div>`:''}
+  <table><thead><tr><th>Name</th><th>Username</th><th>Badge</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>${accounts.map((a,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewAccount(${i})" title="Click to view">
+    <td><div class="dn">${a.name}</div></td>
+    <td><span class="mono" style="color:var(--text-2)">${a.username}</span></td>
+    <td><span class="mono" style="color:var(--amber)">${a.badge}</span></td>
+    <td><span class="tag ${['Manager','Supervisor'].includes(a.role)?'amber':'blue'}">${a.role}</span></td>
+    <td><span class="tag ${a.status==='verified'?'green':a.status==='pending'?'orange':'red'}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span></td>
+    <td><div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${a.status==='pending'?`<button class="btn-sm ok" onclick="event.stopPropagation();verifyAcc(${i})">✓ Verify</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectAcc(${i})">✕ Reject</button>`:''}
+      ${a.status==='verified'&&a.username!=='justin'?`<button class="btn-sm danger" onclick="event.stopPropagation();removeAcc(${i})">Remove</button>`:''}
+      ${a.status==='verified'?`<button class="btn-sm" onclick="event.stopPropagation();openResetPw(${i})">🔑 Reset PW</button>`:''}
+      ${a.status==='verified'?`<button class="btn-sm" onclick="event.stopPropagation();openChangeRole(${i})" style="border-color:rgba(168,85,247,.3);color:var(--purple)">🎖️ Role</button>`:''}
+    </div></td>
+  </tr>`).join('')}</tbody></table>`;
+  updateChips();
+}
+function verifyAcc(i){accounts[i].status='verified';logRoleEvent('Account Verified',accounts[i].name,'—','Verified',currentUser?.name||'System');renderAccounts();toast('✅',accounts[i].name+' verified!');updateChips();}
+function rejectAcc(i){accounts[i].status='rejected';logRoleEvent('Account Rejected',accounts[i].name,'—','Rejected',currentUser?.name||'System');renderAccounts();toast('✕','Account rejected.','var(--red)');updateChips();}
+function removeAcc(i){const n=accounts[i].name;logRoleEvent('Account Removed',n,accounts[i].role,'—',currentUser?.name||'System');accounts.splice(i,1);renderAccounts();toast('🗑','Account removed.','var(--text-3)');}
+function openChangeRole(i){
+  const a=accounts[i];
+  document.getElementById('crIdx').value=i;
+  document.getElementById('crName').textContent=a.name;
+  document.getElementById('crCurrent').textContent=a.role;
+  document.getElementById('crReason').value='';
+  const sel=document.getElementById('crRole');
+  sel.innerHTML='<option value="">Select role...</option>';
+  const mgmt=allRoles().filter(r=>r.name==='Manager'||r.name==='Supervisor');
+  const corp=allRoles().filter(r=>r.code&&r.code.startsWith('AC'));
+  const energy=allRoles().filter(r=>r.code&&r.code.startsWith('AE'));
+  const custom=allRoles().filter(r=>!r.builtin);
+  function addGroup(label,roles){
+    if(!roles.length)return;
+    const g=document.createElement('optgroup');g.label=label;
+    roles.forEach(r=>{const o=document.createElement('option');o.value=r.name;o.textContent=r.code?`${r.name} (${r.code})`:r.name;sel.appendChild(g);g.appendChild(o);});
+    sel.appendChild(g);
+  }
+  addGroup('Management',mgmt);
+  addGroup('Aurum Corporation',corp);
+  addGroup('Aurum Energy — Operations',energy);
+  addGroup('Custom Roles',custom);
+  openModal('changeRoleModal');
+}
+function confirmChangeRole(){
+  const i=parseInt(document.getElementById('crIdx').value);
+  const newRole=V('crRole');
+  if(!newRole){toast('⚠️','Please select a role.','var(--orange)');return;}
+  const a=accounts[i];
+  const prev=a.role;
+  a.role=newRole;
+  const adminLevels=['Manager','Supervisor'];
+  const wasAdmin=adminLevels.includes(prev);
+  const isAdmin=adminLevels.includes(newRole);
+  const action=isAdmin&&!wasAdmin?'Promoted':!isAdmin&&wasAdmin?'Demoted':'Role Changed';
+  logRoleEvent(action,a.name,prev,newRole,currentUser?.name||'System');
+  closeModal('changeRoleModal');
+  renderAccounts();
+  populateRoleSelects();
+  toast(isAdmin&&!wasAdmin?'⬆️':!isAdmin&&wasAdmin?'⬇️':'🎖️',`${a.name} → ${newRole}`,'var(--purple)');
+}
+function openResetPw(i){document.getElementById('rpIdx').value=i;openModal('resetPwModal');}
+function viewAccount(i){
+  const a=accounts[i];if(!a)return;
+  document.getElementById('prevTitle').textContent='Account — '+a.name;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#000">${a.initials||a.name.slice(0,2).toUpperCase()}</div><div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">${a.name}</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">@${a.username}</div></div></div>${pGrid(pRow('BADGE',a.badge),pRow('ROLE',a.role),pRow('STATUS',a.status.charAt(0).toUpperCase()+a.status.slice(1)),'')}`; 
+  openModal('prevModal');
+}
+function doResetPw(){
+  const i=parseInt(V('rpIdx'));const pw=V('rpNew');
+  if(!pw){toast('⚠️','Enter a new password.','var(--orange)');return;}
+  accounts[i].password=pw;
+  const user=accounts[i].username;
+  const ri=pendingResets.findIndex(r=>r.username===user);if(ri>=0)pendingResets.splice(ri,1);
+  closeModal('resetPwModal');document.getElementById('rpNew').value='';
+  renderAccounts();toast('🔑','Password reset successfully!','var(--green)');
+}
+
+// ════════════════════════════════════════════
+// ADMIN: APPLICATIONS
+// ════════════════════════════════════════════
+function switchApplyDiv(div){
+  const isOps=div==='ops';
+  document.getElementById('apDivision').value=div;
+  document.querySelectorAll('#apDivTabs .atab').forEach((t,i)=>t.classList.toggle('on',i===(isOps?0:1)));
+  document.getElementById('apDivOpsInfo').style.display=isOps?'block':'none';
+  document.getElementById('apDivCorpInfo').style.display=isOps?'none':'block';
+  document.getElementById('apCorpFields').style.display=isOps?'none':'block';
+  // Swap role options
+  const sel=document.getElementById('apRole');
+  sel.innerHTML='<option value="">Select position</option>';
+  if(isOps){
+    const ops=[
+      {v:'Field Operator (AE-FO1)',l:'Field Operator — AE-FO1'},
+      {v:'Trucker (AE-T1)',l:'Trucker — AE-T1'},
+      {v:'Foreman (AE-FO2)',l:'Foreman — AE-FO2'},
+      {v:'OFFSHORE — Entry Level Rig Worker (AEO-W1)',l:'OFFSHORE — Entry Level Rig Worker — AEO-W1'},
+      {v:'OFFSHORE — Senior Rig Worker (AEO-W2)',l:'OFFSHORE — Senior Rig Worker — AEO-W2'},
+      {v:'OFFSHORE — Supervisor (AEO-S1)',l:'OFFSHORE — Supervisor — AEO-S1'},
+      {v:'Energy Intern (AE-I1)',l:'Energy Intern — AE-I1'},
+    ];
+    sel.innerHTML+='<optgroup label="— Aurum Energy Operations —">'+ops.map(r=>`<option value="${r.v}">${r.l}</option>`).join('')+'</optgroup>';
+  } else {
+    const corp=[
+      {v:'Human Resources Representative (AC-HR1)',l:'Human Resources Representative — AC-HR1'},
+      {v:'Marketing Specialist (AC-MA1)',l:'Marketing Specialist — AC-MA1'},
+      {v:'Environmental Researcher (AC-ER1)',l:'Environmental Researcher — AC-ER1'},
+      {v:'Scientist (AC-SC1)',l:'Scientist — AC-SC1'},
+      {v:'Corporation Intern (AC-I1)',l:'Corporation Intern — AC-I1'},
+    ];
+    sel.innerHTML+='<optgroup label="— Aurum Corporation —">'+corp.map(r=>`<option value="${r.v}">${r.l}</option>`).join('')+'</optgroup>';
+  }
+}
+function submitApplication(){
+  const name=V('apName'),phone=V('apPhone'),age=V('apAge'),nat=V('apNat'),role=V('apRole'),exp=V('apExp'),why=V('apWhy'),notes=V('apNotes');
+  const division=V('apDivision')||'ops';
+  const err=document.getElementById('apErr');const ok=document.getElementById('apOk');
+  if(!name||!phone||!role||!why){err.textContent='⚠ Please fill in all required fields.';err.style.display='block';ok.style.display='none';return;}
+  if(division==='corp'){
+    const bgCheck=V('apBgCheck');const nda=V('apNda');
+    if(!bgCheck||!nda){err.textContent='⚠ Please complete the background check consent and NDA fields.';err.style.display='block';ok.style.display='none';return;}
+    if(bgCheck==='no'||nda==='no'){err.textContent='⚠ Corporation applicants must consent to the background check and NDA to proceed.';err.style.display='block';ok.style.display='none';return;}
+  }
+  const bgCheck=division==='corp'?V('apBgCheck'):'n/a';
+  const nda=division==='corp'?V('apNda'):'n/a';
+  applications.push({name,phone,age,nationality:nat,role,division:division==='corp'?'Aurum Corporation':'Aurum Energy — Operations',experience:exp,reason:why,notes,bgCheck,nda,submittedAt:nowDate(),status:'pending'});
+  err.style.display='none';ok.style.display='block';
+  ['apName','apPhone','apAge','apNat','apExp','apWhy','apNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('apRole').selectedIndex=0;
+  if(document.getElementById('apBgCheck'))document.getElementById('apBgCheck').selectedIndex=0;
+  if(document.getElementById('apNda'))document.getElementById('apNda').selectedIndex=0;
+  updateChips();
+}
+function renderApplications(){
+  const w=document.getElementById('applWrap');if(!w)return;
+  document.getElementById('apST').textContent=applications.length;
+  document.getElementById('apSP').textContent=applications.filter(a=>a.status==='pending').length;
+  const apSOps=document.getElementById('apSOps');if(apSOps)apSOps.textContent=applications.filter(a=>!a.division||a.division.includes('Operations')).length;
+  const apSCorp=document.getElementById('apSCorp');if(apSCorp)apSCorp.textContent=applications.filter(a=>a.division&&a.division.includes('Corporation')).length;
+  const apSA=document.getElementById('apSA');if(apSA)apSA.textContent=applications.filter(a=>a.status==='accepted').length;
+  if(!applications.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📝</div><div class="empty-t">No Applications</div><div class="empty-s">Applications from the login screen appear here.</div></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Name</th><th>Phone</th><th>Division</th><th>Position</th><th>Age</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>${applications.map((a,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewApplication(${i})" title="Click to view">
+    <td><div class="dn">${a.name}</div></td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${a.phone}</td>
+    <td><span class="tag ${a.division&&a.division.includes('Corporation')?'purple':'amber'}" style="font-size:10px;white-space:nowrap">${a.division&&a.division.includes('Corporation')?'🏢 Corp':'⚡ Ops'}</span></td>
+    <td><span class="tag blue" style="font-size:10px">${a.role}</span></td>
+    <td style="font-size:12px;color:var(--text-2)">${a.age||'—'}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-3)">${a.submittedAt}</td>
+    <td><span class="tag ${a.status==='accepted'?'green':a.status==='rejected'?'red':'orange'}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span></td>
+    <td><div style="display:flex;gap:6px">
+      <button class="btn-sm" onclick="event.stopPropagation();viewApplication(${i})">👁 View</button>
+      ${a.status==='pending'?`<button class="btn-sm ok" onclick="event.stopPropagation();acceptApplication(${i})">✓ Accept</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectApplication(${i})">✕ Reject</button>`:''}
+    </div></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function viewApplication(i){
+  const a=applications[i];if(!a)return;
+  const isCorp=a.division&&a.division.includes('Corporation');
+  document.getElementById('applPrevBody').innerHTML=`
+    <div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">${a.name}</div>
+        <div class="mono" style="font-size:11px;color:var(--text-3)">Applied: ${a.submittedAt}</div>
+        <span class="tag ${isCorp?'purple':'amber'}" style="margin-top:6px;display:inline-flex">${a.division||'Aurum Energy — Operations'}</span>
+      </div>
+      <span class="tag ${a.status==='accepted'?'green':a.status==='rejected'?'red':'orange'}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span>
+    </div>
+    ${pGrid(pRow('POSITION APPLYING FOR',a.role),pRow('PHONE NUMBER',a.phone),pRow('AGE',a.age||'—'),pRow('NATIONALITY',a.nationality||'—'))}
+    ${isCorp?pGrid(
+      pRow('LSPD BACKGROUND CHECK',a.bgCheck==='yes'?'<span style="color:var(--green)">✓ Consented</span>':'<span style="color:var(--red)">✕ Declined</span>'),
+      pRow('NDA AGREEMENT',a.nda==='yes'?'<span style="color:var(--green)">✓ Agreed</span>':'<span style="color:var(--red)">✕ Declined</span>')
+    ):''}
+    ${a.experience?`<div style="margin-bottom:8px">${pRow('PREVIOUS EXPERIENCE',a.experience)}</div>`:''}
+    <div style="margin-top:8px">${pRow('WHY AURUM?',a.reason)}</div>
+    ${a.notes?`<div style="margin-top:8px">${pRow('ADDITIONAL NOTES',a.notes)}</div>`:''}`;
+  const foot=document.getElementById('applPrevFoot');
+  foot.innerHTML=a.status==='pending'?
+    `<button class="btn-can" onclick="closeModal('applPrevModal')">Close</button><button class="btn-save" style="background:var(--red);color:#fff" onclick="rejectApplication(${i});closeModal('applPrevModal')">✕ Reject</button><button class="btn-save" onclick="acceptApplication(${i});closeModal('applPrevModal')">✓ Accept</button>`:
+    `<button class="btn-save" onclick="closeModal('applPrevModal')">Close</button>`;
+  openModal('applPrevModal');
+}
+function acceptApplication(i){
+  const a=applications[i];a.status='accepted';
+  const uname=a.name.toLowerCase().replace(/\s+/,'_').slice(0,12);
+  const initials=(a.name.split(' ').map(w=>w[0]).join('')).toUpperCase().slice(0,2);
+  accounts.push({username:uname,password:'aurum2024',name:a.name,badge:'NEW',role:a.role,status:'pending',initials});
+  renderApplications();updateChips();
+  toast('✅',`${a.name} accepted! Account created (pending verification). Username: ${uname}`,'var(--green)');
+}
+function rejectApplication(i){applications[i].status='rejected';renderApplications();updateChips();toast('✕','Application rejected.','var(--red)');}
+
+// ════════════════════════════════════════════
+// ADMIN: ASSIGN SHIFTS
+// ════════════════════════════════════════════
+function populateAssignForm(){
+  const es=document.getElementById('as-emp');if(es){es.innerHTML='<option value="">Select employee</option>';accounts.filter(a=>a.status==='verified').forEach(a=>es.innerHTML+=`<option value="${a.name}">${a.name} (${a.role})</option>`);}
+  const vs=document.getElementById('as-vehicle');if(vs){vs.innerHTML='<option value="">No vehicle</option>';fleet.forEach(f=>vs.innerHTML+=`<option value="${f.plate}">${f.plate} — ${f.type}</option>`);}
+  const os=document.getElementById('as-order');if(os){os.innerHTML='<option value="">No specific task</option>';orders.filter(o=>o.status==='Pending').forEach(o=>os.innerHTML+=`<option value="${o.title}">${o.title}</option>`);}
+}
+function assignShift(){
+  if(!V('as-emp')||!V('as-date')||!V('as-start')||!V('as-end')){toast('⚠️','Fill in employee, date and times.','var(--orange)');return;}
+  assignedShifts.unshift({employeeName:V('as-emp'),date:V('as-date'),startTime:V('as-start'),endTime:V('as-end'),vehicle:V('as-vehicle'),orderTitle:V('as-order'),notes:V('as-notes'),assignedBy:currentUser?.name||'Admin',status:'assigned'});
+  document.getElementById('as-notes').value='';
+  ['as-emp','as-vehicle','as-order'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  closeModal('assignShiftModal');renderAssignedShifts();toast('📅','Shift assigned!','var(--blue)');
+}
+function renderAssignedShifts(){
+  const w=document.getElementById('assignedWrap');if(!w)return;
+  if(!assignedShifts.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📅</div><div class="empty-t">No Assigned Shifts</div><div class="empty-s">Assign shifts to employees to get started.</div></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Employee</th><th>Date</th><th>Start</th><th>End</th><th>Vehicle</th><th>Task</th><th>By</th><th>Status</th><th>Actions</th></tr></thead><tbody>${assignedShifts.map((s,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both">
+    <td><div class="dn">${s.employeeName}</div></td>
+    <td class="mono" style="font-size:12px">${s.date}</td>
+    <td class="mono" style="color:var(--amber);font-size:11px">${s.startTime}</td>
+    <td class="mono" style="color:var(--text-2);font-size:11px">${s.endTime}</td>
+    <td>${s.vehicle?`<span class="veh">🚛 ${s.vehicle}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}</td>
+    <td style="font-size:11px;max-width:110px;overflow:hidden;text-overflow:ellipsis">${s.orderTitle||'—'}</td>
+    <td style="font-size:11px;color:var(--text-2)">${s.assignedBy}</td>
+    <td><span class="tag ${s.status==='completed'?'green':s.status==='in-progress'?'amber':'blue'}">${s.status==='assigned'?'Upcoming':s.status==='in-progress'?'Active':'Completed'}</span></td>
+    <td><button class="btn-sm danger" onclick="removeShift(${i})">Remove</button></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function removeShift(i){assignedShifts.splice(i,1);renderAssignedShifts();toast('🗑','Shift removed.','var(--text-3)');}
+
+// ════════════════════════════════════════════
+// CLIENTS
+// ════════════════════════════════════════════
+function renderClients(data){
+  const g=document.getElementById('clientGrid');if(!g)return;
+  if(!data||!data.length){g.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🤝</div><div class="empty-t">No Clients</div><div class="empty-s">Add your first client.</div><button class="empty-btn" onclick="openModal('clientModal')">+ Add Client</button></div>`;return;}
+  g.innerHTML=data.map((c,i)=>`<div class="icard" style="animation:rowIn .3s ease ${i*.05}s both"><div class="icard-t">${c.name}</div><div class="icard-s">${c.company||'Independent Client'}</div><div class="icard-row"><span class="k">Contract</span><span style="font-size:12px;font-weight:500">${c.contract||'—'}</span></div><div class="icard-row"><span class="k">Status</span><span class="tag ${c.status==='Active'?'green':c.status==='Pending'?'orange':'dim'}">${c.status}</span></div>${c.notes?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text-2);line-height:1.5">${c.notes}</div>`:''}<div class="icard-actions"><button class="btn-sm" onclick="editClient(${clients.indexOf(c)})">✏️ Edit</button><button class="btn-sm danger" onclick="delClient(${clients.indexOf(c)})">🗑 Remove</button></div></div>`).join('');
+}
+function updateClientStats(){document.getElementById('clST').textContent=clients.length;document.getElementById('clSA').textContent=clients.filter(c=>c.status==='Active').length;document.getElementById('clSP').textContent=clients.filter(c=>c.status==='Pending').length;}
+function addClient(){if(!V('cl-name')||!V('cl-contract')||!V('cl-status')){toast('⚠️','Fill in required fields.','var(--orange)');return;}clients.unshift({name:V('cl-name'),company:V('cl-company'),contract:V('cl-contract'),status:V('cl-status'),notes:V('cl-notes')});['cl-name','cl-company','cl-notes'].forEach(id=>document.getElementById(id).value='');['cl-contract','cl-status'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('clientModal');updateClientStats();renderClients(clients);toast('✅','Client added!');}
+function editClient(i){const c=clients[i];document.getElementById('ecl-idx').value=i;document.getElementById('ecl-name').value=c.name;document.getElementById('ecl-company').value=c.company||'';document.getElementById('ecl-contract').value=c.contract||'';document.getElementById('ecl-status').value=c.status;document.getElementById('ecl-notes').value=c.notes||'';openModal('editClientModal');}
+function saveClient(){const i=parseInt(V('ecl-idx'));clients[i]={name:V('ecl-name'),company:V('ecl-company'),contract:V('ecl-contract'),status:V('ecl-status'),notes:V('ecl-notes')};closeModal('editClientModal');updateClientStats();renderClients(clients);toast('✅','Client updated!');}
+function delClient(i){clients.splice(i,1);updateClientStats();renderClients(clients);toast('🗑','Client removed.','var(--text-3)');}
+document.getElementById('clSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderClients(clients.filter(c=>c.name.toLowerCase().includes(q)||(c.company||'').toLowerCase().includes(q)));});
+
+// ════════════════════════════════════════════
+// FLEET
+// ════════════════════════════════════════════
+function renderFleet(data){
+  const w=document.getElementById('fleetWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🚛</div><div class="empty-t">No Vehicles Registered</div><div class="empty-s">Add vehicles to the fleet registry to get started.</div><button class="empty-btn" onclick="openModal('fleetModal')">+ Add Vehicle</button></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Plate</th><th>Category</th><th>Type</th><th>Status</th><th>Condition</th><th>Maintenance</th><th>Fuel</th><th>Actions</th></tr></thead><tbody>${data.map((f,i)=>{
+    const fp=fuelPctMap[f.fuel]||50;const fc2=fp>50?'hi':fp>25?'mid':'lo';
+    const catCol={'Trucking':'blue','Utility':'amber','Air':'purple'};
+    return`<tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewVehicle(${fleet.indexOf(f)})" title="Click to view"><td><span class="veh">🚛 ${f.plate}</span></td><td><span class="tag ${catCol[f.category]||'dim'}">${f.category||'—'}</span></td><td style="font-size:12px;color:var(--text-2)">${f.type||'—'}</td><td><span class="tag ${f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim'}">${f.status}</span></td><td><span style="font-size:12px;font-weight:600;color:${condCol[f.condition]||'var(--text-2)'}">${f.condition||'—'}</span></td><td><span class="tag ${mK(f.maint)}">${mS(f.maint)}</span></td><td><div class="fbar-w"><div class="fbar"><div class="fbar-f ${fc2}" style="width:${fp}%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">${fS(f.fuel)}</span></div></td><td><div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle(${fleet.indexOf(f)})">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle(${fleet.indexOf(f)})">🗑</button></div></td></tr>`;
+  }).join('')}</tbody></table>`;
+}
+function updateFleetStats(){document.getElementById('flST').textContent=fleet.length;document.getElementById('flSOp').textContent=fleet.filter(f=>f.status==='Operational').length;document.getElementById('flSMaint').textContent=fleet.filter(f=>f.status==='Maintenance').length;document.getElementById('flSOff').textContent=fleet.filter(f=>f.status==='Off Duty').length;document.getElementById('dlSF').textContent=fleet.filter(f=>f.status==='Operational').length;}
+function addVehicle(){if(!V('fl-plate')||!V('fl-type')||!V('fl-status')||!V('fl-condition')||!V('fl-maint')||!V('fl-fuel')||!V('fl-category')){toast('⚠️','Fill in all fields.','var(--orange)');return;}fleet.unshift({plate:V('fl-plate').toUpperCase(),category:V('fl-category'),type:V('fl-type'),status:V('fl-status'),condition:V('fl-condition'),maint:V('fl-maint'),fuel:V('fl-fuel')});document.getElementById('fl-plate').value='';['fl-category','fl-type','fl-status','fl-condition','fl-maint','fl-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('fleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle added!');}
+function editVehicle(i){const f=fleet[i];document.getElementById('efl-idx').value=i;document.getElementById('efl-plate').value=f.plate;document.getElementById('efl-category').value=f.category||'Trucking';document.getElementById('efl-type').value=f.type||'Semi Truck';document.getElementById('efl-status').value=f.status||'Operational';document.getElementById('efl-condition').value=f.condition||'Good';document.getElementById('efl-maint').value=f.maint||'Green — No Issues';document.getElementById('efl-fuel').value=f.fuel||'>75% — Full';openModal('editFleetModal');}
+function saveVehicle(){const i=parseInt(V('efl-idx'));fleet[i]={plate:V('efl-plate').toUpperCase(),category:V('efl-category'),type:V('efl-type'),status:V('efl-status'),condition:V('efl-condition'),maint:V('efl-maint'),fuel:V('efl-fuel')};closeModal('editFleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle updated!');}
+function delVehicle(i){fleet.splice(i,1);updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('🗑','Vehicle removed.','var(--text-3)');}
+function viewVehicle(i){
+  const f=fleet[i];if(!f)return;
+  document.getElementById('prevTitle').textContent='Vehicle — '+f.plate;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:28px">🚛</span><div><div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">${f.plate}</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">${f.type||'—'} · ${f.category||'—'}</div></div></div>${pGrid(pRow('STATUS',f.status),pRow('CONDITION',f.condition),pRow('MAINTENANCE',mS(f.maint)),pRow('FUEL LEVEL',fS(f.fuel)))}`;
+  openModal('prevModal');
+}document.getElementById('flSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderFleet(fleet.filter(f=>f.plate.toLowerCase().includes(q)||f.type.toLowerCase().includes(q)||(f.category||'').toLowerCase().includes(q)));});
+
+// ════════════════════════════════════════════
+// ORDERS
+// ════════════════════════════════════════════
+function populateOrderDriverSelect(){const s=document.getElementById('ord-driver');if(!s)return;s.innerHTML='<option value="">Unassigned</option>';accounts.filter(a=>a.status==='verified').forEach(a=>s.innerHTML+=`<option value="${a.name}">${a.name} (${a.role})</option>`);}
+function renderOrders(data){
+  const w=document.getElementById('orderWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📦</div><div class="empty-t">No Orders</div><div class="empty-s">Create your first order.</div><button class="empty-btn" onclick="openModal('orderModal')">+ New Order</button></div>`;return;}
+  const pC={'Low':'var(--text-2)','Normal':'var(--blue)','High':'var(--orange)','Urgent':'var(--red)'};
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Order</th><th>Client</th><th>Type</th><th>Priority</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr></thead><tbody>${data.map((o,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewOrder(${orders.indexOf(o)})" title="Click to view">
+    <td class="mono" style="font-size:12px">${o.date}</td>
+    <td><div class="dn" style="max-width:140px;overflow:hidden;text-overflow:ellipsis">${o.title}</div></td>
+    <td style="font-size:12px;color:var(--text-2)">${o.client}</td>
+    <td style="font-size:11px;color:var(--text-2)">${o.type||'—'}</td>
+    <td><span style="font-size:11px;font-weight:600;color:${pC[o.priority]||'var(--text-2)'}">${o.priority||'—'}</span></td>
+    <td style="font-size:12px">${o.driver||'<span style="color:var(--text-3)">Unassigned</span>'}</td>
+    <td><span class="tag ${o.status==='Completed'?'green':o.status==='In Transit'?'blue':'orange'}">${o.status}</span></td>
+    <td><div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();cycleOrder(${orders.indexOf(o)})">⟳</button><button class="btn-sm danger" onclick="event.stopPropagation();delOrder(${orders.indexOf(o)})">🗑</button></div></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function updateOrderStats(){document.getElementById('orST').textContent=orders.length;document.getElementById('orSP').textContent=orders.filter(o=>o.status==='Pending').length;document.getElementById('orSI').textContent=orders.filter(o=>o.status==='In Transit').length;document.getElementById('orSD').textContent=orders.filter(o=>o.status==='Completed').length;}
+function addOrder(){if(!V('ord-title')||!V('ord-client')||!V('ord-type')){toast('⚠️','Fill in required fields.','var(--orange)');return;}orders.unshift({date:nowDate(),time:nowTime(),title:V('ord-title'),client:V('ord-client'),type:V('ord-type'),priority:V('ord-priority')||'Normal',driver:V('ord-driver'),status:V('ord-status')||'Pending',notes:V('ord-notes')});['ord-title','ord-client','ord-notes'].forEach(id=>document.getElementById(id).value='');['ord-type'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('orderModal');updateOrderStats();renderOrders(orders);toast('✅','Order created!');}
+function cycleOrder(i){const s=orders[i].status;orders[i].status=s==='Pending'?'In Transit':s==='In Transit'?'Completed':'Pending';updateOrderStats();renderOrders(orders);toast('🔄',`Status: ${orders[i].status}`,'var(--blue)');}
+function delOrder(i){orders.splice(i,1);updateOrderStats();renderOrders(orders);toast('🗑','Order removed.','var(--text-3)');}
+function viewOrder(i){
+  const o=orders[i];if(!o)return;
+  const pC={'Low':'var(--text-2)','Normal':'var(--blue)','High':'var(--orange)','Urgent':'var(--red)'};
+  document.getElementById('prevTitle').textContent='Order — '+o.title;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${o.title}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${o.date} at ${o.time}</div></div>${pGrid(pRow('CLIENT',o.client),pRow('TYPE',o.type||'—'),pRow('PRIORITY',`<span style="color:${pC[o.priority]||'var(--text-2)'};font-weight:700">${o.priority||'—'}</span>`),pRow('ASSIGNED TO',o.driver||'Unassigned'),pRow('STATUS',o.status),'')}`+`${o.notes?`<div style="margin-top:8px">${pRow('NOTES',o.notes)}</div>`:''}`;
+  openModal('prevModal');
+}document.getElementById('orSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderOrders(orders.filter(o=>o.title.toLowerCase().includes(q)||o.client.toLowerCase().includes(q)));});
+
+// ════════════════════════════════════════════
+// MAP — iframe embed (gta-5-map.com)
+// ════════════════════════════════════════════
+function initMap(){/* Map is an iframe — no init needed */}
+function togglePOI(){}
+function resetMap(){}
+
+// ════════════════════════════════════════════
+// ROLE CHANGE LOGS
+// ════════════════════════════════════════════
+function logRoleEvent(action,subject,fromRole,toRole,actor){
+  roleLogs.unshift({date:nowDate(),time:nowTime(),action,subject,fromRole,toRole,actor});
+}
+function renderRoleLogs(){
+  const w=document.getElementById('roleLogsWrap');if(!w)return;
+  document.getElementById('rlST').textContent=roleLogs.length;
+  document.getElementById('rlSP').textContent=roleLogs.filter(l=>l.action==='Promoted'||l.action==='Account Verified'||l.action==='Role Created').length;
+  document.getElementById('rlSD').textContent=roleLogs.filter(l=>l.action==='Demoted'||l.action==='Account Rejected'||l.action==='Account Removed'||l.action==='Role Deleted').length;
+  if(!roleLogs.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📜</div><div class="empty-t">No Role Events Yet</div><div class="empty-s">Role changes, promotions, and account updates are logged here automatically.</div></div>`;return;}
+  const aCol={
+    'Promoted':'green','Account Verified':'green','Role Created':'blue',
+    'Demoted':'orange','Account Rejected':'red','Account Removed':'red','Role Deleted':'red'
+  };
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Time</th><th>Action</th><th>Subject</th><th>From</th><th>To</th><th>Performed By</th></tr></thead><tbody>${roleLogs.map((l,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.03}s both">
+    <td class="mono" style="font-size:12px">${l.date}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-3)">${l.time}</td>
+    <td><span class="tag ${aCol[l.action]||'dim'}" style="font-size:10px">${l.action}</span></td>
+    <td><div class="dn">${l.subject}</div></td>
+    <td style="font-size:12px;color:var(--text-3)">${l.fromRole||'—'}</td>
+    <td style="font-size:12px;color:var(--amber);font-weight:600">${l.toRole||'—'}</td>
+    <td style="font-size:12px;color:var(--text-2)">${l.actor}</td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function clearRoleLogs(){roleLogs.length=0;renderRoleLogs();toast('🗑','Role logs cleared.','var(--text-3)');}
+
+// ════════════════════════════════════════════
+// MAINTENANCE
+// ════════════════════════════════════════════
+let maintTab='damage';
+function switchMaintTab(tab){
+  maintTab=tab;
+  document.querySelectorAll('#maintTabs .ftab').forEach((t,i)=>t.classList.toggle('on',i===(tab==='damage'?0:1)));
+  document.getElementById('maintDamageView').style.display=tab==='damage'?'flex':'none';
+  document.getElementById('maintDamageView').style.flexDirection='column';
+  document.getElementById('maintServiceView').style.display=tab==='service'?'flex':'none';
+  document.getElementById('maintServiceView').style.flexDirection='column';
+  document.getElementById('maintAddBtn').textContent=tab==='service'?'+ Log Service':'+ Log Service';
+  if(tab==='damage')renderMaintDamage();
+  else renderMaintService();
+}
+function populateMaintVehicleSelect(){
+  const sel=document.getElementById('ms-plate');if(!sel)return;
+  sel.innerHTML='<option value="">Select vehicle</option>';
+  fleet.forEach(f=>sel.innerHTML+=`<option value="${f.plate}">${f.plate} — ${f.type}</option>`);
+  // Also add any plates from damage reports not in fleet
+  const dmgPlates=getDamageReports().map(r=>r.vehicle).filter(v=>!fleet.find(f=>f.plate===v));
+  dmgPlates.forEach(p=>{if(p&&p!=='—')sel.innerHTML+=`<option value="${p}">${p} (from damage report)</option>`;});
+  // Auto-fill Performed By from logged-in user
+  const techEl=document.getElementById('ms-tech');
+  if(techEl&&currentUser&&!techEl.value)techEl.value=currentUser.name;
+}
+function getDamageReports(){
+  // Pull damaged vehicle entries from delivery logs
+  return deliveryLogs.filter(r=>r.rep&&r.rep!=='none');
+}
+function renderMaintDamage(){
+  const allDmg=getDamageReports();
+  // Build set of plates that have a completed service log (Repair or Service)
+  const serviced=new Set(maintenanceServiceLogs.filter(s=>s.statusAfter==='Operational'||s.statusAfter==='Off Duty').map(s=>s.plate));
+  // Active damage = damaged reports whose vehicle has NOT been serviced back to operational
+  const dmg=allDmg;// show all for the table
+  const outstanding=allDmg.filter(r=>!serviced.has(r.vehicle));
+  document.getElementById('mdST').textContent=outstanding.length;
+  document.getElementById('mdSH').textContent=outstanding.filter(r=>r.rep==='heavy').length;
+  document.getElementById('mdSS').textContent=outstanding.filter(r=>r.rep==='slight').length;
+  document.getElementById('mdSSvc').textContent=allDmg.filter(r=>serviced.has(r.vehicle)).length;
+  const w=document.getElementById('maintDmgWrap');if(!w)return;
+  if(!allDmg.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🔩</div><div class="empty-t">No Damage Reports</div><div class="empty-s">Damage entries are pulled automatically from Delivery Logs when damage is reported.</div></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Reported By</th><th>Badge</th><th>Vehicle</th><th>Damage Level</th><th>Maint. Status</th><th>Serviced</th><th></th></tr></thead><tbody>${allDmg.map((r,i)=>{
+    const isServiced=serviced.has(r.vehicle);
+    return`<tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer;${isServiced?'opacity:.55;':''}` + `" onclick="viewDL(${deliveryLogs.indexOf(r)})" title="${isServiced?'Completed — vehicle serviced':'Click to view delivery log'}">
+    <td class="mono" style="font-size:12px">${r.date}<span class="dc">${r.time}</span></td>
+    <td><div class="dn">${r.name}</div></td>
+    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
+    <td><span class="veh">🚛 ${r.vehicle}</span></td>
+    <td><span class="tag ${repC[r.rep]}">${repL[r.rep]}</span></td>
+    <td><span class="tag ${r.maint==='green'?'green':r.maint==='orange'?'orange':'red'}">${r.maint.charAt(0).toUpperCase()+r.maint.slice(1)}</span></td>
+    <td>${isServiced?`<span class="tag green">✓ Completed</span>`:`<span class="tag dim">Pending</span>`}</td>
+    <td><button class="btn-sm ok" onclick="event.stopPropagation();prefillMaintService('${r.vehicle}');switchMaintTab('service');openModal('maintServiceModal')">${isServiced?'🔧 Re-log':'🔧 Log'}</button></td>
+  </tr>`;}).join('')}</tbody></table>`;
+}
+function prefillMaintService(plate){
+  populateMaintVehicleSelect();
+  setTimeout(()=>{const s=document.getElementById('ms-plate');if(s)s.value=plate;},50);
+}
+function renderMaintService(){
+  const w=document.getElementById('maintSvcWrap');if(!w)return;
+  document.getElementById('msST').textContent=maintenanceServiceLogs.length;
+  document.getElementById('msSR').textContent=maintenanceServiceLogs.filter(s=>s.type==='Repair').length;
+  document.getElementById('mssSvc').textContent=maintenanceServiceLogs.filter(s=>s.type==='Service / Maintenance'||s.type==='Inspection').length;
+  document.getElementById('msSW').textContent=maintenanceServiceLogs.filter(s=>s.type==='Wash').length;
+  if(!maintenanceServiceLogs.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🛠️</div><div class="empty-t">No Service Logs</div><div class="empty-s">Log repairs, services, and washes carried out on fleet vehicles.</div><button class="empty-btn" onclick="openModal('maintServiceModal')">+ Log Service</button></div>`;return;}
+  w.innerHTML=`<table><thead><tr><th>Date</th><th>Vehicle</th><th>Service Type</th><th>Performed By</th><th>Fuel</th><th>Mileage</th><th>Cost</th><th>Status After</th><th></th></tr></thead><tbody>${maintenanceServiceLogs.map((s,i)=>`
+  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewMaintService(${maintenanceServiceLogs.indexOf(s)})" title="Click to view">
+    <td class="mono" style="font-size:12px">${s.date}<span class="dc">${s.time}</span></td>
+    <td><span class="veh">🚛 ${s.plate}</span></td>
+    <td><span class="tag ${s.type==='Repair'?'red':s.type==='Wash'?'blue':s.type==='Inspection'?'purple':'orange'}">${s.type}</span></td>
+    <td style="font-size:12px;color:var(--text-2)">${s.tech}</td>
+    <td style="font-size:11px;color:var(--text-3)">${s.fuel?(s.fuel.split(' — ')[0]):'—'}</td>
+    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.mileage||'—'}</td>
+    <td class="mono" style="font-size:11px;color:var(--amber)">${s.cost||'—'}</td>
+    <td><span class="tag ${s.statusAfter==='Operational'?'green':s.statusAfter==='Off Duty'?'dim':'orange'}">${s.statusAfter}</span></td>
+    <td><button class="btn-sm" onclick="event.stopPropagation();viewMaintService(${maintenanceServiceLogs.indexOf(s)})">View</button></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function submitMaintService(){
+  if(!V('ms-plate')||!V('ms-type')||!V('ms-tech')||!V('ms-desc')||!V('ms-status')||!V('ms-fuel')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  const techName=V('ms-tech');
+  const techUser=currentUser?currentUser.name:null;
+  maintenanceServiceLogs.unshift({
+    date:nowDate(),time:nowTime(),
+    plate:V('ms-plate'),type:V('ms-type'),
+    tech:techName,techUser:techUser,
+    cost:V('ms-cost'),parts:V('ms-parts'),
+    fuel:V('ms-fuel'),mileage:V('ms-mileage'),
+    statusAfter:V('ms-status'),desc:V('ms-desc'),notes:V('ms-notes')
+  });
+  ['ms-cost','ms-parts','ms-desc','ms-notes','ms-mileage'].forEach(id=>document.getElementById(id).value='');
+  const techEl=document.getElementById('ms-tech');if(techEl)techEl.value='';
+  ['ms-plate','ms-type','ms-status','ms-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  closeModal('maintServiceModal');
+  renderMaintDamage();
+  renderMaintService();
+  toast('✅','Service log recorded — damage stats updated!');
+}
+function viewMaintService(i){
+  const s=maintenanceServiceLogs[i];if(!s)return;
+  document.getElementById('prevTitle').textContent='Service Log — '+s.plate;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:26px">🔧</span><div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">${s.plate}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${s.date} at ${s.time}</div></div></div>${pGrid(pRow('SERVICE TYPE',s.type),pRow('PERFORMED BY',s.tech),pRow('FUEL STATUS',s.fuel||'—'),pRow('MILEAGE',s.mileage||'—'),pRow('COST',s.cost||'—'),pRow('STATUS AFTER',s.statusAfter),pRow('PARTS REPLACED',s.parts||'—'),'')}<div style="margin-top:8px">${pRow('WORK DESCRIPTION',s.desc)}</div>${s.notes?`<div style="margin-top:8px">${pRow('MANAGEMENT NOTES',s.notes)}</div>`:''}`;
+  openModal('prevModal');
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+function refreshAll(){
+  renderDL(deliveryLogs);renderFR(fieldReports);renderIR(incidentReports);
+  renderClients(clients);renderFleet(fleet);renderOrders(orders);
+  renderShiftHistory(shiftHistory);updateDLStats();updateFRStats();
+  updateIRStats();updateClientStats();updateFleetStats();updateOrderStats();
+  populateVehicleSelect();populateShiftVehicle();
+}
+document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:none}}</style>');
+// Start at login/register/apply tabs
+authTab('login');
+refreshAll();
+</script>
+</body>
+</html>
