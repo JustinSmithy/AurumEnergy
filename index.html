@@ -1342,6 +1342,49 @@ function persist(key){lsSave(LS_KEYS[key],eval(key));}
 // DATA
 // ════════════════════════════════════════════
 const DEFAULT_ACCOUNTS=[{username:'justin',password:'logistics',name:'Justin Driver',badge:'4721',role:'Manager',status:'verified',initials:'JD'}];
+const DEFAULT_FLEET=[
+  {plate:'ESK285',category:'Trucking',type:'Benefactor Imperial EV',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'JXK611',category:'Trucking',type:'Benefactor Imperial EV',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'CLC114',category:'Trucking',type:'Benefactor Imperial EV',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'JNK611',category:'Trucking',type:'Benefactor Imperial EV',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'WYB026',category:'Trucking',type:'MTL Tanker',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'KPC715',category:'Trucking',type:'MTL Tanker',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'LHH435',category:'Trucking',type:'MTL Tanker',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'ARD503',category:'Trucking',type:'MTL Tanker',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'PHE178',category:'Trucking',type:'MTL Tanker',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'ITOW4U',category:'Trucking',type:'MTL Flatbed',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'NK888',category:'Utility',type:'MTL Pounder',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'NKB888',category:'Utility',type:'MTL Pounder',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'RJT901',category:'Utility',type:'Utilitruck',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'RTJ901',category:'Utility',type:'Utilitruck',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'EOV552',category:'Utility',type:'TipTruck2',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'EOW552',category:'Utility',type:'TipTruck2',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'LS599',category:'Utility',type:'Forklift',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'LS799',category:'Utility',type:'Bulldozer',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'WAX158',category:'Utility',type:'Caddy3',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM',category:'Utility',type:'Savesta',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'EXEC4',category:'Trucking',type:'Vapid Sandstorm Spark',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'ED0432',category:'Trucking',type:'Vapid Sandstorm Spark',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'EXEC2',category:'Trucking',type:'Coil Raiden Z',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'EXEC1',category:'Trucking',type:'Coil Raiden Z',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'EXEC3',category:'Trucking',type:'Coil Raiden Z',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM1',category:'Utility',type:'Semperado',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM2',category:'Utility',type:'Semperado',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM3',category:'Utility',type:'Semperado',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM4',category:'Utility',type:'Semperado',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUME3',category:'Utility',type:'Seaspeedo',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUME4',category:'Utility',type:'Seaspeedo',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUME1',category:'Utility',type:'Seaspeedo',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUME2',category:'Utility',type:'Seaspeedo',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'IPM108',category:'Utility',type:'Limevick',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM2',category:'Utility',type:'Seabufx',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM1',category:'Utility',type:'Seabufx',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'DCV865',category:'Utility',type:'Nagasaki Dinghy (2 Seater)',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'MZ258',category:'Utility',type:'Nagasaki Dinghy (4 Seater)',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'RUP813',category:'Utility',type:'Tug',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'AURUM3',category:'Utility',type:'Seaclamo',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+  {plate:'N108BA',category:'Air',type:'Cargobob',status:'Operational',condition:'Good',maint:'Green — No Issues',fuel:'>75% — Full'},
+];
 const accounts=lsLoad(LS_KEYS.accounts,DEFAULT_ACCOUNTS);
 const pendingResets=lsLoad(LS_KEYS.pendingResets,[]);
 const applications=lsLoad(LS_KEYS.applications,[]);
@@ -1349,7 +1392,7 @@ const deliveryLogs=lsLoad(LS_KEYS.deliveryLogs,[]);
 const fieldReports=lsLoad(LS_KEYS.fieldReports,[]);
 const incidentReports=lsLoad(LS_KEYS.incidentReports,[]);
 const clients=lsLoad(LS_KEYS.clients,[]);
-const fleet=lsLoad(LS_KEYS.fleet,[]);
+const fleet=lsLoad(LS_KEYS.fleet,DEFAULT_FLEET);
 const orders=lsLoad(LS_KEYS.orders,[]);
 const shiftHistory=lsLoad(LS_KEYS.shiftHistory,[]);
 const assignedShifts=lsLoad(LS_KEYS.assignedShifts,[]);
@@ -2322,10 +2365,12 @@ document.getElementById('clSrch').addEventListener('input',e=>{const q=e.target.
 function renderFleet(data){
   const w=document.getElementById('fleetWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🚛</div><div class="empty-t">No Vehicles Registered</div><div class="empty-s">Add vehicles to the fleet registry to get started.</div><button class="empty-btn" onclick="if(isAdmin())openModal('fleetModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Vehicle</button></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Plate</th><th>Category</th><th>Type</th><th>Status</th><th>Condition</th><th>Maintenance</th><th>Fuel</th><th>Actions</th></tr></thead><tbody>${data.map((f,i)=>{
+  w.innerHTML=`<table><thead><tr><th>Plate</th><th>Category</th><th>Type</th><th>Status</th><th>Condition</th><th>Maintenance</th><th>Fuel</th><th>Mileage</th><th>Actions</th></tr></thead><tbody>${data.map((f,i)=>{
     const fp=fuelPctMap[f.fuel]||50;const fc2=fp>50?'hi':fp>25?'mid':'lo';
     const catCol={'Trucking':'blue','Utility':'amber','Air':'purple'};
-    return`<tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewVehicle(${fleet.indexOf(f)})" title="Click to view"><td><span class="veh">🚛 ${f.plate}</span></td><td><span class="tag ${catCol[f.category]||'dim'}">${f.category||'—'}</span></td><td style="font-size:12px;color:var(--text-2)">${f.type||'—'}</td><td><span class="tag ${f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim'}">${f.status}</span></td><td><span style="font-size:12px;font-weight:600;color:${condCol[f.condition]||'var(--text-2)'}">${f.condition||'—'}</span></td><td><span class="tag ${mK(f.maint)}">${mS(f.maint)}</span></td><td><div class="fbar-w"><div class="fbar"><div class="fbar-f ${fc2}" style="width:${fp}%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">${fS(f.fuel)}</span></div></td><td>${isAdmin()?`<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle(${fleet.indexOf(f)})">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle(${fleet.indexOf(f)})">🗑</button></div>`:""}</td></tr>`;
+    const latestLog=maintenanceServiceLogs.filter(s=>s.plate===f.plate&&s.mileage).sort((a,b)=>b.date.localeCompare(a.date))[0];
+    const mileageDisplay=latestLog?`<span class="mono" style="font-size:11px;color:var(--text-2)">${latestLog.mileage}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>';
+    return`<tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewVehicle(${fleet.indexOf(f)})" title="Click to view"><td><span class="veh">🚛 ${f.plate}</span></td><td><span class="tag ${catCol[f.category]||'dim'}">${f.category||'—'}</span></td><td style="font-size:12px;color:var(--text-2)">${f.type||'—'}</td><td><span class="tag ${f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim'}">${f.status}</span></td><td><span style="font-size:12px;font-weight:600;color:${condCol[f.condition]||'var(--text-2)'}">${f.condition||'—'}</span></td><td><span class="tag ${mK(f.maint)}">${mS(f.maint)}</span></td><td><div class="fbar-w"><div class="fbar"><div class="fbar-f ${fc2}" style="width:${fp}%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">${fS(f.fuel)}</span></div></td><td>${mileageDisplay}</td><td>${isAdmin()?`<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle(${fleet.indexOf(f)})">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle(${fleet.indexOf(f)})">🗑</button></div>`:""}</td></tr>`;
   }).join('')}</tbody></table>`;
 }
 function updateFleetStats(){document.getElementById('flST').textContent=fleet.length;document.getElementById('flSOp').textContent=fleet.filter(f=>f.status==='Operational').length;document.getElementById('flSMaint').textContent=fleet.filter(f=>f.status==='Maintenance').length;document.getElementById('flSOff').textContent=fleet.filter(f=>f.status==='Off Duty').length;document.getElementById('dlSF').textContent=fleet.filter(f=>f.status==='Operational').length;}
@@ -2337,7 +2382,9 @@ function delVehicle(i){if(!isAdmin()){toast('🚫','Supervisors and Managers onl
 function viewVehicle(i){
   const f=fleet[i];if(!f)return;
   document.getElementById('prevTitle').textContent='Vehicle — '+f.plate;
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:28px">🚛</span><div><div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">${f.plate}</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">${f.type||'—'} · ${f.category||'—'}</div></div></div>${pGrid(pRow('STATUS',f.status),pRow('CONDITION',f.condition),pRow('MAINTENANCE',mS(f.maint)),pRow('FUEL LEVEL',fS(f.fuel)))}`;
+  const vLatestLog=maintenanceServiceLogs.filter(s=>s.plate===f.plate&&s.mileage).sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const vMileage=vLatestLog?vLatestLog.mileage+' <span style="font-size:10px;color:var(--text-3)">(as of '+vLatestLog.date+')</span>':'Not recorded';
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:28px">🚛</span><div><div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">${f.plate}</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">${f.type||'—'} · ${f.category||'—'}</div></div></div>${pGrid(pRow('STATUS',f.status),pRow('CONDITION',f.condition),pRow('MAINTENANCE',mS(f.maint)),pRow('FUEL LEVEL',fS(f.fuel)),pRow('LAST MILEAGE',vMileage),'')}`;
   openModal('prevModal');
 }document.getElementById('flSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderFleet(fleet.filter(f=>f.plate.toLowerCase().includes(q)||f.type.toLowerCase().includes(q)||(f.category||'').toLowerCase().includes(q)));});
 
