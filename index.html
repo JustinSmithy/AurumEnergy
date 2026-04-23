@@ -461,6 +461,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
         </div>
       </div>
 
+      <div class="af"><label>Bank Routing Number <span class="req">*</span></label><input type="text" id="apRouting" placeholder="Your routing/account number for payroll"></div>
       <div class="af"><label>Additional Notes</label><textarea id="apNotes" style="min-height:45px" placeholder="Anything else you'd like us to know..."></textarea></div>
       <div class="af-err" id="apErr">⚠ Please fill in all required fields.</div>
       <div class="af-ok" id="apOk">✓ Application submitted! We'll be in touch soon.</div>
@@ -496,6 +497,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
     <div class="si" data-page="field-reports"><span class="ico">🛑</span>Field Reports</div>
     <div class="si" data-page="incident-reports"><span class="ico">🚨</span>Incident Reports</div>
     <div class="si" data-page="maintenance"><span class="ico">🔩</span>Maintenance</div>
+    <div class="si" data-page="reimbursement"><span class="ico">💰</span>Reimbursement</div>
 
     <div class="sb-sec">My Profile</div>
     <div class="si" data-page="my-stats"><span class="ico">📈</span>My Stats</div>
@@ -549,17 +551,19 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       <div class="f-area">
         <div class="f-sec"><div class="f-sec-t">Driver Information</div>
           <div class="fgrid c2">
-            <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="dl-badge" readonly style="opacity:.6;cursor:not-allowed;"></div>
-            <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="dl-name" readonly style="opacity:.6;cursor:not-allowed;"></div>
+            <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="dl-badge" readonly style="opacity:.6;cursor:not-allowed;" placeholder="Auto-filled on login"></div>
+            <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="dl-name" readonly style="opacity:.6;cursor:not-allowed;" placeholder="Auto-filled on login"></div>
             <div class="fg"><label>Role <span class="req">*</span></label><select id="dl-rank"><option value="">Select</option></select></div>
-            <div class="fg"><label>Total Deliveries (from /stats) <span class="req">*</span></label><input type="number" id="dl-total"></div>
+            <div class="fg"><label>Crew / Co-Workers Present</label><input type="text" id="dl-crew" placeholder="Names of anyone with you (for credit)"></div>
           </div>
         </div>
-        <div class="f-sec"><div class="f-sec-t">Vehicle & Shift</div>
+        <div class="f-sec"><div class="f-sec-t">Delivery Details</div>
           <div class="fgrid c2">
+            <div class="fg"><label>What Was Delivered <span class="req">*</span></label><select id="dl-fuel-type" onchange="toggleCustom('dl-fuel-type','dl-fuel-type-other')"><option value="">Select</option><option>Petrol</option><option>Diesel</option><option>Petrol &amp; Diesel</option><option>Equipment / Cargo</option><option>Other — Please Specify</option></select><input type="text" id="dl-fuel-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div>
+            <div class="fg"><label>Company Order # <span class="req">*</span></label><select id="dl-order-ref"><option value="">Select order</option></select><div class="fg-hint" style="margin-top:3px">Marking this log will update the order to Completed</div></div>
             <div class="fg"><label>Vehicle <span class="req">*</span></label><select id="dl-vehicle"><option value="">Select vehicle</option></select></div>
-            <div class="fg"><label>Usage Purpose <span class="req">*</span></label><select id="dl-usage"><option value="">Select</option><option>Delivery</option><option>Transport</option><option>Other</option></select></div>
-            <div class="fg"><label>Fuel Level <span class="req">*</span></label><select id="dl-fuel"><option value="">Select</option><option>&lt;25%</option><option>25–50%</option><option>50–75%</option><option>&gt;75%</option></select></div>
+            <div class="fg"><label>Usage Purpose <span class="req">*</span></label><select id="dl-usage" onchange="toggleCustom('dl-usage','dl-usage-other')"><option value="">Select</option><option>Delivery</option><option>Transport</option><option>Other — Please Specify</option></select><input type="text" id="dl-usage-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div>
+            <div class="fg"><label>Vehicle Fuel Level <span class="req">*</span></label><select id="dl-fuel"><option value="">Select</option><option>&lt;25%</option><option>25–50%</option><option>50–75%</option><option>&gt;75%</option></select></div>
             <div class="fg"><label>Dashcam Installed? <span class="req">*</span></label><div class="fg-hint" style="margin-bottom:4px">Use P or /viv to check</div><select id="dl-dashcam"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
             <div class="fg"><label>Repair Needed? <span class="req">*</span></label><select id="dl-repair"><option value="">Select</option><option>No Damage</option><option>Slight Damage</option><option>Heavy Damage</option></select></div>
             <div class="fg"><label>Maintenance Status <span class="req">*</span></label><select id="dl-maint"><option value="">Select</option><option>Green</option><option>Orange</option><option>Red</option></select></div>
@@ -598,12 +602,16 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
           <div class="fg"><label>Date &amp; Time <span class="req">*</span></label><input type="datetime-local" id="fr-datetime"></div>
         </div></div>
         <div class="f-sec"><div class="f-sec-t">Incident Details</div><div class="fgrid c2">
-          <div class="fg"><label>Report Type <span class="req">*</span></label><select id="fr-type"><option value="">Select</option><option>Refinery Operation</option><option>Refinery Incident</option><option>Incident / Accident</option><option>Road Obstruction</option><option>Mechanical Failure</option><option>Other</option></select></div>
+          <div class="fg"><label>Report Type <span class="req">*</span></label><select id="fr-type" onchange="toggleCustom('fr-type','fr-type-other')"><option value="">Select</option><option>Refinery Operation</option><option>Refinery Incident</option><option>Incident / Accident</option><option>Road Obstruction</option><option>Mechanical Failure</option><option>Other — Please Specify</option></select><input type="text" id="fr-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div>
           <div class="fg"><label>Location <span class="req">*</span></label><input type="text" id="fr-location"></div>
           <div class="fg"><label>Vehicle Plate <span class="req">*</span></label><input type="text" id="fr-vehicle"></div>
           <div class="fg"><label>Other Parties</label><input type="text" id="fr-parties"></div>
           <div class="fg"><label>Outcome <span class="req">*</span></label><select id="fr-outcome"><option value="">Select</option><option>Resolved — No Issues</option><option>Vehicle Towed</option><option>Repaired On-Site</option><option>Emergency Services Called</option><option>Pending Review</option></select></div>
           <div class="fg"><label>Vehicle Damage?</label><select id="fr-damage"><option value="">Select</option><option>No Damage</option><option>Slight Damage</option><option>Heavy Damage</option></select></div>
+          <div class="fg"><label>Division <span class="req">*</span></label><select id="fr-division"><option value="">Select</option><option>Logistics Orders</option><option>Field Operations Orders</option><option>General / Other</option></select></div>
+          <div class="fg"><label>Company Order # (if applicable)</label><select id="fr-order-ref"><option value="">None / Not linked</option></select></div>
+          <div class="fg"><label>Status</label><select id="fr-status"><option value="Open">Open — Pending Review</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div>
+          <div class="fg" style="grid-column:1/-1"><label>Crew / Co-Workers Present</label><input type="text" id="fr-crew" placeholder="Names of anyone with you (so they receive credit)"></div>
         </div></div>
         <div class="f-sec"><div class="f-sec-t">Narrative</div><div class="fgrid c2">
           <div class="fg"><label>Description <span class="req">*</span></label><textarea id="fr-desc" style="min-height:100px"></textarea></div>
@@ -635,7 +643,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
           <div class="fg"><label>Role <span class="req">*</span></label><select id="ir-rank"><option value="">Select</option></select></div>
         </div></div>
         <div class="f-sec"><div class="f-sec-t">Incident Details</div><div class="fgrid c2">
-          <div class="fg"><label>Type <span class="req">*</span></label><select id="ir-type"><option value="">Select</option><option>Vehicle Collision</option><option>Cargo Loss</option><option>Vehicle Theft</option><option>Road Rage</option><option>Police Stop</option><option>Other</option></select></div>
+          <div class="fg"><label>Type <span class="req">*</span></label><select id="ir-type" onchange="toggleCustom('ir-type','ir-type-other')"><option value="">Select</option><option>Vehicle Collision</option><option>Cargo Loss</option><option>Vehicle Theft</option><option>Road Rage</option><option>Police Stop</option><option>Other — Please Specify</option></select><input type="text" id="ir-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div>
           <div class="fg"><label>Severity <span class="req">*</span></label><select id="ir-severity"><option value="">Select</option><option>Minor</option><option>Moderate</option><option>Severe</option><option>Critical</option></select></div>
           <div class="fg"><label>Location <span class="req">*</span></label><input type="text" id="ir-location"></div>
           <div class="fg"><label>Vehicle <span class="req">*</span></label><input type="text" id="ir-vehicle"></div>
@@ -738,6 +746,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
           <div class="kpi"><div class="kpi-v" id="msMaint" style="color:var(--green)">0</div><div class="kpi-l">Maintenance Logs</div></div>
         </div>
         <div class="my-recent"><div class="my-recent-t">Recent Activity</div><div id="msActivity"></div></div>
+        <div class="my-recent" style="margin-top:12px"><div class="my-recent-t">Employee Information</div><div id="msEmpInfo"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:8px"><div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px"><div style="font-size:9px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:2px;margin-bottom:4px">FULL NAME</div><div style="font-size:14px;font-weight:600" id="msEmpName">—</div></div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px"><div style="font-size:9px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:2px;margin-bottom:4px">PHONE NUMBER</div><div style="font-size:14px;font-weight:600" id="msEmpPhone">—</div></div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px"><div style="font-size:9px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:2px;margin-bottom:4px">ROUTING NUMBER</div><div style="font-size:14px;font-weight:600;font-family:'JetBrains Mono',monospace" id="msEmpRouting">—</div></div></div></div></div>
       </div>
     </div>
 
@@ -784,6 +793,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
     <div id="page-fleet" class="page">
       <div class="topbar"><div class="tb-title">Active Fleet</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="flSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('fleetModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Vehicle</button></div></div>
       <div class="sc-strip c4"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="flST">0</div></div><div class="sc"><div class="sc-l">Operational</div><div class="sc-v" id="flSOp" style="color:var(--green)">0</div></div><div class="sc"><div class="sc-l">Maintenance</div><div class="sc-v" id="flSMaint" style="color:var(--orange)">0</div></div><div class="sc"><div class="sc-l">Off Duty</div><div class="sc-v" id="flSOff">0</div></div></div>
+      <div class="sc-strip" style="grid-template-columns:1fr 1fr 1fr;padding-top:0"><div class="sc"><div class="sc-l">Insured</div><div class="sc-v" id="flSIns" style="color:var(--green)">0</div><div class="sc-i">🛡️</div></div><div class="sc"><div class="sc-l">Not Insured</div><div class="sc-v" id="flSNoIns" style="color:var(--red)">0</div><div class="sc-i">⚠️</div></div><div class="sc"><div class="sc-l">Expiring Soon</div><div class="sc-v" id="flSExp" style="color:var(--orange)">0</div><div class="sc-i">⏳</div></div></div>
       <div class="tbl-wrap"><div class="tbl-box" id="fleetWrap"></div></div>
     </div>
 
@@ -1199,6 +1209,45 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       </div>
     </div>
 
+    <!-- ══ REIMBURSEMENT REQUESTS ══ -->
+    <div id="page-reimbursement" class="page">
+      <div class="topbar"><div class="tb-l"><div class="tb-title">Reimbursement Requests</div></div><div class="tb-r"><button class="btn-p" onclick="showPage('reimbursement-form')">+ New Request</button></div></div>
+      <div class="sc-strip c4">
+        <div class="sc"><div class="sc-l">Total Requests</div><div class="sc-v" id="rrST">0</div><div class="sc-i">💰</div></div>
+        <div class="sc"><div class="sc-l">Pending</div><div class="sc-v" id="rrSP" style="color:var(--orange)">0</div><div class="sc-i">⏳</div></div>
+        <div class="sc"><div class="sc-l">Approved</div><div class="sc-v" id="rrSA" style="color:var(--green)">0</div><div class="sc-i">✅</div></div>
+        <div class="sc"><div class="sc-l">Rejected</div><div class="sc-v" id="rrSR" style="color:var(--red)">0</div><div class="sc-i">❌</div></div>
+      </div>
+      <div class="tbl-wrap"><div class="tbl-box" id="rrWrap"></div></div>
+    </div>
+
+    <!-- ══ REIMBURSEMENT FORM ══ -->
+    <div id="page-reimbursement-form" class="page">
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Reimbursement <span>›</span> Create</div><div class="tb-title">New Reimbursement Request</div></div></div>
+      <div class="f-area">
+        <div class="f-sec"><div class="f-sec-t">Employee Information</div>
+          <div class="fgrid c2">
+            <div class="fg"><label>Badge <span class="req">*</span></label><input type="text" id="rr-badge" readonly style="opacity:.6;cursor:not-allowed;"></div>
+            <div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="rr-name" readonly style="opacity:.6;cursor:not-allowed;"></div>
+            <div class="fg"><label>Role <span class="req">*</span></label><select id="rr-rank"><option value="">Select</option></select></div>
+          </div>
+        </div>
+        <div class="f-sec"><div class="f-sec-t">Expense Details</div>
+          <div class="fgrid c2">
+            <div class="fg"><label>Expense Type <span class="req">*</span></label><select id="rr-type" onchange="toggleCustom('rr-type','rr-type-other')"><option value="">Select</option><option>Vehicle Insurance</option><option>Equipment / Tools</option><option>Fuel</option><option>PPE / Safety Gear</option><option>Training / Certification</option><option>Accommodation</option><option>Other — Please Specify</option></select><input type="text" id="rr-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div>
+            <div class="fg"><label>Amount ($) <span class="req">*</span></label><input type="text" id="rr-amount" placeholder="e.g. 250.00"></div>
+            <div class="fg"><label>Date of Expense <span class="req">*</span></label><input type="date" id="rr-date"></div>
+            <div class="fg"><label>Receipt / Reference #</label><input type="text" id="rr-receipt" placeholder="Receipt number or reference"></div>
+            <div class="fg"><label>Linked Order # (if applicable)</label><select id="rr-order-ref"><option value="">None / Not linked</option></select></div>
+            <div class="fg"><label>Status</label><select id="rr-status"><option value="Pending">Pending Review</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option></select></div>
+            <div class="fg" style="grid-column:1/-1"><label>Description / Justification <span class="req">*</span></label><textarea id="rr-desc" style="min-height:90px" placeholder="Explain the expense and why reimbursement is needed..."></textarea></div>
+            <div class="fg" style="grid-column:1/-1"><label>Management Notes</label><textarea id="rr-notes" style="min-height:60px" placeholder="For supervisors — notes on approval/rejection..."></textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="f-actions"><button class="btn-save" onclick="submitReimbursement()">Submit Request</button><button class="btn-can" onclick="showPage('reimbursement')">Cancel</button></div>
+    </div>
+
     <!-- ══ ADMIN: ROLE CHANGE LOGS ══ -->
     <div id="page-admin-role-logs" class="page">
       <div class="topbar"><div class="tb-title">Role Change Logs</div><div class="tb-r"><button class="btn-s" onclick="clearRoleLogs()" style="color:var(--red);border-color:rgba(239,68,68,.3)">🗑 Clear Logs</button></div></div>
@@ -1222,13 +1271,13 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
 <!-- ══════════ MODALS ══════════ -->
 <!-- Client -->
-<div class="modal-overlay" id="clientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Client</div><button class="modal-x" onclick="closeModal('clientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="cl-name"></div><div class="fg"><label>Company</label><input type="text" id="cl-company"></div><div class="fg"><label>Contract Type <span class="req">*</span></label><select id="cl-contract"><option value="">Select</option><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other</option></select></div><div class="fg"><label>Status <span class="req">*</span></label><select id="cl-status"><option value="">Select</option><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes (contact numbers, details etc.)</label><textarea id="cl-notes" style="min-height:70px" placeholder="Phone numbers, addresses, delivery preferences..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('clientModal')">Cancel</button><button class="btn-save" onclick="addClient()">Add</button></div></div></div>
-<div class="modal-overlay" id="editClientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Client</div><button class="modal-x" onclick="closeModal('editClientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="ecl-idx"><div class="fg"><label>Name</label><input type="text" id="ecl-name"></div><div class="fg"><label>Company</label><input type="text" id="ecl-company"></div><div class="fg"><label>Contract</label><select id="ecl-contract"><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other</option></select></div><div class="fg"><label>Status</label><select id="ecl-status"><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes</label><textarea id="ecl-notes" style="min-height:70px" placeholder="Contact numbers, delivery details..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editClientModal')">Cancel</button><button class="btn-save" onclick="saveClient()">Save</button></div></div></div>
+<div class="modal-overlay" id="clientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Client</div><button class="modal-x" onclick="closeModal('clientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="cl-name"></div><div class="fg"><label>Company</label><input type="text" id="cl-company"></div><div class="fg"><label>Contract Type <span class="req">*</span></label><select id="cl-contract"><option value="">Select</option><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other — Please Specify</option></select></div><div class="fg"><label>Status <span class="req">*</span></label><select id="cl-status"><option value="">Select</option><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes (contact numbers, details etc.)</label><textarea id="cl-notes" style="min-height:70px" placeholder="Phone numbers, addresses, delivery preferences..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('clientModal')">Cancel</button><button class="btn-save" onclick="addClient()">Add</button></div></div></div>
+<div class="modal-overlay" id="editClientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Client</div><button class="modal-x" onclick="closeModal('editClientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="ecl-idx"><div class="fg"><label>Name</label><input type="text" id="ecl-name"></div><div class="fg"><label>Company</label><input type="text" id="ecl-company"></div><div class="fg"><label>Contract</label><select id="ecl-contract"><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other — Please Specify</option></select></div><div class="fg"><label>Status</label><select id="ecl-status"><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes</label><textarea id="ecl-notes" style="min-height:70px" placeholder="Contact numbers, delivery details..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editClientModal')">Cancel</button><button class="btn-save" onclick="saveClient()">Save</button></div></div></div>
 <!-- Fleet -->
-<div class="modal-overlay" id="fleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Vehicle</div><button class="modal-x" onclick="closeModal('fleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Plate <span class="req">*</span></label><input type="text" id="fl-plate"></div><div class="fg"><label>Usage Category <span class="req">*</span></label><select id="fl-category"><option value="">Select</option><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Vehicle Type <span class="req">*</span></label><select id="fl-type" onchange="toggleCustomType('fl-type','fl-type-custom')"><option value="">Select</option><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="fl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status <span class="req">*</span></label><select id="fl-status"><option value="">Select</option><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition <span class="req">*</span></label><select id="fl-condition"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance <span class="req">*</span></label><select id="fl-maint"><option value="">Select</option><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel <span class="req">*</span></label><select id="fl-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('fleetModal')">Cancel</button><button class="btn-save" onclick="addVehicle()">Add</button></div></div></div>
-<div class="modal-overlay" id="editFleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Vehicle</div><button class="modal-x" onclick="closeModal('editFleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="efl-idx"><div class="fg"><label>Plate</label><input type="text" id="efl-plate"></div><div class="fg"><label>Usage Category</label><select id="efl-category"><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Type</label><select id="efl-type" onchange="toggleCustomType('efl-type','efl-type-custom')"><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="efl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status</label><select id="efl-status"><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition</label><select id="efl-condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance</label><select id="efl-maint"><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel</label><select id="efl-fuel"><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editFleetModal')">Cancel</button><button class="btn-save" onclick="saveVehicle()">Save</button></div></div></div>
+<div class="modal-overlay" id="fleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Vehicle</div><button class="modal-x" onclick="closeModal('fleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Plate <span class="req">*</span></label><input type="text" id="fl-plate"></div><div class="fg"><label>Usage Category <span class="req">*</span></label><select id="fl-category"><option value="">Select</option><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Vehicle Type <span class="req">*</span></label><select id="fl-type" onchange="toggleCustomType('fl-type','fl-type-custom')"><option value="">Select</option><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="fl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status <span class="req">*</span></label><select id="fl-status"><option value="">Select</option><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition <span class="req">*</span></label><select id="fl-condition"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance <span class="req">*</span></label><select id="fl-maint"><option value="">Select</option><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel <span class="req">*</span></label><select id="fl-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div><div class="fg"><label>Insured?</label><select id="fl-insured" onchange="document.getElementById('fl-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">Select</option><option>Yes</option><option>No</option></select></div><div class="fg" id="fl-ins-expiry-wrap" style="display:none"><label>Insurance Expiry Date</label><input type="date" id="fl-ins-expiry"></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('fleetModal')">Cancel</button><button class="btn-save" onclick="addVehicle()">Add</button></div></div></div>
+<div class="modal-overlay" id="editFleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Vehicle</div><button class="modal-x" onclick="closeModal('editFleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="efl-idx"><div class="fg"><label>Plate</label><input type="text" id="efl-plate"></div><div class="fg"><label>Usage Category</label><select id="efl-category"><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Type</label><select id="efl-type" onchange="toggleCustomType('efl-type','efl-type-custom')"><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="efl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status</label><select id="efl-status"><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition</label><select id="efl-condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance</label><select id="efl-maint"><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel</label><select id="efl-fuel"><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div><div class="fg"><label>Insured?</label><select id="efl-insured" onchange="document.getElementById('efl-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">Select</option><option>Yes</option><option>No</option></select></div><div class="fg" id="efl-ins-expiry-wrap" style="display:none"><label>Insurance Expiry Date</label><input type="date" id="efl-ins-expiry"></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editFleetModal')">Cancel</button><button class="btn-save" onclick="saveVehicle()">Save</button></div></div></div>
 <!-- Orders -->
-<div class="modal-overlay" id="orderModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">New Company Order</div><button class="modal-x" onclick="closeModal('orderModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Title <span class="req">*</span></label><input type="text" id="ord-title"></div><div class="fg"><label>Client <span class="req">*</span></label><input type="text" id="ord-client"></div><div class="fg"><label>Type <span class="req">*</span></label><select id="ord-type"><option value="">Select</option><option>Fuel Delivery</option><option>Cargo Transport</option><option>Supply Run</option><option>Special Order</option><option>Other</option></select></div><div class="fg"><label>Priority</label><select id="ord-priority"><option>Normal</option><option>Low</option><option>High</option><option>Urgent</option></select></div><div class="fg"><label>Assigned To</label><select id="ord-driver"><option value="">Unassigned</option></select></div><div class="fg"><label>Status</label><select id="ord-status"><option>Pending</option><option>In Transit</option><option>Completed</option></select></div><div class="fg" style="grid-column:1/-1"><label>Details</label><textarea id="ord-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('orderModal')">Cancel</button><button class="btn-save" onclick="addOrder()">Create</button></div></div></div>
+<div class="modal-overlay" id="orderModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">New Company Order</div><button class="modal-x" onclick="closeModal('orderModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Order Number <span class="req">*</span></label><input type="text" id="ord-number" placeholder="e.g. AE-L-4 or AE-FO-2"><div class="fg-hint" style="margin-top:3px">L = Logistics · FO = Field Ops</div></div><div class="fg"><label>Title <span class="req">*</span></label><input type="text" id="ord-title"></div><div class="fg"><label>Division <span class="req">*</span></label><select id="ord-division"><option value="">Select</option><option>Logistics Orders</option><option>Field Operations Orders</option></select></div><div class="fg"><label>Client</label><input type="text" id="ord-client"></div><div class="fg"><label>Type <span class="req">*</span></label><select id="ord-type" onchange="toggleCustom('ord-type','ord-type-other')"><option value="">Select</option><option>Fuel Delivery</option><option>Cargo Transport</option><option>Supply Run</option><option>Special Order</option><option>Other — Please Specify</option></select><input type="text" id="ord-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div><div class="fg"><label>Priority</label><select id="ord-priority"><option>Normal</option><option>Low</option><option>High</option><option>Urgent</option></select></div><div class="fg"><label>Assigned To</label><select id="ord-driver"><option value="">Unassigned</option></select></div><div class="fg"><label>Status</label><select id="ord-status"><option>Pending</option><option>In Transit</option><option>Completed</option></select></div><div class="fg" style="grid-column:1/-1"><label>Details</label><textarea id="ord-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('orderModal')">Cancel</button><button class="btn-save" onclick="addOrder()">Create</button></div></div></div>
 <!-- Assign Shift -->
 <div class="modal-overlay" id="assignShiftModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Assign Shift</div><button class="modal-x" onclick="closeModal('assignShiftModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Employee <span class="req">*</span></label><select id="as-emp"><option value="">Select employee</option></select></div><div class="fg"><label>Date <span class="req">*</span></label><input type="date" id="as-date"></div><div class="fg"><label>Start Time <span class="req">*</span></label><input type="time" id="as-start"></div><div class="fg"><label>End Time <span class="req">*</span></label><input type="time" id="as-end"></div><div class="fg"><label>Vehicle</label><select id="as-vehicle"><option value="">No vehicle</option></select></div><div class="fg"><label>Order / Task</label><select id="as-order"><option value="">No specific task</option></select></div><div class="fg" style="grid-column:1/-1"><label>Instructions</label><textarea id="as-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('assignShiftModal')">Cancel</button><button class="btn-save" onclick="assignShift()">Assign</button></div></div></div>
 <!-- Add Role -->
@@ -1270,7 +1319,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 <!-- Maintenance Service Log Modal -->
 <div class="modal-overlay" id="maintServiceModal"><div class="modal-box wide"><div class="modal-head"><div class="modal-t">Log Maintenance Service</div><button class="modal-x" onclick="closeModal('maintServiceModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px">
   <div class="fg"><label>Vehicle Plate <span class="req">*</span></label><select id="ms-plate"><option value="">Select vehicle</option></select></div>
-  <div class="fg"><label>Service Type <span class="req">*</span></label><select id="ms-type"><option value="">Select</option><option>Repair</option><option>Service / Maintenance</option><option>Wash</option><option>Inspection</option><option>Tyre Change</option><option>Other</option></select></div>
+  <div class="fg"><label>Service Type <span class="req">*</span></label><select id="ms-type"><option value="">Select</option><option>Repair</option><option>Service / Maintenance</option><option>Wash</option><option>Inspection</option><option>Tyre Change</option><option>Other — Please Specify</option></select></div>
   <div class="fg"><label>Performed By <span class="req">*</span></label><input type="text" id="ms-tech" placeholder="Technician / employee name" readonly style="opacity:.6;cursor:not-allowed;"></div>
   <div class="fg"><label>Cost (if applicable)</label><input type="text" id="ms-cost" placeholder="e.g. $500"></div>
   <div class="fg"><label>Fuel Status <span class="req">*</span></label><select id="ms-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div>
@@ -1448,7 +1497,7 @@ const _BG_MAINT="https://i.ibb.co/0j1rnFK9/faq-image-10.webp";
 const _BG_ORDERS="https://i.ibb.co/Y73VvJm5/faq-image-11.webp";
 const _BG_FLEET="https://i.ibb.co/RGmWwDTy/faq-image-12.webp";
 const isAdmin=()=>currentUser&&['Manager','Supervisor'].includes(currentUser.role);
-function pRow(l,v){return`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px"><div style="font-size:9px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:2px;margin-bottom:3px">${l}</div><div style="font-size:13px;color:var(--text)">${v||'—'}</div></div>`;}
+function pRow(l,v){return`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px"><div style="font-size:9px;color:var(--amber);font-family:JetBrains Mono,monospace;letter-spacing:2px;margin-bottom:3px">${l}</div><div style="font-size:13px;color:var(--text)">${v||'—'}</div></div>`;}
 function pGrid(...rows){return`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">${rows.join('')}</div>`;}
 function allRoles(){return[...BUILTIN_ROLES,...customRoles];}
 
@@ -1482,9 +1531,9 @@ function doLogin(){
   document.getElementById('sbRole').textContent=acc.role+' · #'+acc.badge;
   document.getElementById('adminNav').style.display=isAdmin()?'block':'none';
   updateChips();populateRoleSelects();refreshAll();showPage('stats');
-  ['dl-badge','fr-badge','ir-badge','sf-badge'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=acc.badge;});
-  ['dl-name','fr-name','ir-name','sf-name'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=acc.name;});
-  ['dl-rank','fr-rank','ir-rank','sf-role'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.role;});
+  ['dl-badge','fr-badge','ir-badge','sf-badge','rr-badge'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.badge;});
+  ['dl-name','fr-name','ir-name','sf-name','rr-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.name;});
+  ['dl-rank','fr-rank','ir-rank','sf-role','rr-rank'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.role;});
 }
 ['lPass','lUser'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});});
 
@@ -1539,7 +1588,7 @@ function updateChips(){
 // ════════════════════════════════════════════
 function populateRoleSelects(){
   const all=allRoles();
-  ['dl-rank','fr-rank','ir-rank','sf-role'].forEach(id=>{
+  ['dl-rank','fr-rank','ir-rank','sf-role','rr-rank'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
     const cur=el.value;
     el.innerHTML='<option value="">Select</option>'+all.map(r=>`<option value="${r.name}"${r.name===cur?' selected':''}>${r.name}${r.code?' ('+r.code+')':''}</option>`).join('');
@@ -1564,7 +1613,7 @@ function renderRoles(){
     <td><span class="tag ${r.builtin?'dim':'green'}">${r.builtin?'Built-in':'Custom'}</span></td>
     <td>${!r.builtin?`<button class="btn-sm danger" onclick="deleteRole(${customRoles.indexOf(r)})">Delete</button>`:'<span style="font-size:11px;color:var(--text-3)">Protected</span>'}</td>
   </tr>`).join('');}
-  function sectionHeader(label,color){return`<tr><td colspan="5" style="background:${color};padding:7px 13px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:#fff;text-transform:uppercase;font-weight:600">${label}</td></tr>`;}
+  function sectionHeader(label,color){return`<tr><td colspan="5" style="background:${color};padding:7px 13px;font-family:JetBrains Mono,monospace;font-size:9px;letter-spacing:2px;color:#fff;text-transform:uppercase;font-weight:600">${label}</td></tr>`;}
   w.innerHTML=`<table><thead><tr><th>Role / Code</th><th>Access Level</th><th>Description</th><th>Type</th><th>Actions</th></tr></thead><tbody>
     ${sectionHeader('Management','rgba(232,160,32,.25)')}${sectionRows(mgmt)}
     ${sectionHeader('Aurum Corporation','rgba(168,85,247,.2)')}${sectionRows(corp)}
@@ -1575,7 +1624,7 @@ function renderRoles(){
   const ir=document.getElementById('infoRoles');
   if(ir){
     function infoSection(label,rows,color){
-      return`<div style="margin-bottom:14px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:${color};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">${label}</div>${rows.map(r=>`<div class="rank-row"><div><div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;color:${r.access==='manager'?'var(--amber)':r.access==='supervisor'?'#94a3b8':'var(--text-2)'}">${r.name}</div>${r.code?`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--amber);margin-top:1px">${r.code}</div>`:''}</div><div style="font-size:11px;color:var(--text-2);line-height:1.5">${r.desc||'—'}</div></div>`).join('')}</div>`;
+      return`<div style="margin-bottom:14px"><div style="font-family:JetBrains Mono,monospace;font-size:9px;color:${color};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">${label}</div>${rows.map(r=>`<div class="rank-row"><div><div style="font-family:Space Grotesk,sans-serif;font-size:12px;font-weight:600;color:${r.access==='manager'?'var(--amber)':r.access==='supervisor'?'#94a3b8':'var(--text-2)'}">${r.name}</div>${r.code?`<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--amber);margin-top:1px">${r.code}</div>`:''}</div><div style="font-size:11px;color:var(--text-2);line-height:1.5">${r.desc||'—'}</div></div>`).join('')}</div>`;
     }
     ir.innerHTML=infoSection('Management',mgmt,'var(--amber)')+infoSection('Aurum Corporation',corp,'var(--purple)')+infoSection('Aurum Energy — Operations',energy,'var(--amber)')+(custom.length?infoSection('Custom Roles',custom,'var(--green)'):'');
   }
@@ -1615,7 +1664,15 @@ function showPage(id){
   else{_m.style.backgroundImage='none';}}
   document.querySelectorAll('.si').forEach(n=>n.classList.toggle('on',n.dataset.page===id));
   if(id==='map')setTimeout(initMap,100);
-  if(id==='delivery-logs'||id==='delivery-form')populateVehicleSelect();
+  if(id==='delivery-logs'||id==='delivery-form'){
+    populateVehicleSelect();populateOrderRefSelects();
+    if(id==='delivery-form'&&currentUser){
+      var db=document.getElementById('dl-badge');if(db)db.value=currentUser.badge;
+      var dn=document.getElementById('dl-name');if(dn)dn.value=currentUser.name;
+      var dr=document.getElementById('dl-rank');if(dr)dr.value=currentUser.role;
+    }
+  }
+  if(id==='field-report-form')populateOrderRefSelects();
   if(id==='stats')renderCompanyOverview();
   if(id==='leaderboard')renderLeaderboard();
   if(id==='my-stats')renderMyStats();
@@ -1628,6 +1685,8 @@ function showPage(id){
   if(id==='admin-role-logs')renderRoleLogs();
   if(id==='maintenance'){renderMaintDamage();renderMaintService();populateMaintVehicleSelect();}
   if(id==='orders'){populateOrderDriverSelect();renderOrders(orders);}
+  if(id==='reimbursement'){renderRR();updateRRStats();populateOrderRefSelects();}
+  if(id==='reimbursement-form'){populateOrderRefSelects();if(currentUser){const rb=document.getElementById('rr-badge');if(rb&&!rb.value)rb.value=currentUser.badge;const rn=document.getElementById('rr-name');if(rn&&!rn.value)rn.value=currentUser.name;const rr=document.getElementById('rr-rank');if(rr)rr.value=currentUser.role;}}
   if(id==='information')renderRoles();
 }
 document.querySelectorAll('.si[data-page]').forEach(n=>n.addEventListener('click',()=>showPage(n.dataset.page)));
@@ -1658,19 +1717,26 @@ function previewFormData(type){
   let title='',body='';
   if(type==='delivery'){
     title='Delivery Log Preview';
-    const rM={'No Damage':'none','Slight Damage':'slight','Heavy Damage':'heavy'};
-    const rep=rM[V('dl-repair')]||'none';
-    body=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)">
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('dl-name')||'—'}</div>
-      <div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('dl-badge')} · ${V('dl-rank')} · ${nowDate()} at ${nowTime()}</div>
-    </div>
-    ${pGrid(pRow('VEHICLE','🚛 '+(V('dl-vehicle')||'—')),pRow('USAGE',V('dl-usage')),pRow('FUEL LEVEL',V('dl-fuel')),pRow('DASHCAM',V('dl-dashcam')==='Yes'?'✓ Installed':'Not specified'),pRow('DAMAGE',repL[rep]||'—'),pRow('MAINTENANCE',(V('dl-maint')||'—').toUpperCase()))}
-    ${V('dl-notes')?pRow('GENERAL NOTES',V('dl-notes')):''}
-    ${V('dl-fleet-notes')?`<div style="margin-top:8px">`+pRow('OPERATIONS NOTES',V('dl-fleet-notes'))+`</div>`:''}`;
+    var rMp={'No Damage':'none','Slight Damage':'slight','Heavy Damage':'heavy'};
+    var repP=rMp[V('dl-repair')]||'none';
+    var fuelTypeVal=V('dl-fuel-type')==='Other — Please Specify'?V('dl-fuel-type-other'):V('dl-fuel-type');
+    var usageVal=V('dl-usage')==='Other — Please Specify'?V('dl-usage-other'):V('dl-usage');
+    body='<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)">'
+      +'<div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">'+(V('dl-name')||'—')+'</div>'
+      +'<div class="mono" style="font-size:11px;color:var(--text-3)">Badge #'+V('dl-badge')+' · '+V('dl-rank')+' · '+nowDate()+' at '+nowTime()+'</div>'
+      +(V('dl-crew')?'<div style="font-size:11px;color:var(--text-2);margin-top:2px">Crew: '+V('dl-crew')+'</div>':'')
+      +'</div>'
+      +'<div style="background:var(--amber-pale);border:1px solid var(--border-hi);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      +'<div><div style="font-size:9px;color:var(--amber);font-family:JetBrains Mono,monospace;letter-spacing:2px;margin-bottom:3px">DELIVERED</div><div style="font-size:15px;font-weight:700;color:var(--text)">'+(fuelTypeVal||'Not selected')+'</div></div>'
+      +'<div><div style="font-size:9px;color:var(--amber);font-family:JetBrains Mono,monospace;letter-spacing:2px;margin-bottom:3px">ORDER #</div><div style="font-size:15px;font-weight:700;color:var(--amber)">'+(V('dl-order-ref')||'None')+'</div></div>'
+      +'</div>'
+      +pGrid(pRow('VEHICLE','🚛 '+(V('dl-vehicle')||'—')),pRow('USAGE',usageVal||'—'),pRow('FUEL LEVEL',V('dl-fuel')||'—'),pRow('DASHCAM',V('dl-dashcam')==='Yes'?'✓ Installed':'Not specified'),pRow('DAMAGE',repL[repP]||'—'),pRow('MAINTENANCE',(V('dl-maint')||'—').toUpperCase()))
+      +(V('dl-notes')?pRow('GENERAL NOTES',V('dl-notes')):'')
+      +(V('dl-fleet-notes')?'<div style="margin-top:8px">'+pRow('OPERATIONS NOTES',V('dl-fleet-notes'))+'</div>':'');
   } else if(type==='field'){
     title='Field Report Preview';
     body=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)">
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('fr-name')||'—'}</div>
+      <div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('fr-name')||'—'}</div>
       <div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('fr-badge')} · ${nowDate()} at ${nowTime()}</div>
     </div>
     ${pGrid(pRow('TYPE',V('fr-type')),pRow('LOCATION',V('fr-location')),pRow('VEHICLE',V('fr-vehicle')),pRow('OUTCOME',V('fr-outcome')),pRow('OTHER PARTIES',V('fr-parties')||'None'),pRow('DAMAGE',V('fr-damage')||'—'))}
@@ -1678,7 +1744,7 @@ function previewFormData(type){
   } else if(type==='incident'){
     title='Incident Report Preview';
     body=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between">
-      <div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('ir-name')||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('ir-badge')} · ${V('ir-rank')}</div></div>
+      <div><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${V('ir-name')||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${V('ir-badge')} · ${V('ir-rank')}</div></div>
       <span style="font-size:11px;font-weight:700;color:${sevCol[V('ir-severity')]||'var(--text-2)'};border:1px solid currentColor;border-radius:5px;padding:2px 8px">${V('ir-severity')||'—'}</span>
     </div>
     ${pGrid(pRow('TYPE',V('ir-type')),pRow('LOCATION',V('ir-location')),pRow('VEHICLE',V('ir-vehicle')),pRow('EMERGENCY SVC',V('ir-police')||'—'),pRow('OTHER PARTIES',V('ir-parties')||'None'),pRow('DAMAGE',V('ir-damage')||'—'))}
@@ -1699,21 +1765,29 @@ function populateVehicleSelect(){
   fleet.forEach(f=>sel.innerHTML+=`<option value="${f.plate}"${f.plate===cur?' selected':''}>${f.plate} — ${f.type} (${f.category})</option>`);
 }
 function renderDL(data){
-  const w=document.getElementById('dlWrap');if(!w)return;
+  var w=document.getElementById('dlWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📋</div><div class="empty-t">No Delivery Logs</div><div class="empty-s">Submitted logs appear here.</div><button class="empty-btn" onclick="showPage('delivery-form')">+ New Log</button></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Time</th><th>Badge</th><th>Driver</th><th>Vehicle</th><th>Fuel</th><th>Cam</th><th>Damage</th><th>Maint.</th><th></th></tr></thead><tbody>${data.map((r,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewDL(${deliveryLogs.indexOf(r)})" title="Click to view">
-    <td><span class="mono" style="display:block;color:var(--text)">${r.date}</span><span class="mono" style="font-size:10px;color:var(--text-3)">${r.time}</span></td>
-    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
-    <td><div class="dn">${r.name}</div><div class="dc">${r.rank}</div></td>
-    <td><span class="veh">🚛 ${r.vehicle}</span></td>
-    <td><div class="fbar-w"><div class="fbar"><div class="fbar-f ${fc(r.fp)}" style="width:${r.fp}%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">${r.fuel}</span></div></td>
-    <td><span class="dot ${r.cam?'on':'off'}"></span></td>
-    <td><span class="tag ${repC[r.rep]}">${repL[r.rep]}</span></td>
-    <td><span class="tag ${r.maint}">${r.maint.charAt(0).toUpperCase()+r.maint.slice(1)}</span></td>
-    <td><button class="btn-sm" onclick="event.stopPropagation();viewDL(${deliveryLogs.indexOf(r)})">View</button></td>
-  </tr>`).join('')}</tbody></table>`;
+  var rows='';
+  for(var i=0;i<data.length;i++){
+    var r=data[i];var ri=deliveryLogs.indexOf(r);
+    var fuelBar='<div class="fbar-w"><div class="fbar"><div class="fbar-f '+fc(r.fp)+'" style="width:'+r.fp+'%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">'+r.fuel+'</span></div>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewDL('+ri+')" title="Click to view">'
+      +'<td><span class="mono" style="display:block;color:var(--text)">'+r.date+'</span><span class="mono" style="font-size:10px;color:var(--text-3)">'+r.time+'</span></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+r.badge+'</span></td>'
+      +'<td><div class="dn">'+r.name+'</div><div class="dc">'+r.rank+'</div></td>'
+      +'<td><span class="veh">🚛 '+r.vehicle+'</span></td>'
+      +'<td>'+fuelBar+'</td>'
+      +'<td><span class="mono" style="font-size:10px;color:var(--text-2)">'+(r.fuelType||'—')+'</span></td>'
+      +'<td><span class="mono" style="font-size:11px;color:var(--amber)">'+(r.orderRef||'—')+'</span></td>'
+      +'<td><span class="dot '+(r.cam?'on':'off')+'"></span></td>'
+      +'<td><span class="tag '+repC[r.rep]+'">'+repL[r.rep]+'</span></td>'
+      +'<td><span class="tag '+(r.maint||'dim')+'">'+(r.maint||'').charAt(0).toUpperCase()+(r.maint||'').slice(1)+'</span></td>'
+      +'<td><button class="btn-sm" onclick="event.stopPropagation();viewDL('+ri+')">View</button></td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Time</th><th>Badge</th><th>Driver</th><th>Vehicle</th><th>Fuel Lvl</th><th>Delivered</th><th>Order #</th><th>Cam</th><th>Damage</th><th>Maint.</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function updateDLStats(){
   const now=new Date(),mon=now.getMonth(),wa=new Date(now-7*24*60*60*1000);
   document.getElementById('dlST').textContent=deliveryLogs.length;
@@ -1724,22 +1798,61 @@ function updateDLStats(){
   document.getElementById('dlMC').textContent=deliveryLogs.filter(r=>new Date(r.date).getMonth()===mon).length;
 }
 function submitDelivery(){
+  // Auto-fill badge/name if empty (catches edge cases where boot didn't fire)
+  if(currentUser){
+    const db=document.getElementById('dl-badge');if(db&&!db.value)db.value=currentUser.badge;
+    const dn=document.getElementById('dl-name');if(dn&&!dn.value)dn.value=currentUser.name;
+    const dr=document.getElementById('dl-rank');if(dr&&!dr.value)dr.value=currentUser.role;
+  }
   if(currentUser&&(V('dl-name').trim().toLowerCase()!==currentUser.name.trim().toLowerCase()||V('dl-badge').trim()!==currentUser.badge.trim())){toast('🚫','You can only submit on behalf of yourself.','var(--red)');return;}
-  if(!V('dl-badge')||!V('dl-name')||!V('dl-rank')||!V('dl-vehicle')||!V('dl-usage')||!V('dl-fuel')||!V('dl-dashcam')||!V('dl-repair')||!V('dl-maint')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  if(!V('dl-badge')||!V('dl-name')||!V('dl-rank')||!V('dl-vehicle')||!V('dl-fuel-type')||!V('dl-order-ref')||!V('dl-usage')||!V('dl-fuel')||!V('dl-dashcam')||!V('dl-repair')||!V('dl-maint')){toast('⚠️','Fill in all required fields — including What Was Delivered and Order #.','var(--orange)');return;}
   const rM={'No Damage':'none','Slight Damage':'slight','Heavy Damage':'heavy'};
   const fP={'<25%':15,'25–50%':38,'50–75%':62,'>75%':82};
-  deliveryLogs.unshift({date:nowDate(),time:nowTime(),badge:V('dl-badge'),name:V('dl-name'),rank:V('dl-rank'),vehicle:V('dl-vehicle'),usage:V('dl-usage'),fuel:V('dl-fuel'),fp:fP[V('dl-fuel')]||62,cam:V('dl-dashcam')==='Yes',rep:rM[V('dl-repair')]||'none',maint:V('dl-maint').toLowerCase(),notes:V('dl-notes'),fleetNotes:V('dl-fleet-notes')});
+  const dlUsage=V('dl-usage')==='Other — Please Specify'?(V('dl-usage-other')||V('dl-usage')):V('dl-usage');
+  const dlFuelType=V('dl-fuel-type')==='Other — Please Specify'?(V('dl-fuel-type-other')||V('dl-fuel-type')):V('dl-fuel-type');
+  const orderNum=V('dl-order-ref');
+  deliveryLogs.unshift({date:nowDate(),time:nowTime(),badge:V('dl-badge'),name:V('dl-name'),rank:V('dl-rank'),vehicle:V('dl-vehicle'),usage:dlUsage,fuelType:dlFuelType,orderRef:orderNum,crew:V('dl-crew'),fuel:V('dl-fuel'),fp:fP[V('dl-fuel')]||62,cam:V('dl-dashcam')==='Yes',rep:rM[V('dl-repair')]||'none',maint:V('dl-maint').toLowerCase(),notes:V('dl-notes'),fleetNotes:V('dl-fleet-notes')});
   persist('deliveryLogs');
-  ['dl-total','dl-notes','dl-fleet-notes'].forEach(id=>document.getElementById(id).value='');
-  ['dl-usage','dl-fuel','dl-dashcam','dl-repair','dl-maint'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  // Auto-complete the linked order
+  if(orderNum){
+    const linkedOrder=orders.find(function(o){return o.number===orderNum;});
+    if(linkedOrder&&linkedOrder.status!=='Completed'){
+      linkedOrder.status='Completed';
+      linkedOrder.completedAt=nowDate()+' '+nowTime();
+      linkedOrder.completedBy=currentUser?currentUser.name:'—';
+      persist('orders');
+      updateOrderStats();
+      toast('✅','Delivery logged & Order '+orderNum+' marked Completed!','var(--green)');
+    } else {
+      toast('✅','Delivery log submitted!','var(--green)');
+    }
+  } else {
+    toast('✅','Delivery log submitted!','var(--green)');
+  }
+  ['dl-notes','dl-fleet-notes','dl-usage-other','dl-fuel-type-other','dl-crew'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['dl-usage','dl-fuel','dl-dashcam','dl-repair','dl-maint','dl-fuel-type','dl-order-ref'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
   if(activeShift){activeShift.deliveries++;document.getElementById('shDelC').textContent=activeShift.deliveries;}
-  updateDLStats();renderDL(deliveryLogs);toast('✅','Delivery log submitted!');showPage('delivery-logs');
+  updateDLStats();renderDL(deliveryLogs);showPage('delivery-logs');
 }
 document.getElementById('dlSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderDL(deliveryLogs.filter(r=>r.name.toLowerCase().includes(q)||r.badge.includes(q)||r.vehicle.toLowerCase().includes(q)));});
 function viewDL(idx){
-  const r=deliveryLogs[idx];if(!r)return;
-  document.getElementById('prevTitle').textContent='Delivery Log';
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.rank} · ${r.date} at ${r.time}</div></div>${pGrid(pRow('VEHICLE','🚛 '+r.vehicle),pRow('USAGE',r.usage),pRow('FUEL',r.fuel),pRow('DASHCAM',r.cam?'✓ Installed':'✕ Not Installed'),pRow('DAMAGE',repL[r.rep]),pRow('MAINTENANCE',r.maint.toUpperCase()))}${r.notes&&r.notes!=='N/A'?pRow('NOTES',r.notes):''}${r.fleetNotes&&r.fleetNotes!=='N/A'?`<div style="margin-top:8px">`+pRow('OPERATIONS NOTES',r.fleetNotes)+`</div>`:''}`;
+  var r=deliveryLogs[idx];if(!r)return;
+  document.getElementById('prevTitle').textContent='Delivery Log — '+(r.orderRef||'No Order Linked');
+  var linkedOrder=r.orderRef?orders.find(function(o){return o.number===r.orderRef;}):null;
+  var orderInfo=linkedOrder?('<span style="color:var(--green);font-weight:600">'+linkedOrder.status+'</span> · '+linkedOrder.title):'Not linked to an order';
+  document.getElementById('prevBody').innerHTML=
+    '<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)">'
+    +'<div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">'+r.name+'</div>'
+    +'<div class="mono" style="font-size:11px;color:var(--text-3)">Badge #'+r.badge+' · '+r.rank+' · '+r.date+' at '+r.time+'</div>'
+    +(r.crew?'<div style="font-size:11px;color:var(--text-2);margin-top:2px">Crew: '+r.crew+'</div>':'')
+    +'</div>'
+    +'<div style="background:var(--amber-pale);border:1px solid var(--border-hi);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<div><div style="font-size:9px;color:var(--amber);font-family:JetBrains Mono,monospace;letter-spacing:2px;margin-bottom:3px">DELIVERED</div><div style="font-size:15px;font-weight:700;color:var(--text)">'+(r.fuelType||'—')+'</div></div>'
+    +'<div><div style="font-size:9px;color:var(--amber);font-family:JetBrains Mono,monospace;letter-spacing:2px;margin-bottom:3px">ORDER #</div><div style="font-size:15px;font-weight:700;color:var(--amber)">'+(r.orderRef||'—')+'</div><div style="font-size:10px;color:var(--text-3);margin-top:2px">'+orderInfo+'</div></div>'
+    +'</div>'
+    +pGrid(pRow('VEHICLE','🚛 '+r.vehicle),pRow('USAGE',r.usage||'—'),pRow('FUEL LEVEL',r.fuel),pRow('DASHCAM',r.cam?'✓ Installed':'✕ Not Installed'),pRow('DAMAGE',repL[r.rep]),pRow('MAINTENANCE',(r.maint||'').toUpperCase()))
+    +(r.notes&&r.notes!=='N/A'?'<div style="margin-top:8px">'+pRow('NOTES',r.notes)+'</div>':'')
+    +(r.fleetNotes&&r.fleetNotes!=='N/A'?'<div style="margin-top:8px">'+pRow('OPERATIONS NOTES',r.fleetNotes)+'</div>':'');
   openModal('prevModal');
 }
 
@@ -1747,33 +1860,44 @@ function viewDL(idx){
 // FIELD REPORTS
 // ════════════════════════════════════════════
 function renderFR(data){
-  const w=document.getElementById('frWrap');if(!w)return;
+  var w=document.getElementById('frWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🛑</div><div class="empty-t">No Field Reports</div><div class="empty-s">Submitted reports appear here.</div><button class="empty-btn" onclick="showPage('field-report-form')">+ New Report</button></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Time</th><th>Badge</th><th>Name</th><th>Type</th><th>Location</th><th>Vehicle</th><th>Outcome</th><th></th></tr></thead><tbody>${data.map((r,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewFR(${fieldReports.indexOf(r)})" title="Click to view">
-    <td><span class="mono" style="display:block;color:var(--text)">${r.date}</span><span class="mono" style="font-size:10px;color:var(--text-3)">${r.time}</span></td>
-    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
-    <td><div class="dn">${r.name}</div></td>
-    <td><span class="tag ${typeC[r.type]||'dim'}">${r.type}</span></td>
-    <td style="font-size:12px;color:var(--text-2)">${r.location}</td>
-    <td><span class="veh">🚛 ${r.vehicle}</span></td>
-    <td style="font-size:11px;color:var(--text-2);max-width:130px;overflow:hidden;text-overflow:ellipsis">${r.outcome}</td>
-    <td><button class="btn-sm" onclick="event.stopPropagation();viewFR(${fieldReports.indexOf(r)})">View</button></td>
-  </tr>`).join('')}</tbody></table>`;
+  var rows='';
+  for(var i=0;i<data.length;i++){
+    var r=data[i];var ri=fieldReports.indexOf(r);
+    var divCell=r.division==='Logistics Orders'?'<span class="tag blue" style="font-size:9px">LOGISTICS</span>':r.division==='Field Operations Orders'?'<span class="tag purple" style="font-size:9px">FIELD OPS</span>':'<span style="color:var(--text-3);font-size:10px">—</span>';
+    var stCell='<span class="tag '+(r.status==='Completed'?'green':r.status==='In Progress'?'blue':'orange')+'">'+(r.status||'Open')+'</span>';
+    var actBtn=(isAdmin()&&r.status!=='Completed')?'<button class="btn-sm ok" onclick="event.stopPropagation();markFRComplete('+ri+')" title="Mark Complete">✓</button>':'';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewFR('+ri+')" title="Click to view">'
+      +'<td><span class="mono" style="display:block;color:var(--text)">'+r.date+'</span><span class="mono" style="font-size:10px;color:var(--text-3)">'+r.time+'</span></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+r.badge+'</span></td>'
+      +'<td><div class="dn">'+r.name+'</div></td>'
+      +'<td>'+divCell+'</td>'
+      +'<td><span class="tag '+(typeC[r.type]||'dim')+'">'+r.type+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+r.location+'</td>'
+      +'<td><span class="veh">🚛 '+r.vehicle+'</span></td>'
+      +'<td>'+stCell+'</td>'
+      +'<td style="font-size:11px;color:var(--text-2);max-width:130px;overflow:hidden;text-overflow:ellipsis">'+r.outcome+'</td>'
+      +'<td><div style="display:flex;gap:5px">'+actBtn+'<button class="btn-sm" onclick="event.stopPropagation();viewFR('+ri+')">View</button></div></td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Time</th><th>Badge</th><th>Name</th><th>Division</th><th>Type</th><th>Location</th><th>Vehicle</th><th>Status</th><th>Outcome</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function updateFRStats(){
   document.getElementById('frST').textContent=fieldReports.length;
   document.getElementById('frSTow').textContent=fieldReports.filter(r=>r.type==='Refinery Operation'||r.type==='Refinery Incident').length;
   document.getElementById('frSInc').textContent=fieldReports.filter(r=>r.type==='Incident / Accident').length;
   document.getElementById('frSAss').textContent=fieldReports.filter(r=>r.type==='Mechanical Failure').length;
 }
+function markFRComplete(i){if(!isAdmin())return;fieldReports[i].status='Completed';fieldReports[i].completedAt=nowDate()+' at '+nowTime();fieldReports[i].completedBy=currentUser?.name||'—';persist('fieldReports');renderFR(fieldReports);updateFRStats();toast('✅','Field report marked as complete!','var(--green)');}
 function submitFieldReport(){
   if(currentUser&&(V('fr-name').trim().toLowerCase()!==currentUser.name.trim().toLowerCase()||V('fr-badge').trim()!==currentUser.badge.trim())){toast('🚫','You can only submit on behalf of yourself.','var(--red)');return;}
-  if(!V('fr-badge')||!V('fr-name')||!V('fr-type')||!V('fr-location')||!V('fr-vehicle')||!V('fr-outcome')||!V('fr-desc')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
-  fieldReports.unshift({date:nowDate(),time:nowTime(),badge:V('fr-badge'),name:V('fr-name'),rank:V('fr-rank'),type:V('fr-type'),location:V('fr-location'),vehicle:V('fr-vehicle'),outcome:V('fr-outcome'),parties:V('fr-parties'),fullDesc:V('fr-desc'),notes:V('fr-notes')});
+  if(!V('fr-badge')||!V('fr-name')||!V('fr-type')||!V('fr-location')||!V('fr-vehicle')||!V('fr-outcome')||!V('fr-division')||!V('fr-desc')){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  const frTypeVal=V('fr-type')==='Other — Please Specify'?(V('fr-type-other')||V('fr-type')):V('fr-type');fieldReports.unshift({date:nowDate(),time:nowTime(),badge:V('fr-badge'),name:V('fr-name'),rank:V('fr-rank'),type:frTypeVal,location:V('fr-location'),vehicle:V('fr-vehicle'),outcome:V('fr-outcome'),parties:V('fr-parties'),division:V('fr-division'),orderRef:V('fr-order-ref'),status:V('fr-status')||'Open',crew:V('fr-crew'),fullDesc:V('fr-desc'),notes:V('fr-notes')});
   persist('fieldReports');
-  ['fr-location','fr-vehicle','fr-parties','fr-desc','fr-notes'].forEach(id=>document.getElementById(id).value='');
-  ['fr-type','fr-outcome','fr-damage'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  ['fr-location','fr-vehicle','fr-parties','fr-desc','fr-notes','fr-type-other','fr-crew'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['fr-type','fr-outcome','fr-damage','fr-division','fr-order-ref','fr-status'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
   if(activeShift){activeShift.fieldReports++;document.getElementById('shFRC').textContent=activeShift.fieldReports;}
   updateFRStats();renderFR(fieldReports);toast('✅','Field report submitted!');showPage('field-reports');
 }
@@ -1781,7 +1905,7 @@ document.getElementById('frSrch').addEventListener('input',e=>{const q=e.target.
 function viewFR(idx){
   const r=fieldReports[idx];if(!r)return;
   document.getElementById('prevTitle').textContent='Field Report';
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.date} at ${r.time}</div></div>${pGrid(pRow('TYPE',r.type),pRow('LOCATION',r.location),pRow('VEHICLE',r.vehicle),pRow('OUTCOME',r.outcome),pRow('OTHER PARTIES',r.parties||'None'),'')}${pRow('DESCRIPTION',r.fullDesc)}${r.notes?`<div style="margin-top:8px">`+pRow('NOTES',r.notes)+`</div>`:''}`;
+  const frStC={'Open':'orange','In Progress':'blue','Completed':'green'};document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--amber)">${r.division||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.date} at ${r.time}</div></div>${pGrid(pRow('TYPE',r.type),pRow('LOCATION',r.location),pRow('VEHICLE',r.vehicle),pRow('OUTCOME',r.outcome),pRow('DIVISION',r.division||'—'),pRow('ORDER #',r.orderRef||'—'),pRow('STATUS',`<span style="color:var(--${frStC[r.status]||'orange'})">${r.status||'Open'}</span>`),pRow('CREW',r.crew||'—'),pRow('OTHER PARTIES',r.parties||'None'),'')}`+`${pRow('DESCRIPTION',r.fullDesc)}${r.notes?`<div style="margin-top:8px">`+pRow('NOTES',r.notes)+`</div>`:''}`;
   openModal('prevModal');
 }
 
@@ -1789,21 +1913,26 @@ function viewFR(idx){
 // INCIDENT REPORTS
 // ════════════════════════════════════════════
 function renderIR(data){
-  const w=document.getElementById('irWrap');if(!w)return;
+  var w=document.getElementById('irWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🚨</div><div class="empty-t">No Incident Reports</div><div class="empty-s">Filed reports appear here.</div><button class="empty-btn" onclick="showPage('incident-form')">+ New Incident</button></div>`;return;}
-  const stC={'Open — Under Review':'orange','Resolved':'green','Escalated':'red'};
-  w.innerHTML=`<table><thead><tr><th>Time</th><th>Badge</th><th>Reporter</th><th>Type</th><th>Severity</th><th>Location</th><th>Status</th><th></th></tr></thead><tbody>${data.map((r,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewIR(${incidentReports.indexOf(r)})" title="Click to view">
-    <td><span class="mono" style="display:block;color:var(--text)">${r.date}</span><span class="mono" style="font-size:10px;color:var(--text-3)">${r.time}</span></td>
-    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
-    <td><div class="dn">${r.name}</div></td>
-    <td><span class="tag red" style="font-size:10px">${r.type}</span></td>
-    <td><span style="font-size:11px;font-weight:700;color:${sevCol[r.severity]||'var(--text-2)'}">${r.severity}</span></td>
-    <td style="font-size:12px;color:var(--text-2)">${r.location}</td>
-    <td><span class="tag ${stC[r.status]||'orange'}" style="font-size:10px">${r.status}</span></td>
-    <td><button class="btn-sm" onclick="event.stopPropagation();viewIR(${incidentReports.indexOf(r)})">View</button></td>
-  </tr>`).join('')}</tbody></table>`;
+  var stC={'Open — Under Review':'orange','Resolved':'green','Escalated':'red'};
+  var rows='';
+  for(var i=0;i<data.length;i++){
+    var r=data[i];var ri=incidentReports.indexOf(r);
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewIR('+ri+')" title="Click to view">'
+      +'<td><span class="mono" style="display:block;color:var(--text)">'+r.date+'</span><span class="mono" style="font-size:10px;color:var(--text-3)">'+r.time+'</span></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+r.badge+'</span></td>'
+      +'<td><div class="dn">'+r.name+'</div></td>'
+      +'<td><span class="tag red" style="font-size:10px">'+r.type+'</span></td>'
+      +'<td><span style="font-size:11px;font-weight:700;color:'+(sevCol[r.severity]||'var(--text-2)')+'">'+r.severity+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+r.location+'</td>'
+      +'<td><span class="tag '+(stC[r.status]||'orange')+'" style="font-size:10px">'+r.status+'</span></td>'
+      +'<td><button class="btn-sm" onclick="event.stopPropagation();viewIR('+ri+')">View</button></td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Time</th><th>Badge</th><th>Reporter</th><th>Type</th><th>Severity</th><th>Location</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function updateIRStats(){
   document.getElementById('irST').textContent=incidentReports.length;
   document.getElementById('irSO').textContent=incidentReports.filter(r=>r.status==='Open — Under Review').length;
@@ -1823,7 +1952,7 @@ document.getElementById('irSrch').addEventListener('input',e=>{const q=e.target.
 function viewIR(idx){
   const r=incidentReports[idx];if(!r)return;
   document.getElementById('prevTitle').textContent='Incident Report';
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between"><div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.rank} · ${r.date} at ${r.time}</div></div><span style="font-size:11px;font-weight:700;color:${sevCol[r.severity]};border:1px solid currentColor;border-radius:5px;padding:2px 8px;white-space:nowrap">${r.severity}</span></div>${pGrid(pRow('TYPE',r.type),pRow('LOCATION',r.location),pRow('VEHICLE',r.vehicle),pRow('EMERGENCY SVC',r.police||'None'),pRow('OTHER PARTIES',r.parties||'None'),pRow('DAMAGE',r.damage||'N/A'))}${pRow('DESCRIPTION',r.fullDesc)}${r.notes?`<div style="margin-top:8px">`+pRow('NOTES',r.notes)+`</div>`:''}`;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between"><div><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.rank} · ${r.date} at ${r.time}</div></div><span style="font-size:11px;font-weight:700;color:${sevCol[r.severity]};border:1px solid currentColor;border-radius:5px;padding:2px 8px;white-space:nowrap">${r.severity}</span></div>${pGrid(pRow('TYPE',r.type),pRow('LOCATION',r.location),pRow('VEHICLE',r.vehicle),pRow('EMERGENCY SVC',r.police||'None'),pRow('OTHER PARTIES',r.parties||'None'),pRow('DAMAGE',r.damage||'N/A'))}${pRow('DESCRIPTION',r.fullDesc)}${r.notes?`<div style="margin-top:8px">`+pRow('NOTES',r.notes)+`</div>`:''}`;
   openModal('prevModal');
 }
 
@@ -1916,26 +2045,32 @@ function endShift(){
   toast('⏹',`Shift ended — ${entry.durationShort}`,'var(--amber)');
 }
 function renderShiftHistory(data){
-  const w=document.getElementById('shHistWrap');if(!w)return;
-  if(!data||!data.length){w.innerHTML=`<div class="empty" style="padding:28px"><div class="empty-ico" style="font-size:30px">📂</div><div class="empty-t" style="font-size:13px">No Shifts Yet</div></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Date</th><th>Name</th><th>Badge</th><th>Vehicle</th><th>Start</th><th>End</th><th>Duration</th><th>Break</th><th>Deliveries</th><th>Reports</th></tr></thead><tbody>${data.map((s,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewShift(${shiftHistory.indexOf(s)})" title="Click to view">
-    <td class="mono" style="font-size:12px">${s.date}</td>
-    <td><div class="dn">${s.name}</div><div class="dc">${s.role}</div></td>
-    <td><span class="mono" style="color:var(--amber)">${s.badge}</span></td>
-    <td>${s.vehicle!=='—'?`<span class="veh">🚛 ${s.vehicle}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}</td>
-    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.startTime}</td>
-    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.endTime}</td>
-    <td><span class="mono" style="color:var(--amber);font-weight:600">${s.duration}</span></td>
-    <td class="mono" style="font-size:11px;color:var(--orange)">${s.breakShort}</td>
-    <td style="font-size:13px;font-weight:600;color:var(--amber)">${s.deliveries}</td>
-    <td style="font-size:13px;font-weight:600;color:var(--blue)">${s.fieldReports||0}</td>
-  </tr>`).join('')}</tbody></table>`;
+  var w=document.getElementById('shHistWrap');if(!w)return;
+  if(!data||!data.length){w.innerHTML='<div class="empty" style="padding:28px"><div class="empty-ico" style="font-size:30px">📂</div><div class="empty-t" style="font-size:13px">No Shifts Yet</div></div>';return;}
+  var rows='';
+  for(var i=0;i<data.length;i++){
+    var s=data[i];var si=shiftHistory.indexOf(s);
+    var vehCell=s.vehicle!=='—'?'<span class="veh">🚛 '+s.vehicle+'</span>':'<span style="color:var(--text-3);font-size:11px">—</span>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer" onclick="viewShift('+si+')" title="Click to view">'
+      +'<td class="mono" style="font-size:12px">'+s.date+'</td>'
+      +'<td><div class="dn">'+s.name+'</div><div class="dc">'+s.role+'</div></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+s.badge+'</span></td>'
+      +'<td>'+vehCell+'</td>'
+      +'<td class="mono" style="font-size:11px;color:var(--text-2)">'+s.startTime+'</td>'
+      +'<td class="mono" style="font-size:11px;color:var(--text-2)">'+s.endTime+'</td>'
+      +'<td><span class="mono" style="color:var(--amber);font-weight:600">'+s.duration+'</span></td>'
+      +'<td class="mono" style="font-size:11px;color:var(--orange)">'+s.breakShort+'</td>'
+      +'<td style="font-size:13px;font-weight:600;color:var(--amber)">'+s.deliveries+'</td>'
+      +'<td style="font-size:13px;font-weight:600;color:var(--blue)">'+(s.fieldReports||0)+'</td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Date</th><th>Name</th><th>Badge</th><th>Vehicle</th><th>Start</th><th>End</th><th>Duration</th><th>Break</th><th>Deliveries</th><th>Reports</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function viewShift(i){
   const s=shiftHistory[i];if(!s)return;
   document.getElementById('prevTitle').textContent='Shift — '+s.name;
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${s.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${s.badge} · ${s.role}</div></div>${pGrid(pRow('DATE',s.date),pRow('VEHICLE',s.vehicle!=='—'?'🚛 '+s.vehicle:'—'),pRow('START TIME',s.startTime),pRow('END TIME',s.endTime),pRow('DURATION',s.duration),pRow('BREAK TIME',s.breakShort),pRow('DELIVERIES',String(s.deliveries)),pRow('FIELD REPORTS',String(s.fieldReports||0)))}`;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${s.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${s.badge} · ${s.role}</div></div>${pGrid(pRow('DATE',s.date),pRow('VEHICLE',s.vehicle!=='—'?'🚛 '+s.vehicle:'—'),pRow('START TIME',s.startTime),pRow('END TIME',s.endTime),pRow('DURATION',s.duration),pRow('BREAK TIME',s.breakShort),pRow('DELIVERIES',String(s.deliveries)),pRow('FIELD REPORTS',String(s.fieldReports||0)))}`;
   openModal('prevModal');
 }
 
@@ -2026,36 +2161,148 @@ function renderMyStats(){
   ].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,10);
   const aw=document.getElementById('msActivity');
   if(!recent.length){aw.innerHTML=`<div style="font-size:12px;color:var(--text-3);text-align:center;padding:20px">No activity yet. Start a shift and submit logs.</div>`;return;}
-  aw.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">${recent.map(a=>`<div style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px"><span style="font-size:14px">${a.type.split(' ')[0]}</span><div><div style="font-size:12px;font-weight:500">${a.type.replace(/^[^ ]+ /,'')}</div><div style="font-size:11px;color:var(--text-3)">${a.detail}</div></div><div class="mono" style="margin-left:auto;font-size:10px;color:var(--text-3)">${a.ts}</div></div>`).join('')}</div>`;
+  var awH='<div style="display:flex;flex-direction:column;gap:8px">';
+  recent.forEach(function(a){
+    var ico=a.type.split(' ')[0];
+    awH+='<div style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px"><span style="font-size:14px">'+ico+'</span><div><div style="font-family:&quot;Space Grotesk&quot;,sans-serif;font-size:12px;font-weight:500">'+a.type+'</div><div style="font-size:11px;color:var(--text-3);font-family:&quot;JetBrains Mono&quot;,monospace">'+a.detail+'</div><div style="font-size:10px;color:var(--text-3);margin-top:1px">'+a.ts+'</div></div></div>';
+  });
+  awH+='</div>';
+  aw.innerHTML=awH;
+  document.getElementById('ovFR').textContent=fieldReports.length;
+  document.getElementById('ovIR').textContent=incidentReports.length;
+  document.getElementById('ovSH').textContent=shiftHistory.length;
+  var verified=accounts.filter(function(a){return a.status==='verified';});
+  var ee=document.getElementById('ovEmp');
+  if(ee){
+    if(!verified.length){ee.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No verified accounts</div>';}
+    else{
+      var empH='';
+      verified.forEach(function(a){
+        var ini=(a.initials||a.name.charAt(0)).toUpperCase();
+        empH+='<div class="lb-row"><div style="width:28px;height:28px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:Space Grotesk,sans-serif;font-size:10px;font-weight:700;color:#000;flex-shrink:0">'+ini+'</div><div style="flex:1;margin-left:9px"><div style="font-size:12px;font-weight:500">'+a.name+'</div><div style="font-size:10px;color:var(--text-3)">'+a.role+'</div></div></div>';
+      });
+      ee.innerHTML=empH;
+    }
+  }
+  var fe=document.getElementById('ovFleet');
+  if(fe){
+    if(!fleet.length){fe.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No vehicles registered</div>';}
+    else{
+      var flH='';
+      fleet.slice(0,5).forEach(function(f){
+        var stCol=f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim';
+        flH+='<div class="lb-row"><span class="veh" style="font-size:10px">🚛 '+f.plate+'</span><span style="font-size:11px;color:var(--text-2);flex:1;margin-left:8px">'+f.type+'</span><span class="tag '+stCol+'" style="font-size:9px">'+f.status+'</span></div>';
+      });
+      fe.innerHTML=flH;
+    }
+  }
+  var oe=document.getElementById('ovOrders');
+  if(oe){
+    var ao=orders.filter(function(o){return o.status!=='Completed';});
+    if(!ao.length){oe.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No active orders</div>';}
+    else{
+      var orH='';
+      ao.slice(0,5).forEach(function(o){
+        var stCol=o.status==='In Transit'?'var(--blue)':'var(--orange)';
+        var divBadge=o.division==='Logistics Orders'?'<span class="tag blue" style="font-size:8px;margin-left:4px">LOG</span>':o.division==='Field Operations Orders'?'<span class="tag purple" style="font-size:8px;margin-left:4px">FOP</span>':'';
+        orH+='<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis">'+o.title+divBadge+'</div><div style="font-size:10px;color:var(--text-3)">'+(o.number||'')+(o.client?' · '+o.client:'')+'</div></div><span style="font-size:11px;font-weight:600;color:'+stCol+'">'+o.status+'</span></div>';
+      });
+      oe.innerHTML=orH;
+    }
+  }
+  var wa=new Date(Date.now()-7*24*60*60*1000);
+  var ws=shiftHistory.filter(function(s){return new Date(s.date)>=wa;});
+  var we=document.getElementById('ovWeek');
+  if(we){
+    if(!ws.length){we.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No shifts this week</div>';}
+    else{
+      var wsH='';
+      ws.slice(0,5).forEach(function(s){
+        wsH+='<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500">'+s.name+'</div><div style="font-size:10px;color:var(--text-3)">'+s.date+'</div></div><span class="mono" style="font-size:11px;color:var(--amber)">'+s.durationShort+'</span></div>';
+      });
+      we.innerHTML=wsH;
+    }
+  }
 }
 
-// ════════════════════════════════════════════
-// COMPANY OVERVIEW & LEADERBOARD
-// ════════════════════════════════════════════
 function renderCompanyOverview(){
   document.getElementById('ovDL').textContent=deliveryLogs.length;
   document.getElementById('ovFR').textContent=fieldReports.length;
   document.getElementById('ovIR').textContent=incidentReports.length;
   document.getElementById('ovSH').textContent=shiftHistory.length;
-  const verified=accounts.filter(a=>a.status==='verified');
-  const ee=document.getElementById('ovEmp');if(ee)ee.innerHTML=verified.length?verified.map(a=>`<div class="lb-row"><div style="width:28px;height:28px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#000">${a.initials}</div><div style="flex:1;margin-left:2px"><div style="font-size:13px;font-weight:500">${a.name}</div><div style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace">${a.role}</div></div><span class="tag ${['Manager','Supervisor'].includes(a.role)?'amber':'blue'}">${a.role}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No employees</div>`;
-  const fe=document.getElementById('ovFleet');if(fe)fe.innerHTML=fleet.length?fleet.slice(0,5).map(f=>`<div class="lb-row"><span class="veh" style="font-size:10px">🚛 ${f.plate}</span><span style="font-size:11px;color:var(--text-2);flex:1;margin-left:8px">${f.type}</span><span class="tag ${f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim'}" style="font-size:10px">${f.status}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No vehicles</div>`;
-  const oe=document.getElementById('ovOrders');if(oe){const ao=orders.filter(o=>o.status!=='Completed');oe.innerHTML=ao.length?ao.slice(0,5).map(o=>`<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis">${o.title}</div><div style="font-size:10px;color:var(--text-3)">${o.client}</div></div><span class="tag ${o.status==='In Transit'?'blue':'orange'}" style="font-size:10px">${o.status}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No active orders</div>`;}
-  const wa=new Date(Date.now()-7*24*60*60*1000);const ws=shiftHistory.filter(s=>new Date(s.date)>=wa);
-  const we=document.getElementById('ovWeek');if(we)we.innerHTML=ws.length?ws.slice(0,5).map(s=>`<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500">${s.name}</div><div style="font-size:10px;color:var(--text-3)">${s.date}</div></div><span class="mono" style="font-size:11px;color:var(--amber)">${s.durationShort}</span></div>`).join(''):`<div style="padding:14px;font-size:12px;color:var(--text-3);text-align:center">No shifts this week</div>`;
+  var verified=accounts.filter(function(a){return a.status==='verified';});
+  var ee=document.getElementById('ovEmp');
+  if(ee){
+    if(!verified.length){ee.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No verified accounts</div>';}
+    else{
+      var empH='';
+      verified.forEach(function(a){
+        var ini=(a.initials||a.name.charAt(0)).toUpperCase();
+        empH+='<div class="lb-row"><div style="width:28px;height:28px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:Space Grotesk,sans-serif;font-size:10px;font-weight:700;color:#000;flex-shrink:0">'+ini+'</div><div style="flex:1;margin-left:9px"><div style="font-size:12px;font-weight:500">'+a.name+'</div><div style="font-size:10px;color:var(--text-3)">'+a.role+'</div></div></div>';
+      });
+      ee.innerHTML=empH;
+    }
+  }
+  var fe=document.getElementById('ovFleet');
+  if(fe){
+    if(!fleet.length){fe.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No vehicles registered</div>';}
+    else{
+      var flH='';
+      fleet.slice(0,5).forEach(function(f){
+        var stCol=f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim';
+        flH+='<div class="lb-row"><span class="veh" style="font-size:10px">🚛 '+f.plate+'</span><span style="font-size:11px;color:var(--text-2);flex:1;margin-left:8px">'+f.type+'</span><span class="tag '+stCol+'" style="font-size:9px">'+f.status+'</span></div>';
+      });
+      fe.innerHTML=flH;
+    }
+  }
+  var oe=document.getElementById('ovOrders');
+  if(oe){
+    var ao=orders.filter(function(o){return o.status!=='Completed';});
+    if(!ao.length){oe.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No active orders</div>';}
+    else{
+      var orH='';
+      ao.slice(0,5).forEach(function(o){
+        var stCol=o.status==='In Transit'?'var(--blue)':'var(--orange)';
+        var divBadge=o.division==='Logistics Orders'?'<span class="tag blue" style="font-size:8px;margin-left:4px">LOG</span>':o.division==='Field Operations Orders'?'<span class="tag purple" style="font-size:8px;margin-left:4px">FOP</span>':'';
+        orH+='<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis">'+o.title+divBadge+'</div><div style="font-size:10px;color:var(--text-3)">'+(o.number||'')+(o.client?' · '+o.client:'')+'</div></div><span style="font-size:11px;font-weight:600;color:'+stCol+'">'+o.status+'</span></div>';
+      });
+      oe.innerHTML=orH;
+    }
+  }
+  var wa=new Date(Date.now()-7*24*60*60*1000);
+  var ws=shiftHistory.filter(function(s){return new Date(s.date)>=wa;});
+  var we=document.getElementById('ovWeek');
+  if(we){
+    if(!ws.length){we.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No shifts this week</div>';}
+    else{
+      var wsH='';
+      ws.slice(0,5).forEach(function(s){
+        wsH+='<div class="lb-row"><div style="flex:1"><div style="font-size:12px;font-weight:500">'+s.name+'</div><div style="font-size:10px;color:var(--text-3)">'+s.date+'</div></div><span class="mono" style="font-size:11px;color:var(--amber)">'+s.durationShort+'</span></div>';
+      });
+      we.innerHTML=wsH;
+    }
+  }
 }
 function renderLeaderboard(){
-  const dlM={},hrM={},rpM={},shM={};
-  deliveryLogs.forEach(r=>{dlM[r.name]=(dlM[r.name]||0)+1;});
-  fieldReports.forEach(r=>{rpM[r.name]=(rpM[r.name]||0)+1;});
-  incidentReports.forEach(r=>{rpM[r.name]=(rpM[r.name]||0)+1;});
-  shiftHistory.forEach(s=>{shM[s.name]=(shM[s.name]||0)+1;hrM[s.name]=(hrM[s.name]||0)+s.durationMs;});
+  var dlM={},hrM={},rpM={},shM={};
+  deliveryLogs.forEach(function(r){dlM[r.name]=(dlM[r.name]||0)+1;});
+  fieldReports.forEach(function(r){rpM[r.name]=(rpM[r.name]||0)+1;});
+  incidentReports.forEach(function(r){rpM[r.name]=(rpM[r.name]||0)+1;});
+  shiftHistory.forEach(function(s){shM[s.name]=(shM[s.name]||0)+1;hrM[s.name]=(hrM[s.name]||0)+s.durationMs;});
   function buildLB(map,unit,id){
-    const sorted=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    const max=sorted[0]?sorted[0][1]:1;const rc=['g','s','b','',''];
-    const el=document.getElementById(id);if(!el)return;
-    if(!sorted.length){el.innerHTML=`<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No data yet</div>`;return;}
-    el.innerHTML=sorted.map(([n,v],i)=>`<div class="lb-row"><span class="lb-rank ${rc[i]||''}">${i+1}</span><span class="lb-name">${n}</span><div class="lb-bg"><div class="lb-fill" style="width:${Math.round((v/max)*100)}%"></div></div><span class="lb-val">${unit==='time'?fmtShort(v):v}</span></div>`).join('');
+    var sorted=Object.entries(map).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+    var max=sorted[0]?sorted[0][1]:1;
+    var rc=['g','s','b','',''];
+    var el=document.getElementById(id);if(!el)return;
+    if(!sorted.length){el.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-3)">No data yet</div>';return;}
+    var h='';
+    sorted.forEach(function(entry,i){
+      var n=entry[0],v=entry[1];
+      var pct=Math.round((v/max)*100);
+      var val=unit==='time'?fmtShort(v):v;
+      h+='<div class="lb-row"><span class="lb-rank '+(rc[i]||'')+'">'+( i+1)+'</span><span class="lb-name">'+n+'</span><div class="lb-bg"><div class="lb-fill" style="width:'+pct+'%"></div></div><span class="lb-val">'+val+'</span></div>';
+    });
+    el.innerHTML=h;
   }
   buildLB(dlM,'','lbDel');buildLB(hrM,'time','lbHrs');buildLB(rpM,'','lbRep');buildLB(shM,'','lbSh');
 }
@@ -2064,31 +2311,40 @@ function renderLeaderboard(){
 // ADMIN: ACCOUNTS
 // ════════════════════════════════════════════
 function renderAccounts(){
-  const w=document.getElementById('accWrap');if(!w)return;
+  var w=document.getElementById('accWrap');if(!w)return;
   document.getElementById('acST').textContent=accounts.length;
-  document.getElementById('acSV').textContent=accounts.filter(a=>a.status==='verified').length;
-  document.getElementById('acSP').textContent=accounts.filter(a=>a.status==='pending').length;
-  // Pending resets notice
-  const resets=pendingResets.filter(r=>accounts.find(a=>a.username===r.username));
-  const hasResets=resets.length>0;
-  w.innerHTML=`${hasResets?`<div style="background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.25);border-radius:var(--r);padding:10px 14px;margin:12px;font-size:12px;color:var(--orange)"><strong style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px">⚠ PASSWORD RESET REQUESTS</strong><br>${resets.map(r=>`${r.name} (${r.username}) — badge #${r.badge} — Requested: ${r.requestedAt}`).join('<br>')}</div>`:''}
-  <table><thead><tr><th>Name</th><th>Username</th><th>Badge</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>${accounts.map((a,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewAccount(${i})" title="Click to view">
-    <td><div class="dn">${a.name}</div></td>
-    <td><span class="mono" style="color:var(--text-2)">${a.username}</span></td>
-    <td><span class="mono" style="color:var(--amber)">${a.badge}</span></td>
-    <td><span class="tag ${['Manager','Supervisor'].includes(a.role)?'amber':'blue'}">${a.role}</span></td>
-    <td><span class="tag ${a.status==='verified'?'green':a.status==='pending'?'orange':'red'}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span></td>
-    <td><div style="display:flex;gap:6px;flex-wrap:wrap">
-      ${a.status==='pending'?`<button class="btn-sm ok" onclick="event.stopPropagation();verifyAcc(${i})">✓ Verify</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectAcc(${i})">✕ Reject</button>`:''}
-      ${a.status==='verified'&&a.username!=='justin'?`<button class="btn-sm danger" onclick="event.stopPropagation();removeAcc(${i})">Remove</button>`:''}
-      ${a.status==='verified'?`<button class="btn-sm" onclick="event.stopPropagation();openResetPw(${i})">🔑 Reset PW</button>`:''}
-      ${a.status==='verified'?`<button class="btn-sm" onclick="event.stopPropagation();openChangeRole(${i})" style="border-color:rgba(168,85,247,.3);color:var(--purple)">🎖️ Role</button>`:''}
-      <button class="btn-sm" onclick="event.stopPropagation();openChangeBadge(${i})" style="border-color:rgba(232,160,32,.3);color:var(--amber)">🔢 Badge</button>
-    </div></td>
-  </tr>`).join('')}</tbody></table>`;
+  document.getElementById('acSV').textContent=accounts.filter(function(a){return a.status==='verified';}).length;
+  document.getElementById('acSP').textContent=accounts.filter(function(a){return a.status==='pending';}).length;
+  var resets=pendingResets.filter(function(r){return accounts.find(function(a){return a.username===r.username;});});
+  var resetsHtml='';
+  if(resets.length){
+    var resetItems='';
+    resets.forEach(function(r){resetItems+='<span style="font-family:JetBrains Mono,monospace">'+r.name+' (#'+r.badge+')</span> — ';});
+    resetsHtml='<div style="background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.25);border-radius:var(--r);padding:10px 14px;margin:12px;font-size:12px;color:var(--orange)"><strong style="font-family:JetBrains Mono,monospace;font-size:10px;letter-spacing:1px">⚠ PASSWORD RESET REQUESTS</strong><div style="margin-top:4px">'+resetItems+'— Reset via the password column below.</div></div>';
+  }
+  var rows='';
+  accounts.forEach(function(a,i){
+    var isAdmin2=['Manager','Supervisor'].includes(a.role);
+    var stTag='<span class="tag '+(a.status==='verified'?'green':a.status==='pending'?'orange':'red')+'">'+a.status.charAt(0).toUpperCase()+a.status.slice(1)+'</span>';
+    var acts='';
+    if(a.status==='pending') acts+='<button class="btn-sm ok" onclick="event.stopPropagation();verifyAcc('+i+')">✓ Verify</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectAcc('+i+')">✕ Reject</button>';
+    if(a.status==='verified'&&a.username!=='justin') acts+='<button class="btn-sm danger" onclick="event.stopPropagation();removeAcc('+i+')">Remove</button>';
+    if(a.status==='verified') acts+='<button class="btn-sm" onclick="event.stopPropagation();openResetPw('+i+')">🔑 Reset PW</button>';
+    if(a.status==='verified') acts+='<button class="btn-sm" onclick="event.stopPropagation();openChangeRole('+i+')" style="border-color:rgba(168,85,247,.3);color:var(--purple)">🎖️ Role</button>';
+    acts+='<button class="btn-sm" onclick="event.stopPropagation();openChangeBadge('+i+')" style="border-color:rgba(232,160,32,.3);color:var(--amber)">🔢 Badge</button>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer" onclick="viewAccount('+i+')" title="Click to view">'
+      +'<td><div class="dn">'+a.name+'</div></td>'
+      +'<td><span class="mono" style="color:var(--text-2)">'+a.username+'</span></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+a.badge+'</span></td>'
+      +'<td><span class="tag '+(isAdmin2?'amber':'blue')+'">'+a.role+'</span></td>'
+      +'<td>'+stTag+'</td>'
+      +'<td><div style="display:flex;gap:6px;flex-wrap:wrap">'+acts+'</div></td>'
+      +'</tr>';
+  });
+  w.innerHTML=resetsHtml+'<table><thead><tr><th>Name</th><th>Username</th><th>Badge</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
   updateChips();
 }
+
 function verifyAcc(i){accounts[i].status='verified';persist('accounts');logRoleEvent('Account Verified',accounts[i].name,'—','Verified',currentUser?.name||'System');renderAccounts();toast('✅',accounts[i].name+' verified!');updateChips();}
 function rejectAcc(i){accounts[i].status='rejected';persist('accounts');logRoleEvent('Account Rejected',accounts[i].name,'—','Rejected',currentUser?.name||'System');renderAccounts();toast('✕','Account rejected.','var(--red)');updateChips();}
 function removeAcc(i){const n=accounts[i].name;logRoleEvent('Account Removed',n,accounts[i].role,'—',currentUser?.name||'System');accounts.splice(i,1);persist('accounts');renderAccounts();toast('🗑','Account removed.','var(--text-3)');}
@@ -2158,7 +2414,7 @@ function openResetPw(i){document.getElementById('rpIdx').value=i;openModal('rese
 function viewAccount(i){
   const a=accounts[i];if(!a)return;
   document.getElementById('prevTitle').textContent='Account — '+a.name;
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#000">${a.initials||a.name.slice(0,2).toUpperCase()}</div><div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">${a.name}</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">@${a.username}</div></div></div>${pGrid(pRow('BADGE',a.badge),pRow('ROLE',a.role),pRow('STATUS',a.status.charAt(0).toUpperCase()+a.status.slice(1)),'')}`; 
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:700;color:#000">${a.initials||a.name.slice(0,2).toUpperCase()}</div><div><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600">${a.name}</div><div style="font-size:11px;color:var(--text-3);font-family:JetBrains Mono,monospace">@${a.username}</div></div></div>${pGrid(pRow('BADGE',a.badge),pRow('ROLE',a.role),pRow('STATUS',a.status.charAt(0).toUpperCase()+a.status.slice(1)),'')}`; 
   openModal('prevModal');
 }
 function doResetPw(){
@@ -2220,7 +2476,7 @@ function submitApplication(){
   }
   const bgCheck=division==='corp'?V('apBgCheck'):'n/a';
   const nda=division==='corp'?V('apNda'):'n/a';
-  applications.push({name,phone,age,nationality:nat,role,division:division==='corp'?'Aurum Corporation':'Aurum Energy — Operations',experience:exp,reason:why,notes,bgCheck,nda,submittedAt:nowDate(),status:'pending'});
+  applications.push({name,phone,age,nationality:nat,role,division:division==='corp'?'Aurum Corporation':'Aurum Energy — Operations',experience:exp,reason:why,notes,bgCheck,nda,routing:V('apRouting'),submittedAt:nowDate(),status:'pending'});
   persist('applications');
   err.style.display='none';ok.style.display='block';
   ['apName','apPhone','apAge','apNat','apExp','apWhy','apNotes'].forEach(id=>document.getElementById(id).value='');
@@ -2230,35 +2486,41 @@ function submitApplication(){
   updateChips();
 }
 function renderApplications(){
-  const w=document.getElementById('applWrap');if(!w)return;
+  var w=document.getElementById('applWrap');if(!w)return;
   document.getElementById('apST').textContent=applications.length;
-  document.getElementById('apSP').textContent=applications.filter(a=>a.status==='pending').length;
-  const apSOps=document.getElementById('apSOps');if(apSOps)apSOps.textContent=applications.filter(a=>!a.division||a.division.includes('Operations')).length;
-  const apSCorp=document.getElementById('apSCorp');if(apSCorp)apSCorp.textContent=applications.filter(a=>a.division&&a.division.includes('Corporation')).length;
-  const apSA=document.getElementById('apSA');if(apSA)apSA.textContent=applications.filter(a=>a.status==='accepted').length;
-  if(!applications.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📝</div><div class="empty-t">No Applications</div><div class="empty-s">Applications from the login screen appear here.</div></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Name</th><th>Phone</th><th>Division</th><th>Position</th><th>Age</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>${applications.map((a,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewApplication(${i})" title="Click to view">
-    <td><div class="dn">${a.name}</div></td>
-    <td class="mono" style="font-size:11px;color:var(--text-2)">${a.phone}</td>
-    <td><span class="tag ${a.division&&a.division.includes('Corporation')?'purple':'amber'}" style="font-size:10px;white-space:nowrap">${a.division&&a.division.includes('Corporation')?'🏢 Corp':'⚡ Ops'}</span></td>
-    <td><span class="tag blue" style="font-size:10px">${a.role}</span></td>
-    <td style="font-size:12px;color:var(--text-2)">${a.age||'—'}</td>
-    <td class="mono" style="font-size:11px;color:var(--text-3)">${a.submittedAt}</td>
-    <td><span class="tag ${a.status==='accepted'?'green':a.status==='rejected'?'red':'orange'}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span></td>
-    <td><div style="display:flex;gap:6px">
-      <button class="btn-sm" onclick="event.stopPropagation();viewApplication(${i})">👁 View</button>
-      ${a.status==='pending'?`<button class="btn-sm ok" onclick="event.stopPropagation();acceptApplication(${i})">✓ Accept</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectApplication(${i})">✕ Reject</button>`:''}
-    </div></td>
-  </tr>`).join('')}</tbody></table>`;
+  document.getElementById('apSP').textContent=applications.filter(function(a){return a.status==='pending';}).length;
+  var apSOps=document.getElementById('apSOps');if(apSOps)apSOps.textContent=applications.filter(function(a){return !a.division||a.division.includes('Operations');}).length;
+  var apSCorp=document.getElementById('apSCorp');if(apSCorp)apSCorp.textContent=applications.filter(function(a){return a.division&&a.division.includes('Corporation');}).length;
+  var apSA=document.getElementById('apSA');if(apSA)apSA.textContent=applications.filter(function(a){return a.status==='accepted';}).length;
+  if(!applications.length){w.innerHTML='<div class="empty"><div class="empty-ico">📝</div><div class="empty-t">No Applications</div><div class="empty-s">Applications from the login screen appear here.</div></div>';return;}
+  var rows='';
+  applications.forEach(function(a,i){
+    var isCorpDiv=a.division&&a.division.includes('Corporation');
+    var divTag='<span class="tag '+(isCorpDiv?'purple':'amber')+'" style="font-size:10px;white-space:nowrap">'+(isCorpDiv?'🏢 Corp':'⚡ Ops')+'</span>';
+    var stTag='<span class="tag '+(a.status==='accepted'?'green':a.status==='rejected'?'red':'orange')+'">'+a.status.charAt(0).toUpperCase()+a.status.slice(1)+'</span>';
+    var acts='<button class="btn-sm" onclick="event.stopPropagation();viewApplication('+i+')">👁 View</button>';
+    if(a.status==='pending') acts+='<button class="btn-sm ok" onclick="event.stopPropagation();acceptApplication('+i+')">✓ Accept</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectApplication('+i+')">✕ Reject</button>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer" onclick="viewApplication('+i+')" title="Click to view">'
+      +'<td><div class="dn">'+a.name+'</div></td>'
+      +'<td class="mono" style="font-size:11px;color:var(--text-2)">'+a.phone+'</td>'
+      +'<td>'+divTag+'</td>'
+      +'<td><span class="tag blue" style="font-size:10px">'+a.role+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+(a.age||'—')+'</td>'
+      +'<td class="mono" style="font-size:11px;color:var(--text-3)">'+a.submittedAt+'</td>'
+      +'<td>'+stTag+'</td>'
+      +'<td><div style="display:flex;gap:6px">'+acts+'</div></td>'
+      +'</tr>';
+  });
+  w.innerHTML='<table><thead><tr><th>Name</th><th>Phone</th><th>Division</th><th>Position</th><th>Age</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function viewApplication(i){
   const a=applications[i];if(!a)return;
   const isCorp=a.division&&a.division.includes('Corporation');
   document.getElementById('applPrevBody').innerHTML=`
     <div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between">
       <div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">${a.name}</div>
+        <div style="font-family:Space Grotesk,sans-serif;font-size:18px;font-weight:700">${a.name}</div>
         <div class="mono" style="font-size:11px;color:var(--text-3)">Applied: ${a.submittedAt}</div>
         <span class="tag ${isCorp?'purple':'amber'}" style="margin-top:6px;display:inline-flex">${a.division||'Aurum Energy — Operations'}</span>
       </div>
@@ -2283,7 +2545,7 @@ function acceptApplication(i){
   const uname=a.name.toLowerCase().replace(/\s+/g,'_').slice(0,12);
   const pw='aurum'+Math.floor(1000+Math.random()*9000);
   const initials=(a.name.split(' ').map(w=>w[0]).join('')).toUpperCase().slice(0,2);
-  accounts.push({username:uname,password:pw,name:a.name,badge:'NEW',role:a.role,status:'pending',initials});
+  accounts.push({username:uname,password:pw,name:a.name,badge:'NEW',role:a.role,status:'pending',initials:(a.name.split(' ').map(w=>w[0]||'').join('')).toUpperCase().slice(0,2),phone:a.phone||'',routing:a.routing||''});
   persist('accounts');persist('applications');
   renderApplications();updateChips();
   // Show credentials modal
@@ -2313,20 +2575,26 @@ function assignShift(){
   closeModal('assignShiftModal');renderAssignedShifts();toast('📅','Shift assigned!','var(--blue)');
 }
 function renderAssignedShifts(){
-  const w=document.getElementById('assignedWrap');if(!w)return;
-  if(!assignedShifts.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📅</div><div class="empty-t">No Assigned Shifts</div><div class="empty-s">Assign shifts to employees to get started.</div></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Employee</th><th>Date</th><th>Start</th><th>End</th><th>Vehicle</th><th>Task</th><th>By</th><th>Status</th><th>Actions</th></tr></thead><tbody>${assignedShifts.map((s,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.04}s both">
-    <td><div class="dn">${s.employeeName}</div></td>
-    <td class="mono" style="font-size:12px">${s.date}</td>
-    <td class="mono" style="color:var(--amber);font-size:11px">${s.startTime}</td>
-    <td class="mono" style="color:var(--text-2);font-size:11px">${s.endTime}</td>
-    <td>${s.vehicle?`<span class="veh">🚛 ${s.vehicle}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}</td>
-    <td style="font-size:11px;max-width:110px;overflow:hidden;text-overflow:ellipsis">${s.orderTitle||'—'}</td>
-    <td style="font-size:11px;color:var(--text-2)">${s.assignedBy}</td>
-    <td><span class="tag ${s.status==='completed'?'green':s.status==='in-progress'?'amber':'blue'}">${s.status==='assigned'?'Upcoming':s.status==='in-progress'?'Active':'Completed'}</span></td>
-    <td><button class="btn-sm danger" onclick="removeShift(${i})">Remove</button></td>
-  </tr>`).join('')}</tbody></table>`;
+  var w=document.getElementById('assignedWrap');if(!w)return;
+  if(!assignedShifts.length){w.innerHTML='<div class="empty"><div class="empty-ico">📅</div><div class="empty-t">No Assigned Shifts</div><div class="empty-s">Assign shifts to employees to get started.</div></div>';return;}
+  var rows='';
+  assignedShifts.forEach(function(s,i){
+    var stCol=s.status==='completed'?'green':s.status==='in-progress'?'amber':'blue';
+    var stLabel=s.status==='assigned'?'Upcoming':s.status==='in-progress'?'Active':'Completed';
+    var vehCell=s.vehicle?'<span class="veh">🚛 '+s.vehicle+'</span>':'<span style="color:var(--text-3);font-size:11px">—</span>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both">'
+      +'<td><div class="dn">'+s.employeeName+'</div></td>'
+      +'<td class="mono" style="font-size:12px">'+s.date+'</td>'
+      +'<td class="mono" style="color:var(--amber);font-size:11px">'+s.startTime+'</td>'
+      +'<td class="mono" style="color:var(--text-2);font-size:11px">'+s.endTime+'</td>'
+      +'<td>'+vehCell+'</td>'
+      +'<td style="font-size:11px;max-width:110px;overflow:hidden;text-overflow:ellipsis">'+(s.orderTitle||'—')+'</td>'
+      +'<td style="font-size:11px;color:var(--text-2)">'+(s.assignedBy||'—')+'</td>'
+      +'<td><span class="tag '+stCol+'">'+stLabel+'</span></td>'
+      +'<td><button class="btn-sm danger" onclick="removeShift('+i+')">Remove</button></td>'
+      +'</tr>';
+  });
+  w.innerHTML='<table><thead><tr><th>Employee</th><th>Date</th><th>Start</th><th>End</th><th>Vehicle</th><th>Task</th><th>By</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function removeShift(i){assignedShifts.splice(i,1);persist('assignedShifts');renderAssignedShifts();toast('🗑','Shift removed.','var(--text-3)');}
 
@@ -2347,11 +2615,27 @@ function viewClient(i){
     (c.notes?pRow('NOTES / CONTACT DETAILS',c.notes):'');
   openModal('prevModal');
 }
+function renderClientsAddBtn(){if(isAdmin())openModal('clientModal');else toast('🚫','Supervisors and Managers only.','var(--red)');}
 function renderClients(data){
-  const g=document.getElementById('clientGrid');if(!g)return;
-  if(!data||!data.length){g.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🤝</div><div class="empty-t">No Clients</div><div class="empty-s">Add your first client.</div><button class="empty-btn" onclick="if(isAdmin())openModal('clientModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Client</button></div>`;return;}
-  g.innerHTML=data.map((c,i)=>`<div class="icard" style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewClient(${clients.indexOf(c)})" title="Click to view"><div class="icard-t">${c.name}</div><div class="icard-s">${c.company||'Independent Client'}</div><div class="icard-row"><span class="k">Contract</span><span style="font-size:12px;font-weight:500">${c.contract||'—'}</span></div><div class="icard-row"><span class="k">Status</span><span class="tag ${c.status==='Active'?'green':c.status==='Pending'?'orange':'dim'}">${c.status}</span></div><div class="icard-actions"><button class="btn-sm" onclick="event.stopPropagation();viewClient(${clients.indexOf(c)})">👁 View</button>${isAdmin()?`<button class="btn-sm" onclick="event.stopPropagation();editClient(${clients.indexOf(c)})">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delClient(${clients.indexOf(c)})">🗑 Remove</button>`:""}</div></div>`).join('');
+  var g=document.getElementById('clientGrid');if(!g)return;
+  if(!data||!data.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🤝</div><div class="empty-t">No Clients</div><div class="empty-s">Add your first client.</div><button class="empty-btn" onclick="renderClientsAddBtn()">+ Add Client</button></div>';return;}
+  var out='';
+  data.forEach(function(c,i){
+    var ci=clients.indexOf(c);
+    var stCol=c.status==='Active'?'green':c.status==='Pending'?'orange':'dim';
+    out+='<div class="icard" style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewClient('+ci+')" title="Click to view">'
+      +'<div class="icard-t">'+c.name+'</div>'
+      +'<div class="icard-s">'+(c.company||'Independent Client')+'</div>'
+      +'<div class="icard-row"><span class="k">Contract</span><span class="tag dim" style="font-size:10px">'+(c.contract||'—')+'</span></div>'
+      +'<div class="icard-row"><span class="k">Status</span><span class="tag '+stCol+'" style="font-size:10px">'+c.status+'</span></div>'
+      +(c.notes?'<div style="font-size:11px;color:var(--text-3);margin-top:7px;line-height:1.5;white-space:normal">'+c.notes.slice(0,80)+(c.notes.length>80?'…':'')+'</div>':'')
+      +'<div class="icard-actions">'
+      +(isAdmin()?'<button class="btn-sm" onclick="event.stopPropagation();editClient('+ci+')">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delClient('+ci+')">🗑</button>':'')
+      +'</div></div>';
+  });
+  g.innerHTML=out;
 }
+
 function updateClientStats(){document.getElementById('clST').textContent=clients.length;document.getElementById('clSA').textContent=clients.filter(c=>c.status==='Active').length;document.getElementById('clSP').textContent=clients.filter(c=>c.status==='Pending').length;}
 function addClient(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}if(!V('cl-name')||!V('cl-contract')||!V('cl-status')){toast('⚠️','Fill in required fields.','var(--orange)');return;}clients.unshift({name:V('cl-name'),company:V('cl-company'),contract:V('cl-contract'),status:V('cl-status'),notes:V('cl-notes')});persist('clients');['cl-name','cl-company','cl-notes'].forEach(id=>document.getElementById(id).value='');['cl-contract','cl-status'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('clientModal');updateClientStats();renderClients(clients);toast('✅','Client added!');}
 function editClient(i){const c=clients[i];document.getElementById('ecl-idx').value=i;document.getElementById('ecl-name').value=c.name;document.getElementById('ecl-company').value=c.company||'';document.getElementById('ecl-contract').value=c.contract||'';document.getElementById('ecl-status').value=c.status;document.getElementById('ecl-notes').value=c.notes||'';openModal('editClientModal');}
@@ -2363,28 +2647,68 @@ document.getElementById('clSrch').addEventListener('input',e=>{const q=e.target.
 // FLEET
 // ════════════════════════════════════════════
 function renderFleet(data){
-  const w=document.getElementById('fleetWrap');if(!w)return;
+  var w=document.getElementById('fleetWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🚛</div><div class="empty-t">No Vehicles Registered</div><div class="empty-s">Add vehicles to the fleet registry to get started.</div><button class="empty-btn" onclick="if(isAdmin())openModal('fleetModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Vehicle</button></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Plate</th><th>Category</th><th>Type</th><th>Status</th><th>Condition</th><th>Maintenance</th><th>Fuel</th><th>Mileage</th><th>Actions</th></tr></thead><tbody>${data.map((f,i)=>{
-    const fp=fuelPctMap[f.fuel]||50;const fc2=fp>50?'hi':fp>25?'mid':'lo';
-    const catCol={'Trucking':'blue','Utility':'amber','Air':'purple'};
-    const latestLog=maintenanceServiceLogs.filter(s=>s.plate===f.plate&&s.mileage).sort((a,b)=>b.date.localeCompare(a.date))[0];
-    const mileageDisplay=latestLog?`<span class="mono" style="font-size:11px;color:var(--text-2)">${latestLog.mileage}</span>`:'<span style="color:var(--text-3);font-size:11px">—</span>';
-    return`<tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewVehicle(${fleet.indexOf(f)})" title="Click to view"><td><span class="veh">🚛 ${f.plate}</span></td><td><span class="tag ${catCol[f.category]||'dim'}">${f.category||'—'}</span></td><td style="font-size:12px;color:var(--text-2)">${f.type||'—'}</td><td><span class="tag ${f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim'}">${f.status}</span></td><td><span style="font-size:12px;font-weight:600;color:${condCol[f.condition]||'var(--text-2)'}">${f.condition||'—'}</span></td><td><span class="tag ${mK(f.maint)}">${mS(f.maint)}</span></td><td><div class="fbar-w"><div class="fbar"><div class="fbar-f ${fc2}" style="width:${fp}%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">${fS(f.fuel)}</span></div></td><td>${mileageDisplay}</td><td>${isAdmin()?`<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle(${fleet.indexOf(f)})">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle(${fleet.indexOf(f)})">🗑</button></div>`:""}</td></tr>`;
-  }).join('')}</tbody></table>`;
+  var catCol={'Trucking':'blue','Utility':'amber','Air':'purple'};
+  var rows='';
+  for(var i=0;i<data.length;i++){
+    var f=data[i];
+    var fi=fleet.indexOf(f);
+    var fp=fuelPctMap[f.fuel]||50;
+    var fc2=fp>50?'hi':fp>25?'mid':'lo';
+    var latestLog=maintenanceServiceLogs.filter(function(s){return s.plate===f.plate&&s.mileage;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
+    var mileageDisplay=latestLog?('<span class="mono" style="font-size:11px;color:var(--text-2)">'+latestLog.mileage+'</span>'):'<span style="color:var(--text-3);font-size:11px">—</span>';
+    var insCell;
+    if(!f.insured||f.insured==='No'){
+      insCell='<span class="tag red" style="font-size:9px">⚠ NOT INSURED</span>';
+    } else if(f.insured==='Yes'&&f.insExpiry){
+      var ins=insExpiryStatus(f.insExpiry);
+      if(ins&&ins.days<0){insCell='<span class="tag red" style="font-size:9px">⚠ EXPIRED</span>';}
+      else if(ins&&ins.days<=30){insCell='<span class="tag orange" style="font-size:9px">⚠ '+ins.label+'</span>';}
+      else{insCell='<span class="tag green" style="font-size:9px">'+(ins?ins.label:'Valid')+'</span>';}
+    } else if(f.insured==='Yes'){
+      insCell='<span class="tag green" style="font-size:9px">Insured</span>';
+    } else {
+      insCell='<span class="tag dim" style="font-size:9px">Unknown</span>';
+    }
+    var actionsCell=isAdmin()?('<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle('+fi+')">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle('+fi+')">🗑</button></div>'):'';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewVehicle('+fi+')" title="Click to view">'
+      +'<td><span class="veh">🚛 '+f.plate+'</span></td>'
+      +'<td><span class="tag '+(catCol[f.category]||'dim')+'">'+(f.category||'—')+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+(f.type||'—')+'</td>'
+      +'<td><span class="tag '+(f.status==='Operational'?'green':f.status==='Maintenance'?'orange':'dim')+'">'+f.status+'</span></td>'
+      +'<td><span style="font-size:12px;font-weight:600;color:'+(condCol[f.condition]||'var(--text-2)')+'">'+( f.condition||'—')+'</span></td>'
+      +'<td><span class="tag '+mK(f.maint)+'">'+mS(f.maint)+'</span></td>'
+      +'<td><div class="fbar-w"><div class="fbar"><div class="fbar-f '+fc2+'" style="width:'+fp+'%"></div></div><span class="mono" style="font-size:10px;color:var(--text-3)">'+fS(f.fuel)+'</span></div></td>'
+      +'<td>'+insCell+'</td>'
+      +'<td>'+mileageDisplay+'</td>'
+      +'<td>'+actionsCell+'</td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Plate</th><th>Category</th><th>Type</th><th>Status</th><th>Condition</th><th>Maintenance</th><th>Fuel</th><th>Insurance</th><th>Mileage</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function updateFleetStats(){document.getElementById('flST').textContent=fleet.length;document.getElementById('flSOp').textContent=fleet.filter(f=>f.status==='Operational').length;document.getElementById('flSMaint').textContent=fleet.filter(f=>f.status==='Maintenance').length;document.getElementById('flSOff').textContent=fleet.filter(f=>f.status==='Off Duty').length;document.getElementById('dlSF').textContent=fleet.filter(f=>f.status==='Operational').length;}
+function updateFleetStats(){
+  document.getElementById('flST').textContent=fleet.length;
+  document.getElementById('flSOp').textContent=fleet.filter(f=>f.status==='Operational').length;
+  document.getElementById('flSMaint').textContent=fleet.filter(f=>f.status==='Maintenance').length;
+  document.getElementById('flSOff').textContent=fleet.filter(f=>f.status==='Off Duty').length;
+  document.getElementById('dlSF').textContent=fleet.filter(f=>f.status==='Operational').length;
+  const insEl=document.getElementById('flSIns');const noInsEl=document.getElementById('flSNoIns');const expEl=document.getElementById('flSExp');
+  if(insEl)insEl.textContent=fleet.filter(f=>f.insured==='Yes').length;
+  if(noInsEl)noInsEl.textContent=fleet.filter(f=>!f.insured||f.insured==='No').length;
+  if(expEl)expEl.textContent=fleet.filter(f=>{if(f.insured!=='Yes'||!f.insExpiry)return false;const s=insExpiryStatus(f.insExpiry);return s&&s.days>=0&&s.days<=30;}).length;
+}
 function toggleCustomType(selId,inputId){const sel=document.getElementById(selId);const inp=document.getElementById(inputId);if(!sel||!inp)return;inp.style.display=sel.value==='__custom__'?'block':'none';if(sel.value!=='__custom__')inp.value='';}
-function addVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const rawType=V('fl-type');const customType=document.getElementById('fl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!V('fl-plate')||!finalType||!V('fl-status')||!V('fl-condition')||!V('fl-maint')||!V('fl-fuel')||!V('fl-category')){toast('⚠️','Fill in all fields.','var(--orange)');return;}fleet.unshift({plate:V('fl-plate').toUpperCase(),category:V('fl-category'),type:finalType,status:V('fl-status'),condition:V('fl-condition'),maint:V('fl-maint'),fuel:V('fl-fuel')});persist('fleet');document.getElementById('fl-plate').value='';document.getElementById('fl-type-custom').value='';document.getElementById('fl-type-custom').style.display='none';['fl-category','fl-type','fl-status','fl-condition','fl-maint','fl-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('fleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle added!');}
-function editVehicle(i){const f=fleet[i];document.getElementById('efl-idx').value=i;document.getElementById('efl-plate').value=f.plate;document.getElementById('efl-category').value=f.category||'Trucking';const knownTypes=['Semi Truck','Box Truck','Flatbed','Van','Pickup','Helicopter','Plane'];const typeEl=document.getElementById('efl-type');const typeCustomEl=document.getElementById('efl-type-custom');if(knownTypes.includes(f.type)){typeEl.value=f.type;typeCustomEl.style.display='none';typeCustomEl.value='';}else{typeEl.value='__custom__';typeCustomEl.style.display='block';typeCustomEl.value=f.type||'';}document.getElementById('efl-status').value=f.status||'Operational';document.getElementById('efl-condition').value=f.condition||'Good';document.getElementById('efl-maint').value=f.maint||'Green — No Issues';document.getElementById('efl-fuel').value=f.fuel||'>75% — Full';openModal('editFleetModal');}
-function saveVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const i=parseInt(V('efl-idx'));const rawType=V('efl-type');const customType=document.getElementById('efl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!finalType){toast('⚠️','Please specify the vehicle type.','var(--orange)');return;}fleet[i]={plate:V('efl-plate').toUpperCase(),category:V('efl-category'),type:finalType,status:V('efl-status'),condition:V('efl-condition'),maint:V('efl-maint'),fuel:V('efl-fuel')};persist('fleet');closeModal('editFleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle updated!');}
+function addVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const rawType=V('fl-type');const customType=document.getElementById('fl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!V('fl-plate')||!finalType||!V('fl-status')||!V('fl-condition')||!V('fl-maint')||!V('fl-fuel')||!V('fl-category')){toast('⚠️','Fill in all fields.','var(--orange)');return;}fleet.unshift({plate:V('fl-plate').toUpperCase(),category:V('fl-category'),type:finalType,status:V('fl-status'),condition:V('fl-condition'),maint:V('fl-maint'),fuel:V('fl-fuel'),insured:V('fl-insured'),insExpiry:V('fl-ins-expiry')});persist('fleet');document.getElementById('fl-plate').value='';document.getElementById('fl-type-custom').value='';document.getElementById('fl-type-custom').style.display='none';['fl-category','fl-type','fl-status','fl-condition','fl-maint','fl-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('fleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle added!');}
+function editVehicle(i){const f=fleet[i];document.getElementById('efl-idx').value=i;document.getElementById('efl-plate').value=f.plate;document.getElementById('efl-category').value=f.category||'Trucking';const knownTypes=['Semi Truck','Box Truck','Flatbed','Van','Pickup','Helicopter','Plane'];const typeEl=document.getElementById('efl-type');const typeCustomEl=document.getElementById('efl-type-custom');if(knownTypes.includes(f.type)){typeEl.value=f.type;typeCustomEl.style.display='none';typeCustomEl.value='';}else{typeEl.value='__custom__';typeCustomEl.style.display='block';typeCustomEl.value=f.type||'';}document.getElementById('efl-status').value=f.status||'Operational';document.getElementById('efl-condition').value=f.condition||'Good';document.getElementById('efl-maint').value=f.maint||'Green — No Issues';document.getElementById('efl-fuel').value=f.fuel||'>75% — Full';const eInsEl=document.getElementById('efl-insured');if(eInsEl)eInsEl.value=f.insured||'';const eInsExpWrap=document.getElementById('efl-ins-expiry-wrap');const eInsExp=document.getElementById('efl-ins-expiry');if(eInsExpWrap&&eInsExp){eInsExpWrap.style.display=f.insured==='Yes'?'block':'none';eInsExp.value=f.insExpiry||'';}openModal('editFleetModal');}
+function saveVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const i=parseInt(V('efl-idx'));const rawType=V('efl-type');const customType=document.getElementById('efl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!finalType){toast('⚠️','Please specify the vehicle type.','var(--orange)');return;}fleet[i]={plate:V('efl-plate').toUpperCase(),category:V('efl-category'),type:finalType,status:V('efl-status'),condition:V('efl-condition'),maint:V('efl-maint'),fuel:V('efl-fuel'),insured:V('efl-insured')||fleet[i].insured,insExpiry:V('efl-ins-expiry')||fleet[i].insExpiry};persist('fleet');closeModal('editFleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle updated!');}
 function delVehicle(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}fleet.splice(i,1);persist('fleet');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('🗑','Vehicle removed.','var(--text-3)');}
 function viewVehicle(i){
   const f=fleet[i];if(!f)return;
   document.getElementById('prevTitle').textContent='Vehicle — '+f.plate;
   const vLatestLog=maintenanceServiceLogs.filter(s=>s.plate===f.plate&&s.mileage).sort((a,b)=>b.date.localeCompare(a.date))[0];
   const vMileage=vLatestLog?vLatestLog.mileage+' <span style="font-size:10px;color:var(--text-3)">(as of '+vLatestLog.date+')</span>':'Not recorded';
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:28px">🚛</span><div><div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">${f.plate}</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">${f.type||'—'} · ${f.category||'—'}</div></div></div>${pGrid(pRow('STATUS',f.status),pRow('CONDITION',f.condition),pRow('MAINTENANCE',mS(f.maint)),pRow('FUEL LEVEL',fS(f.fuel)),pRow('LAST MILEAGE',vMileage),'')}`;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:28px">🚛</span><div><div style="font-family:Space Grotesk,sans-serif;font-size:18px;font-weight:700">${f.plate}</div><div style="font-size:11px;color:var(--text-3);font-family:JetBrains Mono,monospace">${f.type||'—'} · ${f.category||'—'}</div></div></div>${pGrid(pRow('STATUS',f.status),pRow('CONDITION',f.condition),pRow('MAINTENANCE',mS(f.maint)),pRow('FUEL LEVEL',fS(f.fuel)),pRow('LAST MILEAGE',vMileage),'')}`;
   openModal('prevModal');
 }document.getElementById('flSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderFleet(fleet.filter(f=>f.plate.toLowerCase().includes(q)||f.type.toLowerCase().includes(q)||(f.category||'').toLowerCase().includes(q)));});
 
@@ -2393,30 +2717,41 @@ function viewVehicle(i){
 // ════════════════════════════════════════════
 function populateOrderDriverSelect(){const s=document.getElementById('ord-driver');if(!s)return;s.innerHTML='<option value="">Unassigned</option>';accounts.filter(a=>a.status==='verified').forEach(a=>s.innerHTML+=`<option value="${a.name}">${a.name} (${a.role})</option>`);}
 function renderOrders(data){
-  const w=document.getElementById('orderWrap');if(!w)return;
+  var w=document.getElementById('orderWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📦</div><div class="empty-t">No Orders</div><div class="empty-s">Create your first order.</div><button class="empty-btn" onclick="if(isAdmin())openModal('orderModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ New Order</button></div>`;return;}
-  const pC={'Low':'var(--text-2)','Normal':'var(--blue)','High':'var(--orange)','Urgent':'var(--red)'};
-  w.innerHTML=`<table><thead><tr><th>Date</th><th>Order</th><th>Client</th><th>Type</th><th>Priority</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr></thead><tbody>${data.map((o,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.05}s both;cursor:pointer" onclick="viewOrder(${orders.indexOf(o)})" title="Click to view">
-    <td class="mono" style="font-size:12px">${o.date}</td>
-    <td><div class="dn" style="max-width:140px;overflow:hidden;text-overflow:ellipsis">${o.title}</div></td>
-    <td style="font-size:12px;color:var(--text-2)">${o.client}</td>
-    <td style="font-size:11px;color:var(--text-2)">${o.type||'—'}</td>
-    <td><span style="font-size:11px;font-weight:600;color:${pC[o.priority]||'var(--text-2)'}">${o.priority||'—'}</span></td>
-    <td style="font-size:12px">${o.driver||'<span style="color:var(--text-3)">Unassigned</span>'}</td>
-    <td><span class="tag ${o.status==='Completed'?'green':o.status==='In Transit'?'blue':'orange'}">${o.status}</span></td>
-    <td>${isAdmin()?`<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();cycleOrder(${orders.indexOf(o)})">⟳</button><button class="btn-sm danger" onclick="event.stopPropagation();delOrder(${orders.indexOf(o)})">🗑</button></div>`:""}</td>
-  </tr>`).join('')}</tbody></table>`;
+  var pC={'Low':'var(--text-2)','Normal':'var(--blue)','High':'var(--orange)','Urgent':'var(--red)'};
+  var rows='';
+  for(var i=0;i<data.length;i++){
+    var o=data[i];var oi=orders.indexOf(o);
+    var divTag=o.division==='Logistics Orders'?'<span class="tag blue" style="font-size:9px">LOGISTICS</span>':o.division==='Field Operations Orders'?'<span class="tag purple" style="font-size:9px">FIELD OPS</span>':'<span style="color:var(--text-3);font-size:10px">—</span>';
+    var stTag='<span class="tag '+(o.status==='Completed'?'green':o.status==='In Transit'?'blue':'orange')+'">'+o.status+'</span>';
+    var acts=isAdmin()?'<div style="display:flex;gap:6px"><button class="btn-sm ok" onclick="event.stopPropagation();markOrderComplete('+oi+')" title="Mark Complete">✓</button><button class="btn-sm" onclick="event.stopPropagation();cycleOrder('+oi+')" title="Cycle Status">⟳</button><button class="btn-sm danger" onclick="event.stopPropagation();delOrder('+oi+')">🗑</button></div>':'';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewOrder('+oi+')" title="Click to view">'
+      +'<td class="mono" style="font-size:12px">'+o.date+'</td>'
+      +'<td><span class="mono" style="color:var(--amber);font-size:12px;font-weight:600">'+(o.number||'—')+'</span></td>'
+      +'<td>'+divTag+'</td>'
+      +'<td><div class="dn" style="max-width:120px;overflow:hidden;text-overflow:ellipsis">'+o.title+'</div></td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+(o.client||'—')+'</td>'
+      +'<td style="font-size:11px;color:var(--text-2)">'+(o.type||'—')+'</td>'
+      +'<td><span style="font-size:11px;font-weight:600;color:'+(pC[o.priority]||'var(--text-2)')+'">'+( o.priority||'—')+'</span></td>'
+      +'<td style="font-size:12px">'+(o.driver||'<span style="color:var(--text-3)">Unassigned</span>')+'</td>'
+      +'<td>'+stTag+'</td>'
+      +'<td>'+acts+'</td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Date</th><th>Order #</th><th>Division</th><th>Title</th><th>Client</th><th>Type</th><th>Priority</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+
 function updateOrderStats(){document.getElementById('orST').textContent=orders.length;document.getElementById('orSP').textContent=orders.filter(o=>o.status==='Pending').length;document.getElementById('orSI').textContent=orders.filter(o=>o.status==='In Transit').length;document.getElementById('orSD').textContent=orders.filter(o=>o.status==='Completed').length;}
-function addOrder(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}if(!V('ord-title')||!V('ord-client')||!V('ord-type')){toast('⚠️','Fill in required fields.','var(--orange)');return;}orders.unshift({date:nowDate(),time:nowTime(),title:V('ord-title'),client:V('ord-client'),type:V('ord-type'),priority:V('ord-priority')||'Normal',driver:V('ord-driver'),status:V('ord-status')||'Pending',notes:V('ord-notes')});persist('orders');['ord-title','ord-client','ord-notes'].forEach(id=>document.getElementById(id).value='');['ord-type'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('orderModal');updateOrderStats();renderOrders(orders);toast('✅','Order created!');}
+function markOrderComplete(i){if(!isAdmin())return;orders[i].status='Completed';orders[i].completedAt=nowDate()+' '+nowTime();orders[i].completedBy=currentUser?.name||'—';persist('orders');updateOrderStats();renderOrders(orders);toast('✅','Order marked as complete!','var(--green)');}
+function addOrder(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}if(!V('ord-number')||!V('ord-title')||!V('ord-type')||!V('ord-division')){toast('⚠️','Fill in Order #, Division, Title and Type.','var(--orange)');return;}const ordTypeVal=V('ord-type')==='Other — Please Specify'?(V('ord-type-other')||V('ord-type')):V('ord-type');orders.unshift({date:nowDate(),time:nowTime(),number:V('ord-number'),division:V('ord-division'),title:V('ord-title'),client:V('ord-client'),type:ordTypeVal,priority:V('ord-priority')||'Normal',driver:V('ord-driver'),status:V('ord-status')||'Pending',notes:V('ord-notes')});persist('orders');['ord-number','ord-title','ord-client','ord-notes','ord-type-other'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});['ord-type','ord-division'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});closeModal('orderModal');updateOrderStats();renderOrders(orders);populateOrderRefSelects();toast('✅','Order created!');}
 function cycleOrder(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const s=orders[i].status;orders[i].status=s==='Pending'?'In Transit':s==='In Transit'?'Completed':'Pending';persist('orders');updateOrderStats();renderOrders(orders);toast('🔄',`Status: ${orders[i].status}`,'var(--blue)');}
 function delOrder(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}orders.splice(i,1);persist('orders');updateOrderStats();renderOrders(orders);toast('🗑','Order removed.','var(--text-3)');}
 function viewOrder(i){
   const o=orders[i];if(!o)return;
   const pC={'Low':'var(--text-2)','Normal':'var(--blue)','High':'var(--orange)','Urgent':'var(--red)'};
-  document.getElementById('prevTitle').textContent='Order — '+o.title;
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${o.title}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${o.date} at ${o.time}</div></div>${pGrid(pRow('CLIENT',o.client),pRow('TYPE',o.type||'—'),pRow('PRIORITY',`<span style="color:${pC[o.priority]||'var(--text-2)'};font-weight:700">${o.priority||'—'}</span>`),pRow('ASSIGNED TO',o.driver||'Unassigned'),pRow('STATUS',o.status),'')}`+`${o.notes?`<div style="margin-top:8px">${pRow('NOTES',o.notes)}</div>`:''}`;
+  document.getElementById('prevTitle').textContent='Order — '+(o.number?o.number+' · ':'')+o.title;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${o.title}</div><div class="mono" style="font-size:11px;color:var(--amber)">${o.number||'No Order #'} · ${o.division||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${o.date} at ${o.time}</div></div>${pGrid(pRow('ORDER #',o.number||'—'),pRow('DIVISION',o.division||'—'),pRow('CLIENT',o.client||'—'),pRow('TYPE',o.type||'—'),pRow('PRIORITY',`<span style="color:${pC[o.priority]||'var(--text-2)'};font-weight:700">${o.priority||'—'}</span>`),pRow('ASSIGNED TO',o.driver||'Unassigned'),pRow('STATUS',o.status),o.completedAt?pRow('COMPLETED',o.completedAt+' by '+o.completedBy):'')}`+`${o.notes?`<div style="margin-top:8px">${pRow('DETAILS',o.notes)}</div>`:''}`;
   openModal('prevModal');
 }document.getElementById('orSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderOrders(orders.filter(o=>o.title.toLowerCase().includes(q)||o.client.toLowerCase().includes(q)));});
 
@@ -2435,25 +2770,25 @@ function logRoleEvent(action,subject,fromRole,toRole,actor){
   persist('roleLogs');
 }
 function renderRoleLogs(){
-  const w=document.getElementById('roleLogsWrap');if(!w)return;
+  var w=document.getElementById('roleLogsWrap');if(!w)return;
   document.getElementById('rlST').textContent=roleLogs.length;
-  document.getElementById('rlSP').textContent=roleLogs.filter(l=>l.action==='Promoted'||l.action==='Account Verified'||l.action==='Role Created').length;
-  document.getElementById('rlSD').textContent=roleLogs.filter(l=>l.action==='Demoted'||l.action==='Account Rejected'||l.action==='Account Removed'||l.action==='Role Deleted').length;
-  if(!roleLogs.length){w.innerHTML=`<div class="empty"><div class="empty-ico">📜</div><div class="empty-t">No Role Events Yet</div><div class="empty-s">Role changes, promotions, and account updates are logged here automatically.</div></div>`;return;}
-  const aCol={
-    'Promoted':'green','Account Verified':'green','Role Created':'blue',
-    'Demoted':'orange','Account Rejected':'red','Account Removed':'red','Role Deleted':'red'
-  };
-  w.innerHTML=`<table><thead><tr><th>Date</th><th>Time</th><th>Action</th><th>Subject</th><th>From</th><th>To</th><th>Performed By</th></tr></thead><tbody>${roleLogs.map((l,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.03}s both">
-    <td class="mono" style="font-size:12px">${l.date}</td>
-    <td class="mono" style="font-size:11px;color:var(--text-3)">${l.time}</td>
-    <td><span class="tag ${aCol[l.action]||'dim'}" style="font-size:10px">${l.action}</span></td>
-    <td><div class="dn">${l.subject}</div></td>
-    <td style="font-size:12px;color:var(--text-3)">${l.fromRole||'—'}</td>
-    <td style="font-size:12px;color:var(--amber);font-weight:600">${l.toRole||'—'}</td>
-    <td style="font-size:12px;color:var(--text-2)">${l.actor}</td>
-  </tr>`).join('')}</tbody></table>`;
+  document.getElementById('rlSP').textContent=roleLogs.filter(function(l){return l.action==='Promoted'||l.action==='Account Verified'||l.action==='Role Created';}).length;
+  document.getElementById('rlSD').textContent=roleLogs.filter(function(l){return l.action==='Demoted'||l.action==='Account Rejected'||l.action==='Account Removed'||l.action==='Role Deleted';}).length;
+  if(!roleLogs.length){w.innerHTML='<div class="empty"><div class="empty-ico">📜</div><div class="empty-t">No Role Events Yet</div><div class="empty-s">Role changes, promotions, and account updates are logged here automatically.</div></div>';return;}
+  var aCol={'Promoted':'green','Account Verified':'green','Role Created':'blue','Demoted':'orange','Account Rejected':'red','Account Removed':'red','Role Deleted':'red'};
+  var rows='';
+  roleLogs.forEach(function(l,i){
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.03)+'s both">'
+      +'<td class="mono" style="font-size:12px">'+l.date+'</td>'
+      +'<td class="mono" style="font-size:11px;color:var(--text-3)">'+l.time+'</td>'
+      +'<td><span class="tag '+(aCol[l.action]||'dim')+'" style="font-size:10px">'+l.action+'</span></td>'
+      +'<td><div class="dn">'+l.subject+'</div></td>'
+      +'<td style="font-size:12px;color:var(--text-3)">'+(l.fromRole||'—')+'</td>'
+      +'<td style="font-size:12px;color:var(--amber);font-weight:600">'+(l.toRole||'—')+'</td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+l.actor+'</td>'
+      +'</tr>';
+  });
+  w.innerHTML='<table><thead><tr><th>Date</th><th>Time</th><th>Action</th><th>Subject</th><th>From</th><th>To</th><th>Performed By</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function clearRoleLogs(){roleLogs.length=0;persist('roleLogs');renderRoleLogs();toast('🗑','Role logs cleared.','var(--text-3)');}
 
@@ -2488,54 +2823,63 @@ function getDamageReports(){
   return deliveryLogs.filter(r=>r.rep&&r.rep!=='none');
 }
 function renderMaintDamage(){
-  const allDmg=getDamageReports();
-  // Build set of plates that have a completed service log (Repair or Service)
-  const serviced=new Set(maintenanceServiceLogs.filter(s=>s.statusAfter==='Operational'||s.statusAfter==='Off Duty').map(s=>s.plate));
-  // Active damage = damaged reports whose vehicle has NOT been serviced back to operational
-  const dmg=allDmg;// show all for the table
-  const outstanding=allDmg.filter(r=>!serviced.has(r.vehicle));
+  var allDmg=getDamageReports();
+  var serviced=new Set(maintenanceServiceLogs.filter(function(s){return s.statusAfter==='Operational'||s.statusAfter==='Off Duty';}).map(function(s){return s.plate;}));
+  var outstanding=allDmg.filter(function(r){return !serviced.has(r.vehicle);});
   document.getElementById('mdST').textContent=outstanding.length;
-  document.getElementById('mdSH').textContent=outstanding.filter(r=>r.rep==='heavy').length;
-  document.getElementById('mdSS').textContent=outstanding.filter(r=>r.rep==='slight').length;
-  document.getElementById('mdSSvc').textContent=allDmg.filter(r=>serviced.has(r.vehicle)).length;
-  const w=document.getElementById('maintDmgWrap');if(!w)return;
-  if(!allDmg.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🔩</div><div class="empty-t">No Damage Reports</div><div class="empty-s">Damage entries are pulled automatically from Delivery Logs when damage is reported.</div></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Date</th><th>Reported By</th><th>Badge</th><th>Vehicle</th><th>Damage Level</th><th>Maint. Status</th><th>Serviced</th><th></th></tr></thead><tbody>${allDmg.map((r,i)=>{
-    const isServiced=serviced.has(r.vehicle);
-    return`<tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer;${isServiced?'opacity:.55;':''}` + `" onclick="viewDL(${deliveryLogs.indexOf(r)})" title="${isServiced?'Completed — vehicle serviced':'Click to view delivery log'}">
-    <td class="mono" style="font-size:12px">${r.date}<span class="dc">${r.time}</span></td>
-    <td><div class="dn">${r.name}</div></td>
-    <td><span class="mono" style="color:var(--amber)">${r.badge}</span></td>
-    <td><span class="veh">🚛 ${r.vehicle}</span></td>
-    <td><span class="tag ${repC[r.rep]}">${repL[r.rep]}</span></td>
-    <td><span class="tag ${r.maint==='green'?'green':r.maint==='orange'?'orange':'red'}">${r.maint.charAt(0).toUpperCase()+r.maint.slice(1)}</span></td>
-    <td>${isServiced?`<span class="tag green">✓ Completed</span>`:`<span class="tag dim">Pending</span>`}</td>
-    <td><button class="btn-sm ok" onclick="event.stopPropagation();prefillMaintService('${r.vehicle}');switchMaintTab('service');openModal('maintServiceModal')">${isServiced?'🔧 Re-log':'🔧 Log'}</button></td>
-  </tr>`;}).join('')}</tbody></table>`;
+  document.getElementById('mdSH').textContent=outstanding.filter(function(r){return r.rep==='heavy';}).length;
+  document.getElementById('mdSS').textContent=outstanding.filter(function(r){return r.rep==='slight';}).length;
+  document.getElementById('mdSSvc').textContent=allDmg.filter(function(r){return serviced.has(r.vehicle);}).length;
+  var w=document.getElementById('maintDmgWrap');if(!w)return;
+  if(!allDmg.length){w.innerHTML='<div class="empty"><div class="empty-ico">🔩</div><div class="empty-t">No Damage Reports</div><div class="empty-s">Damage entries are pulled automatically from Delivery Logs when damage is reported.</div></div>';return;}
+  var rows='';
+  allDmg.forEach(function(r,i){
+    var isSvc=serviced.has(r.vehicle);
+    var di=deliveryLogs.indexOf(r);
+    var svcTag=isSvc?'<span class="tag green">✓ Completed</span>':'<span class="tag dim">Pending</span>';
+    var logBtn='<button class="btn-sm ok" onclick="event.stopPropagation();prefillMaintService(&quot;'+r.vehicle+'&quot;);switchMaintTab(&quot;service&quot;);openModal(&quot;maintServiceModal&quot;)">'+( isSvc?'🔧 Re-log':'🔧 Log')+'</button>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer'+(isSvc?';opacity:.55':'')+'" onclick="viewDL('+di+')" title="'+(isSvc?'Completed — vehicle serviced':'Click to view delivery log')+'">'
+      +'<td class="mono" style="font-size:12px">'+r.date+'<span class="dc">'+r.time+'</span></td>'
+      +'<td><div class="dn">'+r.name+'</div></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+r.badge+'</span></td>'
+      +'<td><span class="veh">🚛 '+r.vehicle+'</span></td>'
+      +'<td><span class="tag '+repC[r.rep]+'">'+repL[r.rep]+'</span></td>'
+      +'<td><span class="tag '+(r.maint==='green'?'green':r.maint==='orange'?'orange':'red')+'">'+( r.maint||'').charAt(0).toUpperCase()+(r.maint||'').slice(1)+'</span></td>'
+      +'<td>'+svcTag+'</td>'
+      +'<td>'+logBtn+'</td>'
+      +'</tr>';
+  });
+  w.innerHTML='<table><thead><tr><th>Date</th><th>Reported By</th><th>Badge</th><th>Vehicle</th><th>Damage Level</th><th>Maint. Status</th><th>Serviced</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function prefillMaintService(plate){
   populateMaintVehicleSelect();
   setTimeout(()=>{const s=document.getElementById('ms-plate');if(s)s.value=plate;},50);
 }
 function renderMaintService(){
-  const w=document.getElementById('maintSvcWrap');if(!w)return;
+  var w=document.getElementById('maintSvcWrap');if(!w)return;
   document.getElementById('msST').textContent=maintenanceServiceLogs.length;
-  document.getElementById('msSR').textContent=maintenanceServiceLogs.filter(s=>s.type==='Repair').length;
-  document.getElementById('mssSvc').textContent=maintenanceServiceLogs.filter(s=>s.type==='Service / Maintenance'||s.type==='Inspection').length;
-  document.getElementById('msSW').textContent=maintenanceServiceLogs.filter(s=>s.type==='Wash').length;
-  if(!maintenanceServiceLogs.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🛠️</div><div class="empty-t">No Service Logs</div><div class="empty-s">Log repairs, services, and washes carried out on fleet vehicles.</div><button class="empty-btn" onclick="openModal('maintServiceModal')">+ Log Service</button></div>`;return;}
-  w.innerHTML=`<table><thead><tr><th>Date</th><th>Vehicle</th><th>Service Type</th><th>Performed By</th><th>Fuel</th><th>Mileage</th><th>Cost</th><th>Status After</th><th></th></tr></thead><tbody>${maintenanceServiceLogs.map((s,i)=>`
-  <tr style="animation:rowIn .3s ease ${i*.04}s both;cursor:pointer" onclick="viewMaintService(${maintenanceServiceLogs.indexOf(s)})" title="Click to view">
-    <td class="mono" style="font-size:12px">${s.date}<span class="dc">${s.time}</span></td>
-    <td><span class="veh">🚛 ${s.plate}</span></td>
-    <td><span class="tag ${s.type==='Repair'?'red':s.type==='Wash'?'blue':s.type==='Inspection'?'purple':'orange'}">${s.type}</span></td>
-    <td style="font-size:12px;color:var(--text-2)">${s.tech}</td>
-    <td style="font-size:11px;color:var(--text-3)">${s.fuel?(s.fuel.split(' — ')[0]):'—'}</td>
-    <td class="mono" style="font-size:11px;color:var(--text-2)">${s.mileage||'—'}</td>
-    <td class="mono" style="font-size:11px;color:var(--amber)">${s.cost||'—'}</td>
-    <td><span class="tag ${s.statusAfter==='Operational'?'green':s.statusAfter==='Off Duty'?'dim':'orange'}">${s.statusAfter}</span></td>
-    <td><button class="btn-sm" onclick="event.stopPropagation();viewMaintService(${maintenanceServiceLogs.indexOf(s)})">View</button></td>
-  </tr>`).join('')}</tbody></table>`;
+  document.getElementById('msSR').textContent=maintenanceServiceLogs.filter(function(s){return s.type==='Repair';}).length;
+  document.getElementById('mssSvc').textContent=maintenanceServiceLogs.filter(function(s){return s.type==='Service / Maintenance'||s.type==='Inspection';}).length;
+  document.getElementById('msSW').textContent=maintenanceServiceLogs.filter(function(s){return s.type==='Wash';}).length;
+  if(!maintenanceServiceLogs.length){w.innerHTML='<div class="empty"><div class="empty-ico">🛠️</div><div class="empty-t">No Service Logs</div><div class="empty-s">Log repairs, services, and washes carried out on fleet vehicles.</div><button class="empty-btn" onclick="renderMaintSvcAddBtn()">+ Log Service</button></div>';return;}
+  var rows='';
+  maintenanceServiceLogs.forEach(function(s,i){
+    var si2=maintenanceServiceLogs.indexOf(s);
+    var typeCol=s.type==='Repair'?'red':s.type==='Wash'?'blue':s.type==='Inspection'?'purple':'orange';
+    var stCol=s.statusAfter==='Operational'?'green':s.statusAfter==='Off Duty'?'dim':'orange';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer" onclick="viewMaintService('+si2+')" title="Click to view">'
+      +'<td class="mono" style="font-size:12px">'+s.date+'<span class="dc">'+s.time+'</span></td>'
+      +'<td><span class="veh">🚛 '+s.plate+'</span></td>'
+      +'<td><span class="tag '+typeCol+'">'+s.type+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text-2)">'+s.tech+'</td>'
+      +'<td style="font-size:11px;color:var(--text-3)">'+(s.fuel?s.fuel.split(' — ')[0]:'—')+'</td>'
+      +'<td class="mono" style="font-size:11px;color:var(--text-2)">'+(s.mileage||'—')+'</td>'
+      +'<td class="mono" style="font-size:11px;color:var(--amber)">'+(s.cost||'—')+'</td>'
+      +'<td><span class="tag '+stCol+'">'+s.statusAfter+'</span></td>'
+      +'<td><button class="btn-sm" onclick="event.stopPropagation();viewMaintService('+si2+')">View</button></td>'
+      +'</tr>';
+  });
+  w.innerHTML='<table><thead><tr><th>Date</th><th>Vehicle</th><th>Service Type</th><th>Performed By</th><th>Fuel</th><th>Mileage</th><th>Cost</th><th>Status After</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function submitMaintService(){
   if(currentUser&&V('ms-tech').trim().toLowerCase()!==currentUser.name.trim().toLowerCase()){toast('🚫','You can only log maintenance under your own name.','var(--red)');return;}
@@ -2562,7 +2906,7 @@ function submitMaintService(){
 function viewMaintService(i){
   const s=maintenanceServiceLogs[i];if(!s)return;
   document.getElementById('prevTitle').textContent='Service Log — '+s.plate;
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:26px">🔧</span><div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">${s.plate}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${s.date} at ${s.time}</div></div></div>${pGrid(pRow('SERVICE TYPE',s.type),pRow('PERFORMED BY',s.tech),pRow('FUEL STATUS',s.fuel||'—'),pRow('MILEAGE',s.mileage||'—'),pRow('COST',s.cost||'—'),pRow('STATUS AFTER',s.statusAfter),pRow('PARTS REPLACED',s.parts||'—'),'')}<div style="margin-top:8px">${pRow('WORK DESCRIPTION',s.desc)}</div>${s.notes?`<div style="margin-top:8px">${pRow('MANAGEMENT NOTES',s.notes)}</div>`:''}`;
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px"><span style="font-size:26px">🔧</span><div><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600">${s.plate}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${s.date} at ${s.time}</div></div></div>${pGrid(pRow('SERVICE TYPE',s.type),pRow('PERFORMED BY',s.tech),pRow('FUEL STATUS',s.fuel||'—'),pRow('MILEAGE',s.mileage||'—'),pRow('COST',s.cost||'—'),pRow('STATUS AFTER',s.statusAfter),pRow('PARTS REPLACED',s.parts||'—'),'')}<div style="margin-top:8px">${pRow('WORK DESCRIPTION',s.desc)}</div>${s.notes?`<div style="margin-top:8px">${pRow('MANAGEMENT NOTES',s.notes)}</div>`:''}`;
   openModal('prevModal');
 }
 
@@ -2609,6 +2953,111 @@ function showFieldTab(tab){
   });
 }
 
+
+// ════════════════════════════════════════════
+// REIMBURSEMENT REQUESTS
+// ════════════════════════════════════════════
+const reimbursementRequests=lsLoad('ae_reimbursements',[]);
+function renderRR(){
+  var w=document.getElementById('rrWrap');if(!w)return;
+  if(!reimbursementRequests.length){w.innerHTML=`<div class="empty"><div class="empty-ico">💰</div><div class="empty-t">No Reimbursement Requests</div><div class="empty-s">Submitted requests appear here.</div><button class="empty-btn" onclick="showPage('reimbursement-form')">+ New Request</button></div>`;return;}
+  var stC={'Pending':'orange','Approved':'green','Rejected':'red'};
+  var rows='';
+  for(var i=0;i<reimbursementRequests.length;i++){
+    var r=reimbursementRequests[i];
+    var acts=isAdmin()?'<button class="btn-sm ok" onclick="event.stopPropagation();approveRR('+i+')">✓</button> <button class="btn-sm danger" onclick="event.stopPropagation();rejectRR('+i+')">✕</button>':'<button class="btn-sm" onclick="event.stopPropagation();viewRR('+i+')">View</button>';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewRR('+i+')">'
+      +'<td><span class="mono" style="font-size:12px">'+r.date+'</span></td>'
+      +'<td><span class="mono" style="color:var(--amber)">'+r.badge+'</span></td>'
+      +'<td><div class="dn">'+r.name+'</div><div class="dc">'+r.rank+'</div></td>'
+      +'<td><span class="tag amber" style="font-size:10px">'+r.type+'</span></td>'
+      +'<td><span style="font-family:JetBrains Mono,monospace;font-size:13px;font-weight:600;color:var(--green)">$'+r.amount+'</span></td>'
+      +'<td><span class="mono" style="font-size:11px;color:var(--text-3)">'+(r.orderRef||'—')+'</span></td>'
+      +'<td><span class="tag '+(stC[r.status]||'orange')+'">'+r.status+'</span></td>'
+      +'<td>'+acts+'</td>'
+      +'</tr>';
+  }
+  w.innerHTML='<table><thead><tr><th>Date</th><th>Badge</th><th>Employee</th><th>Type</th><th>Amount</th><th>Order #</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function updateRRStats(){
+  document.getElementById('rrST').textContent=reimbursementRequests.length;
+  document.getElementById('rrSP').textContent=reimbursementRequests.filter(r=>r.status==='Pending').length;
+  document.getElementById('rrSA').textContent=reimbursementRequests.filter(r=>r.status==='Approved').length;
+  document.getElementById('rrSR').textContent=reimbursementRequests.filter(r=>r.status==='Rejected').length;
+}
+function submitReimbursement(){
+  const badge=V('rr-badge'),name=V('rr-name'),rank=V('rr-rank'),type=V('rr-type'),typeOther=V('rr-type-other'),amount=V('rr-amount'),date=V('rr-date'),desc=V('rr-desc');
+  if(!badge||!name||!type||!amount||!date||!desc){toast('⚠️','Fill in all required fields.','var(--orange)');return;}
+  const finalType=type==='Other — Please Specify'?(typeOther||type):type;
+  reimbursementRequests.unshift({date:nowDate(),time:nowTime(),badge,name,rank,type:finalType,amount,expenseDate:date,receipt:V('rr-receipt'),orderRef:V('rr-order-ref'),status:V('rr-status')||'Pending',desc,notes:V('rr-notes')});
+  lsSave('ae_reimbursements',reimbursementRequests);
+  ['rr-amount','rr-date','rr-receipt','rr-desc','rr-notes'].forEach(id=>document.getElementById(id).value='');
+  ['rr-type','rr-status'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
+  updateRRStats();renderRR();toast('✅','Reimbursement request submitted!','var(--green)');showPage('reimbursement');
+}
+function viewRR(i){
+  const r=reimbursementRequests[i];if(!r)return;
+  document.getElementById('prevTitle').textContent='Reimbursement Request';
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600">${r.name}</div><div class="mono" style="font-size:11px;color:var(--text-3)">Badge #${r.badge} · ${r.rank} · ${r.date}</div></div>${pGrid(pRow('EXPENSE TYPE',r.type),pRow('AMOUNT','$'+r.amount),pRow('EXPENSE DATE',r.expenseDate||'—'),pRow('RECEIPT #',r.receipt||'—'),pRow('ORDER REF',r.orderRef||'—'),pRow('STATUS',r.status))}${pRow('DESCRIPTION',r.desc)}${r.notes?'<div style="margin-top:8px">'+pRow('MANAGEMENT NOTES',r.notes)+'</div>':''}`;
+  openModal('prevModal');
+}
+function approveRR(i){if(!isAdmin())return;reimbursementRequests[i].status='Approved';lsSave('ae_reimbursements',reimbursementRequests);renderRR();updateRRStats();toast('✅','Request approved.','var(--green)');}
+function rejectRR(i){if(!isAdmin())return;reimbursementRequests[i].status='Rejected';lsSave('ae_reimbursements',reimbursementRequests);renderRR();updateRRStats();toast('✕','Request rejected.','var(--red)');}
+
+// ════════════════════════════════════════════
+// TOGGLE CUSTOM INPUT (for "Other — Please Specify")
+// ════════════════════════════════════════════
+function toggleCustom(selId,inputId){
+  const sel=document.getElementById(selId);
+  const inp=document.getElementById(inputId);
+  if(!sel||!inp)return;
+  inp.style.display=sel.value.includes('Please Specify')?'block':'none';
+  if(!sel.value.includes('Please Specify'))inp.value='';
+}
+
+// ════════════════════════════════════════════
+// POPULATE ORDER REF SELECTS
+// ════════════════════════════════════════════
+function populateOrderRefSelects(){
+  // dl-order-ref: show active (non-completed) orders with number, title, division
+  var dlSel=document.getElementById('dl-order-ref');
+  if(dlSel){
+    var dlCur=dlSel.value;
+    dlSel.innerHTML='<option value="">Select order</option>';
+    orders.forEach(function(o){
+      if(!o.number)return;
+      var divShort=o.division==='Logistics Orders'?'[LOG]':o.division==='Field Operations Orders'?'[FOP]':'';
+      var stNote=o.status==='Completed'?' ✓':'';
+      dlSel.innerHTML+='<option value="'+o.number+'"'+(o.number===dlCur?' selected':'')+'>'
+        +o.number+' '+divShort+' — '+o.title+stNote+'</option>';
+    });
+  }
+  // fr-order-ref and rr-order-ref: show all orders
+  ['fr-order-ref','rr-order-ref'].forEach(function(selId){
+    var sel=document.getElementById(selId);if(!sel)return;
+    var cur=sel.value;
+    sel.innerHTML='<option value="">None / Not linked</option>';
+    orders.forEach(function(o){
+      if(!o.number)return;
+      var divShort=o.division==='Logistics Orders'?'[LOG]':o.division==='Field Operations Orders'?'[FOP]':'';
+      sel.innerHTML+='<option value="'+o.number+'"'+(o.number===cur?' selected':'')+'>'+o.number+' '+divShort+' — '+o.title+'</option>';
+    });
+  });
+}
+
+// ════════════════════════════════════════════
+// INSURANCE EXPIRY HELPERS
+// ════════════════════════════════════════════
+function insExpiryStatus(expiry){
+  if(!expiry)return null;
+  const exp=new Date(expiry);const now=new Date();
+  const diff=Math.ceil((exp-now)/(1000*60*60*24));
+  if(diff<0)return{label:'EXPIRED',cls:'red',days:diff};
+  if(diff<=30)return{label:'Expires in '+diff+'d',cls:'orange',days:diff};
+  return{label:'Valid until '+exp.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),cls:'green',days:diff};
+}
+
 // ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
@@ -2617,7 +3066,8 @@ function refreshAll(){
   renderClients(clients);renderFleet(fleet);renderOrders(orders);
   renderShiftHistory(shiftHistory);updateDLStats();updateFRStats();
   updateIRStats();updateClientStats();updateFleetStats();updateOrderStats();
-  populateVehicleSelect();populateShiftVehicle();
+  updateRRStats();
+  populateVehicleSelect();populateShiftVehicle();populateOrderRefSelects();
 }
 function copyCredentials(){
   const name=document.getElementById('credName').textContent;
@@ -2648,9 +3098,9 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
       document.getElementById('sbRole').textContent=acc.role+' · #'+acc.badge;
       document.getElementById('adminNav').style.display=(['Manager','Supervisor'].includes(acc.role))?'block':'none';
       updateChips();populateRoleSelects();showPage('stats');
-      ['dl-badge','fr-badge','ir-badge','sf-badge'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=acc.badge;});
-      ['dl-name','fr-name','ir-name','sf-name'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=acc.name;});
-      ['dl-rank','fr-rank','ir-rank','sf-role'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.role;});
+      ['dl-badge','fr-badge','ir-badge','sf-badge','rr-badge'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.badge;});
+      ['dl-name','fr-name','ir-name','sf-name','rr-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.name;});
+      ['dl-rank','fr-rank','ir-rank','sf-role','rr-rank'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.role;});
       return;
     }
   }
@@ -2658,4 +3108,4 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
 })();
 </script>
 </body>
-</html>
+  if(!data||!data.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🤝</div><div class="empty-t">No Clients</div><div class="empty-s">Add your first client.</div><button class="empty-btn" onclick="renderClientsAddBtn()">+ Add Client</button></div>';return;}
