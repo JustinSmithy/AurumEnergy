@@ -1452,7 +1452,17 @@ const deliveryLogs=lsLoad(LS_KEYS.deliveryLogs,[]);
 const fieldReports=lsLoad(LS_KEYS.fieldReports,[]);
 const incidentReports=lsLoad(LS_KEYS.incidentReports,[]);
 const clients=lsLoad(LS_KEYS.clients,[]);
-const fleet=(()=>{const _f=lsLoad(LS_KEYS.fleet,null);if(_f&&_f.length)return _f;lsSave(LS_KEYS.fleet,DEFAULT_FLEET);return DEFAULT_FLEET.slice();})();
+const fleet=(()=>{
+  const _f=lsLoad(LS_KEYS.fleet,null);
+  if(!_f||!_f.length){lsSave(LS_KEYS.fleet,DEFAULT_FLEET);return DEFAULT_FLEET.slice();}
+  // Merge in any DEFAULT_FLEET vehicles not already stored (by plate+type)
+  const _merged=[..._f];
+  DEFAULT_FLEET.forEach(def=>{
+    if(!_merged.find(v=>v.plate===def.plate&&v.type===def.type))_merged.push(def);
+  });
+  if(_merged.length!==_f.length)lsSave(LS_KEYS.fleet,_merged);
+  return _merged;
+})();
 const orders=lsLoad(LS_KEYS.orders,[]);
 const shiftHistory=lsLoad(LS_KEYS.shiftHistory,[]);
 const assignedShifts=lsLoad(LS_KEYS.assignedShifts,[]);
@@ -1694,6 +1704,7 @@ function showPage(id){
   if(id==='admin-shifts'){populateAssignForm();renderAssignedShifts();}
   if(id==='admin-roles')renderRoles();
   if(id==='admin-role-logs')renderRoleLogs();
+  if(id==='fleet'){renderFleet(fleet);updateFleetStats();}
   if(id==='maintenance'){renderMaintDamage();renderMaintService();populateMaintVehicleSelect();}
   if(id==='orders'){populateOrderDriverSelect();renderOrders(orders);}
   if(id==='reimbursement'){renderRR();updateRRStats();populateOrderRefSelects();}
@@ -3120,7 +3131,6 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
 // SESSION RESTORE + BOOT
 // ════════════════════════════════════════════
 (function bootApp(){
-  refreshAll();
   const _bm=document.querySelector('.main');
   if(_bm){_bm.style.backgroundImage='url('+_BG_DL+')';_bm.style.backgroundSize='cover';_bm.style.backgroundPosition='center';}
   const savedUsername=lsLoad(LS_KEYS.session,null);
@@ -3128,6 +3138,7 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
     const acc=accounts.find(a=>a.username===savedUsername&&a.status==='verified');
     if(acc){
       currentUser=acc;
+      refreshAll();
       document.getElementById('authWrap').style.display='none';
       document.getElementById('app').classList.add('on');
       document.getElementById('sbAv').textContent=acc.initials;
@@ -3141,6 +3152,7 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
       return;
     }
   }
+  refreshAll();
   authTab('login');
 })();
 </script>
