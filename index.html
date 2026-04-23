@@ -1387,7 +1387,16 @@ const LS_KEYS={
 };
 function lsLoad(key,fallback){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
 function lsSave(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
-function persist(key){lsSave(LS_KEYS[key],eval(key));}
+function persist(key){
+  const _dataMap={
+    accounts:()=>accounts,pendingResets:()=>pendingResets,applications:()=>applications,
+    deliveryLogs:()=>deliveryLogs,fieldReports:()=>fieldReports,incidentReports:()=>incidentReports,
+    clients:()=>clients,fleet:()=>fleet,orders:()=>orders,shiftHistory:()=>shiftHistory,
+    assignedShifts:()=>assignedShifts,customRoles:()=>customRoles,
+    maintenanceServiceLogs:()=>maintenanceServiceLogs,roleLogs:()=>roleLogs
+  };
+  if(_dataMap[key])lsSave(LS_KEYS[key],_dataMap[key]());
+}
 
 // ════════════════════════════════════════════
 // DATA
@@ -1443,7 +1452,7 @@ const deliveryLogs=lsLoad(LS_KEYS.deliveryLogs,[]);
 const fieldReports=lsLoad(LS_KEYS.fieldReports,[]);
 const incidentReports=lsLoad(LS_KEYS.incidentReports,[]);
 const clients=lsLoad(LS_KEYS.clients,[]);
-const fleet=(()=>{const _f=lsLoad(LS_KEYS.fleet,null);return(_f&&_f.length)?_f:DEFAULT_FLEET;})();
+const fleet=(()=>{const _f=lsLoad(LS_KEYS.fleet,null);if(_f&&_f.length)return _f;lsSave(LS_KEYS.fleet,DEFAULT_FLEET);return DEFAULT_FLEET.slice();})();
 const orders=lsLoad(LS_KEYS.orders,[]);
 const shiftHistory=lsLoad(LS_KEYS.shiftHistory,[]);
 const assignedShifts=lsLoad(LS_KEYS.assignedShifts,[]);
