@@ -1286,6 +1286,8 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 <div class="modal-overlay" id="resetPwModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Reset Password</div><button class="modal-x" onclick="closeModal('resetPwModal')">✕</button></div><div class="modal-body"><input type="hidden" id="rpIdx"><div class="fg"><label>New Password <span class="req">*</span></label><input type="password" id="rpNew" placeholder="Set new password for this account"></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('resetPwModal')">Cancel</button><button class="btn-save" onclick="doResetPw()">Set Password</button></div></div></div>
 <!-- Change Badge (Admin) -->
 <div class="modal-overlay" id="changeBadgeModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Change Badge Number</div><button class="modal-x" onclick="closeModal('changeBadgeModal')">✕</button></div><div class="modal-body"><input type="hidden" id="cbIdx"><div style="margin-bottom:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r)"><div style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:4px">EMPLOYEE</div><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600" id="cbName">—</div><div style="font-size:11px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px">Current badge: #<span id="cbCurrent">—</span></div></div><div class="fg"><label>New Badge Number <span class="req">*</span></label><input type="text" id="cbNew" placeholder="e.g. 4821" autocomplete="off"></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('changeBadgeModal')">Cancel</button><button class="btn-save" onclick="confirmChangeBadge()">Update Badge</button></div></div></div>
+<!-- Change Name (Admin) -->
+<div class="modal-overlay" id="changeNameModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Change Account Name</div><button class="modal-x" onclick="closeModal('changeNameModal')">✕</button></div><div class="modal-body"><input type="hidden" id="cnIdx"><div style="margin-bottom:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r)"><div style="font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:4px">EMPLOYEE</div><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600" id="cnCurrent">—</div><div style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:2px">Username: @<span id="cnUsername">—</span></div></div><div class="fg"><label>New Full Name <span class="req">*</span></label><input type="text" id="cnNew" placeholder="e.g. John Smith" autocomplete="off"></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('changeNameModal')">Cancel</button><button class="btn-save" onclick="confirmChangeName()">Update Name</button></div></div></div>
 <!-- Change Role Modal -->
 <div class="modal-overlay" id="changeRoleModal">
   <div class="modal-box">
@@ -1441,7 +1443,7 @@ const deliveryLogs=lsLoad(LS_KEYS.deliveryLogs,[]);
 const fieldReports=lsLoad(LS_KEYS.fieldReports,[]);
 const incidentReports=lsLoad(LS_KEYS.incidentReports,[]);
 const clients=lsLoad(LS_KEYS.clients,[]);
-const fleet=lsLoad(LS_KEYS.fleet,DEFAULT_FLEET);
+const fleet=(()=>{const _f=lsLoad(LS_KEYS.fleet,null);return(_f&&_f.length)?_f:DEFAULT_FLEET;})();
 const orders=lsLoad(LS_KEYS.orders,[]);
 const shiftHistory=lsLoad(LS_KEYS.shiftHistory,[]);
 const assignedShifts=lsLoad(LS_KEYS.assignedShifts,[]);
@@ -2332,6 +2334,7 @@ function renderAccounts(){
     if(a.status==='verified') acts+='<button class="btn-sm" onclick="event.stopPropagation();openResetPw('+i+')">🔑 Reset PW</button>';
     if(a.status==='verified') acts+='<button class="btn-sm" onclick="event.stopPropagation();openChangeRole('+i+')" style="border-color:rgba(168,85,247,.3);color:var(--purple)">🎖️ Role</button>';
     acts+='<button class="btn-sm" onclick="event.stopPropagation();openChangeBadge('+i+')" style="border-color:rgba(232,160,32,.3);color:var(--amber)">🔢 Badge</button>';
+    acts+='<button class="btn-sm" onclick="event.stopPropagation();openChangeName('+i+')" style="border-color:rgba(59,130,246,.3);color:var(--blue)">✏️ Name</button>';
     rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer" onclick="viewAccount('+i+')" title="Click to view">'
       +'<td><div class="dn">'+a.name+'</div></td>'
       +'<td><span class="mono" style="color:var(--text-2)">'+a.username+'</span></td>'
@@ -2367,6 +2370,31 @@ function confirmChangeBadge(){
   closeModal('changeBadgeModal');
   renderAccounts();
   toast('🔢',`Badge updated to #${nb}`,'var(--amber)');
+}
+function openChangeName(i){
+  const a=accounts[i];
+  document.getElementById('cnIdx').value=i;
+  document.getElementById('cnCurrent').textContent=a.name;
+  document.getElementById('cnUsername').textContent=a.username;
+  document.getElementById('cnNew').value='';
+  openModal('changeNameModal');
+}
+function confirmChangeName(){
+  const i=parseInt(document.getElementById('cnIdx').value);
+  const nn=document.getElementById('cnNew').value.trim();
+  if(!nn){toast('⚠️','Enter a new name.','var(--orange)');return;}
+  const old=accounts[i].name;
+  accounts[i].name=nn;
+  accounts[i].initials=nn.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  persist('accounts');
+  logRoleEvent('Name Changed',nn,old,nn,currentUser?.name||'System');
+  if(currentUser&&currentUser.username===accounts[i].username){
+    currentUser.name=nn;currentUser.initials=accounts[i].initials;
+    document.getElementById('sbName').textContent=nn;
+  }
+  closeModal('changeNameModal');
+  renderAccounts();
+  toast('✏️',`Name updated to ${nn}`,'var(--blue)');
 }
 function openChangeRole(i){
   const a=accounts[i];
