@@ -2768,7 +2768,7 @@ function editVehicle(i){const f=fleet[i];document.getElementById('efl-idx').valu
 function saveVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const i=parseInt(V('efl-idx'));const rawType=V('efl-type');const customType=document.getElementById('efl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!finalType){toast('⚠️','Please specify the vehicle type.','var(--orange)');return;}fleet[i]={plate:V('efl-plate').toUpperCase(),category:V('efl-category'),type:finalType,status:V('efl-status'),condition:V('efl-condition'),maint:V('efl-maint'),fuel:V('efl-fuel'),insured:V('efl-insured')||fleet[i].insured,insExpiry:V('efl-ins-expiry')||fleet[i].insExpiry};persist('fleet');closeModal('editFleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle updated!');}
 function delVehicle(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}fleet.splice(i,1);persist('fleet');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('🗑','Vehicle removed.','var(--text-3)');}
 function resetFleetToDefault(){
-  if(!isAdmin()){toast('🚫','Managers only.','var(--red)');return;}
+  if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}
   if(!confirm('Reset fleet to default vehicles? Any manually added vehicles will be removed.'))return;
   fleet.length=0;
   DEFAULT_FLEET.forEach(v=>fleet.push(v));
