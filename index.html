@@ -165,6 +165,11 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
 .dot.on{background:var(--green);box-shadow:0 0 6px var(--green);}
 .dot.off{background:var(--text-3);}
+.fl-chk{width:15px;height:15px;cursor:pointer;appearance:none;-webkit-appearance:none;background:var(--surface2);border:1px solid rgba(255,255,255,0.15);border-radius:3px;position:relative;flex-shrink:0;transition:all .15s;}
+.fl-chk:checked{background:var(--amber);border-color:var(--amber);}
+.fl-chk:checked::after{content:'';position:absolute;left:4px;top:1px;width:5px;height:9px;border:2px solid #000;border-top:none;border-left:none;transform:rotate(45deg);}
+.fl-chk:hover{border-color:var(--amber);}
+
 .btn-sm{background:transparent;border:1px solid var(--border);border-radius:5px;padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);cursor:pointer;transition:all .15s;}
 .btn-sm:hover{border-color:var(--border-hi);color:var(--amber);}
 .btn-sm.danger:hover{border-color:rgba(239,68,68,.4);color:var(--red);}
@@ -367,6 +372,8 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
         <div class="af"><label>Username</label><input type="text" id="rUser" placeholder="Choose a username"></div>
         <div class="af"><label>Password</label><input type="password" id="rPass" placeholder="Choose a password"></div>
         <div class="af"><label>Badge Number</label><input type="text" id="rBadge" placeholder="e.g. 3477"></div>
+        <div class="af"><label>In-Game Phone</label><input type="text" id="rPhone" placeholder="e.g. 555-0123"></div>
+        <div class="af"><label>Bank Routing Number</label><input type="text" id="rRouting" placeholder="Your routing/account number for payroll"></div>
       </div>
       <div class="af" style="margin-top:2px"><label>Role</label>
         <select id="rRole"><option value="">Select your role</option><optgroup label="Aurum Energy — Operations"><option>Field Operator (AE-FO1)</option><option>Trucker (AE-T1)</option><option>Foreman (AE-FO2)</option><option>OFFSHORE — Entry Level Rig Worker (AEO-W1)</option><option>OFFSHORE — Senior Rig Worker (AEO-W2)</option><option>OFFSHORE — Supervisor (AEO-S1)</option><option>Energy Intern (AE-I1)</option></optgroup><optgroup label="Aurum Corporation"><option>Human Resources Representative (AC-HR1)</option><option>Marketing Specialist (AC-MA1)</option><option>Environmental Researcher (AC-ER1)</option><option>Scientist (AC-SC1)</option><option>Corporation Intern (AC-I1)</option></optgroup></select>
@@ -795,6 +802,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       <div class="sc-strip c4"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="flST">0</div></div><div class="sc"><div class="sc-l">Operational</div><div class="sc-v" id="flSOp" style="color:var(--green)">0</div></div><div class="sc"><div class="sc-l">Maintenance</div><div class="sc-v" id="flSMaint" style="color:var(--orange)">0</div></div><div class="sc"><div class="sc-l">Off Duty</div><div class="sc-v" id="flSOff">0</div></div></div>
       <div class="sc-strip" style="grid-template-columns:1fr 1fr 1fr;padding-top:0"><div class="sc"><div class="sc-l">Insured</div><div class="sc-v" id="flSIns" style="color:var(--green)">0</div><div class="sc-i">🛡️</div></div><div class="sc"><div class="sc-l">Not Insured</div><div class="sc-v" id="flSNoIns" style="color:var(--red)">0</div><div class="sc-i">⚠️</div></div><div class="sc"><div class="sc-l">Expiring Soon</div><div class="sc-v" id="flSExp" style="color:var(--orange)">0</div><div class="sc-i">⏳</div></div></div>
       <div class="tbl-wrap"><div class="tbl-box" id="fleetWrap"></div></div>
+      <div id="flBatchBar" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border-hi);border-radius:12px;padding:10px 18px;display:none;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:200;white-space:nowrap"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber)" id="flSelCount">0 selected</span><button class="btn-sm" onclick="openBatchEdit()" style="border-color:rgba(232,160,32,.4);color:var(--amber)">✏️ Batch Edit</button><button class="btn-sm danger" onclick="batchDelete()">🗑 Delete Selected</button><button class="btn-sm" onclick="clearFleetSelection()">✕ Clear</button></div>
     </div>
 
     <!-- ══ ORDERS ══ -->
@@ -1274,10 +1282,11 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 <div class="modal-overlay" id="clientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Client</div><button class="modal-x" onclick="closeModal('clientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Name <span class="req">*</span></label><input type="text" id="cl-name"></div><div class="fg"><label>Company</label><input type="text" id="cl-company"></div><div class="fg"><label>Contract Type <span class="req">*</span></label><select id="cl-contract"><option value="">Select</option><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other — Please Specify</option></select></div><div class="fg"><label>Status <span class="req">*</span></label><select id="cl-status"><option value="">Select</option><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes (contact numbers, details etc.)</label><textarea id="cl-notes" style="min-height:70px" placeholder="Phone numbers, addresses, delivery preferences..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('clientModal')">Cancel</button><button class="btn-save" onclick="addClient()">Add</button></div></div></div>
 <div class="modal-overlay" id="editClientModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Client</div><button class="modal-x" onclick="closeModal('editClientModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="ecl-idx"><div class="fg"><label>Name</label><input type="text" id="ecl-name"></div><div class="fg"><label>Company</label><input type="text" id="ecl-company"></div><div class="fg"><label>Contract</label><select id="ecl-contract"><option>Fuel Supply</option><option>Cargo Transport</option><option>Regular Delivery</option><option>One-Time</option><option>Other — Please Specify</option></select></div><div class="fg"><label>Status</label><select id="ecl-status"><option>Active</option><option>Pending</option><option>Inactive</option></select></div></div><div class="fg" style="margin-top:10px"><label>Notes</label><textarea id="ecl-notes" style="min-height:70px" placeholder="Contact numbers, delivery details..."></textarea></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editClientModal')">Cancel</button><button class="btn-save" onclick="saveClient()">Save</button></div></div></div>
 <!-- Fleet -->
-<div class="modal-overlay" id="fleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Vehicle</div><button class="modal-x" onclick="closeModal('fleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Plate <span class="req">*</span></label><input type="text" id="fl-plate"></div><div class="fg"><label>Usage Category <span class="req">*</span></label><select id="fl-category"><option value="">Select</option><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Vehicle Type <span class="req">*</span></label><select id="fl-type" onchange="toggleCustomType('fl-type','fl-type-custom')"><option value="">Select</option><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="fl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status <span class="req">*</span></label><select id="fl-status"><option value="">Select</option><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition <span class="req">*</span></label><select id="fl-condition"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance <span class="req">*</span></label><select id="fl-maint"><option value="">Select</option><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel <span class="req">*</span></label><select id="fl-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div><div class="fg"><label>Insured?</label><select id="fl-insured" onchange="document.getElementById('fl-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">Select</option><option>Yes</option><option>No</option></select></div><div class="fg" id="fl-ins-expiry-wrap" style="display:none"><label>Insurance Expiry Date</label><input type="date" id="fl-ins-expiry"></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('fleetModal')">Cancel</button><button class="btn-save" onclick="addVehicle()">Add</button></div></div></div>
-<div class="modal-overlay" id="editFleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Vehicle</div><button class="modal-x" onclick="closeModal('editFleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="efl-idx"><div class="fg"><label>Plate</label><input type="text" id="efl-plate"></div><div class="fg"><label>Usage Category</label><select id="efl-category"><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Type</label><select id="efl-type" onchange="toggleCustomType('efl-type','efl-type-custom')"><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="efl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status</label><select id="efl-status"><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition</label><select id="efl-condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance</label><select id="efl-maint"><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel</label><select id="efl-fuel"><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div><div class="fg"><label>Insured?</label><select id="efl-insured" onchange="document.getElementById('efl-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">Select</option><option>Yes</option><option>No</option></select></div><div class="fg" id="efl-ins-expiry-wrap" style="display:none"><label>Insurance Expiry Date</label><input type="date" id="efl-ins-expiry"></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editFleetModal')">Cancel</button><button class="btn-save" onclick="saveVehicle()">Save</button></div></div></div>
+<div class="modal-overlay" id="fleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Add Vehicle</div><button class="modal-x" onclick="closeModal('fleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Plate <span class="req">*</span></label><input type="text" id="fl-plate"></div><div class="fg"><label>Usage Category <span class="req">*</span></label><select id="fl-category"><option value="">Select</option><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Vehicle Type <span class="req">*</span></label><select id="fl-type" onchange="toggleCustomType('fl-type','fl-type-custom')"><option value="">Select</option><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="fl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status <span class="req">*</span></label><select id="fl-status"><option value="">Select</option><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition <span class="req">*</span></label><select id="fl-condition"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance <span class="req">*</span></label><select id="fl-maint"><option value="">Select</option><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel <span class="req">*</span></label><select id="fl-fuel"><option value="">Select</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div><div class="fg"><label>Insured?</label><select id="fl-insured" onchange="document.getElementById('fl-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">Select</option><option>Yes</option><option>No</option></select></div><div class="fg" id="fl-ins-expiry-wrap" style="display:none"><label>Insurance Duration (days)</label><input type="number" id="fl-ins-days" min="1" placeholder="e.g. 30, 60, 90"></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('fleetModal')">Cancel</button><button class="btn-save" onclick="addVehicle()">Add</button></div></div></div>
+<div class="modal-overlay" id="batchFleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Batch Edit Vehicles</div><button class="modal-x" onclick="closeModal('batchFleetModal')">✕</button></div><div class="modal-body"><div style="margin-bottom:14px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);font-size:12px;color:var(--text-2)">Only filled fields will be applied. Leave blank to keep existing values.</div><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Insurance Status</label><select id="bf-insured" onchange="document.getElementById('bf-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">— No change —</option><option>Yes</option><option>No</option></select></div><div class="fg" id="bf-ins-expiry-wrap" style="display:none"><label>Insurance Duration (days)</label><input type="number" id="bf-ins-days" min="1" placeholder="e.g. 30, 60, 90"></div><div class="fg"><label>Status</label><select id="bf-status"><option value="">— No change —</option><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition</label><select id="bf-condition"><option value="">— No change —</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance</label><select id="bf-maint"><option value="">— No change —</option><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel Level</label><select id="bf-fuel"><option value="">— No change —</option><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('batchFleetModal')">Cancel</button><button class="btn-save" onclick="applyBatchEdit()">Apply to Selected</button></div></div></div>
+<div class="modal-overlay" id="editFleetModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Edit Vehicle</div><button class="modal-x" onclick="closeModal('editFleetModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><input type="hidden" id="efl-idx"><div class="fg"><label>Plate</label><input type="text" id="efl-plate"></div><div class="fg"><label>Usage Category</label><select id="efl-category"><option>Trucking</option><option>Utility</option><option>Air</option></select></div><div class="fg"><label>Type</label><select id="efl-type" onchange="toggleCustomType('efl-type','efl-type-custom')"><option>Semi Truck</option><option>Box Truck</option><option>Flatbed</option><option>Van</option><option>Pickup</option><option>Helicopter</option><option>Plane</option><option value="__custom__">Other (specify below)</option></select><input type="text" id="efl-type-custom" placeholder="Enter vehicle type..." style="display:none;margin-top:6px"></div><div class="fg"><label>Status</label><select id="efl-status"><option>Operational</option><option>Maintenance</option><option>Off Duty</option></select></div><div class="fg"><label>Condition</label><select id="efl-condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option></select></div><div class="fg"><label>Maintenance</label><select id="efl-maint"><option>Green — No Issues</option><option>Orange — Service Due</option><option>Red — Urgent Repair</option></select></div><div class="fg"><label>Fuel</label><select id="efl-fuel"><option>&lt;25% — Critical</option><option>25–50% — Low</option><option>50–75% — Adequate</option><option>&gt;75% — Full</option></select></div><div class="fg"><label>Insured?</label><select id="efl-insured" onchange="document.getElementById('efl-ins-expiry-wrap').style.display=this.value==='Yes'?'block':'none'"><option value="">Select</option><option>Yes</option><option>No</option></select></div><div class="fg" id="efl-ins-expiry-wrap" style="display:none"><label>Insurance Duration (days)</label><input type="number" id="efl-ins-days" min="1" placeholder="e.g. 30, 60, 90"><div class="fg-hint" style="margin-top:3px" id="efl-ins-remaining"></div></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('editFleetModal')">Cancel</button><button class="btn-save" onclick="saveVehicle()">Save</button></div></div></div>
 <!-- Orders -->
-<div class="modal-overlay" id="orderModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">New Company Order</div><button class="modal-x" onclick="closeModal('orderModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Order Number <span class="req">*</span></label><input type="text" id="ord-number" placeholder="e.g. AE-L-4 or AE-FO-2"><div class="fg-hint" style="margin-top:3px">L = Logistics · FO = Field Ops</div></div><div class="fg"><label>Title <span class="req">*</span></label><input type="text" id="ord-title"></div><div class="fg"><label>Division <span class="req">*</span></label><select id="ord-division"><option value="">Select</option><option>Logistics Orders</option><option>Field Operations Orders</option></select></div><div class="fg"><label>Client</label><input type="text" id="ord-client"></div><div class="fg"><label>Type <span class="req">*</span></label><select id="ord-type" onchange="toggleCustom('ord-type','ord-type-other')"><option value="">Select</option><option>Fuel Delivery</option><option>Cargo Transport</option><option>Supply Run</option><option>Special Order</option><option>Other — Please Specify</option></select><input type="text" id="ord-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div><div class="fg"><label>Priority</label><select id="ord-priority"><option>Normal</option><option>Low</option><option>High</option><option>Urgent</option></select></div><div class="fg"><label>Assigned To</label><select id="ord-driver"><option value="">Unassigned</option></select></div><div class="fg"><label>Status</label><select id="ord-status"><option>Pending</option><option>In Transit</option><option>Completed</option></select></div><div class="fg" style="grid-column:1/-1"><label>Details</label><textarea id="ord-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('orderModal')">Cancel</button><button class="btn-save" onclick="addOrder()">Create</button></div></div></div>
+<div class="modal-overlay" id="orderModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">New Company Order</div><button class="modal-x" onclick="closeModal('orderModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Order Number <span class="req">*</span></label><input type="text" id="ord-number" placeholder="e.g. AE-L-4 or AE-FO-2"><div class="fg-hint" style="margin-top:3px">L = Logistics · FO = Field Ops</div></div><div class="fg"><label>Title <span class="req">*</span></label><input type="text" id="ord-title"></div><div class="fg"><label>Division <span class="req">*</span></label><select id="ord-division"><option value="">Select</option><option>Logistics Orders</option><option>Field Operations Orders</option></select></div><div class="fg"><label>Client</label><input type="text" id="ord-client"></div><div class="fg"><label>Type <span class="req">*</span></label><select id="ord-type" onchange="toggleCustom('ord-type','ord-type-other')"><option value="">Select</option><option>Fuel Delivery</option><option>Cargo Transport</option><option>Supply Run</option><option>Special Order</option><option>Other — Please Specify</option></select><input type="text" id="ord-type-other" placeholder="Please specify..." style="display:none;margin-top:6px"></div><div class="fg"><label>Priority</label><select id="ord-priority"><option>Normal</option><option>Low</option><option>High</option><option>Urgent</option></select></div><div class="fg"><label>Assigned To</label><select id="ord-driver"><option value="">Unassigned</option></select></div><div class="fg"><label>Status</label><select id="ord-status"><option>Pending</option><option>In Transit</option><option>Completed</option></select></div><div class="fg" style="grid-column:1/-1"><label>Details</label><textarea id="ord-notes" style="min-height:65px"></textarea></div><div class="fg" style="grid-column:1/-1"><label>Location Image <span style="color:var(--text-3);font-weight:400">(Imgur URL — optional)</span></label><input type="text" id="ord-location-img" placeholder="https://i.imgur.com/..."><div class="fg-hint" style="margin-top:3px">Paste an Imgur direct image link to attach a location photo to this order.</div></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('orderModal')">Cancel</button><button class="btn-save" onclick="addOrder()">Create</button></div></div></div>
 <!-- Assign Shift -->
 <div class="modal-overlay" id="assignShiftModal"><div class="modal-box"><div class="modal-head"><div class="modal-t">Assign Shift</div><button class="modal-x" onclick="closeModal('assignShiftModal')">✕</button></div><div class="modal-body"><div class="fgrid c2" style="gap:12px"><div class="fg"><label>Employee <span class="req">*</span></label><select id="as-emp"><option value="">Select employee</option></select></div><div class="fg"><label>Date <span class="req">*</span></label><input type="date" id="as-date"></div><div class="fg"><label>Start Time <span class="req">*</span></label><input type="time" id="as-start"></div><div class="fg"><label>End Time <span class="req">*</span></label><input type="time" id="as-end"></div><div class="fg"><label>Vehicle</label><select id="as-vehicle"><option value="">No vehicle</option></select></div><div class="fg"><label>Order / Task</label><select id="as-order"><option value="">No specific task</option></select></div><div class="fg" style="grid-column:1/-1"><label>Instructions</label><textarea id="as-notes" style="min-height:65px"></textarea></div></div></div><div class="modal-foot"><button class="btn-can" onclick="closeModal('assignShiftModal')">Cancel</button><button class="btn-save" onclick="assignShift()">Assign</button></div></div></div>
 <!-- Add Role -->
@@ -1576,10 +1585,11 @@ function doRegister(){
   if(!name||!user||!pass||!badge||!role){err.textContent='⚠ Please fill in all fields.';err.style.display='block';return;}
   if(accounts.find(a=>a.username===user)){err.textContent='⚠ Username already taken.';err.style.display='block';return;}
   const initials=(name.split(' ').map(w=>w[0]).join('')).toUpperCase().slice(0,2);
-  accounts.push({username:user,password:pass,name,badge,role,status:'pending',initials});
+  const phone=V('rPhone')||'';const routing=V('rRouting')||'';
+  accounts.push({username:user,password:pass,name,badge,role,status:'pending',initials,phone,routing});
   persist('accounts');
   err.style.display='none';document.getElementById('rOk').style.display='block';
-  ['rName','rUser','rPass','rBadge'].forEach(id=>document.getElementById(id).value='');
+  ['rName','rUser','rPass','rBadge','rPhone','rRouting'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('rRole').selectedIndex=0;
   updateChips();
 }
@@ -2173,6 +2183,13 @@ function renderMyStats(){
   document.getElementById('msName').textContent=currentUser.name;
   document.getElementById('msRole').textContent=currentUser.role;
   document.getElementById('msBadge').textContent='Badge #'+currentUser.badge;
+  var accRec=accounts.find(function(a){return a.username===currentUser.username;})||currentUser;
+  var appRec=applications.find(function(a){return a.name===currentUser.name;});
+  var empPhone=accRec.phone||(appRec&&appRec.phone)||'—';
+  var empRouting=accRec.routing||(appRec&&appRec.routing)||'—';
+  document.getElementById('msEmpName').textContent=currentUser.name||'—';
+  document.getElementById('msEmpPhone').textContent=empPhone;
+  document.getElementById('msEmpRouting').textContent=empRouting;
   const myDL=deliveryLogs.filter(r=>r.badge===currentUser.badge||r.name===currentUser.name);
   const myFR=fieldReports.filter(r=>r.badge===currentUser.badge||r.name===currentUser.name);
   const myIR=incidentReports.filter(r=>r.badge===currentUser.badge||r.name===currentUser.name);
@@ -2708,14 +2725,47 @@ document.getElementById('clSrch').addEventListener('input',e=>{const q=e.target.
 // ════════════════════════════════════════════
 // FLEET
 // ════════════════════════════════════════════
+let fleetSort={col:null,dir:1};
+let fleetSelection=new Set();
+function sortFleet(col){
+  if(fleetSort.col===col)fleetSort.dir*=-1;else{fleetSort.col=col;fleetSort.dir=1;}
+  renderFleet(fleet);
+}
 function renderFleet(data){
+  checkInsuranceExpiry();
   var w=document.getElementById('fleetWrap');if(!w)return;
   if(!data||!data.length){w.innerHTML=`<div class="empty"><div class="empty-ico">🚛</div><div class="empty-t">No Vehicles Registered</div><div class="empty-s">Add vehicles to the fleet registry to get started.</div><button class="empty-btn" onclick="if(isAdmin())openModal('fleetModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Vehicle</button></div>`;return;}
+  // Apply sort
+  var sorted=data.slice();
+  if(fleetSort.col){
+    sorted.sort(function(a,b){
+      var av='',bv='';
+      if(fleetSort.col==='plate'){av=a.plate||'';bv=b.plate||'';}
+      else if(fleetSort.col==='category'){av=a.category||'';bv=b.category||'';}
+      else if(fleetSort.col==='type'){av=a.type||'';bv=b.type||'';}
+      else if(fleetSort.col==='status'){av=a.status||'';bv=b.status||'';}
+      else if(fleetSort.col==='condition'){av=a.condition||'';bv=b.condition||'';}
+      else if(fleetSort.col==='maint'){av=a.maint||'';bv=b.maint||'';}
+      else if(fleetSort.col==='insurance'){
+        var as=a.insuredOn?insExpiryStatus(a):null;
+        var bs=b.insuredOn?insExpiryStatus(b):null;
+        av=as?as.days:-9999;bv=bs?bs.days:-9999;
+        return(av-bv)*fleetSort.dir;
+      }
+      return av.localeCompare(bv)*fleetSort.dir;
+    });
+  }
   var catCol={'Trucking':'blue','Utility':'amber','Air':'purple'};
+  var allIndices=[];
   var rows='';
-  for(var i=0;i<data.length;i++){
-    var f=data[i];
+  function sortTh(col,label){
+    var arr=fleetSort.col===col?(fleetSort.dir===1?' ↑':' ↓'):'';
+    return '<th onclick="sortFleet(\''+col+'\')" style="cursor:pointer;user-select:none" title="Sort by '+label+'">'+label+'<span style="color:var(--amber)">'+arr+'</span></th>';
+  }
+  for(var i=0;i<sorted.length;i++){
+    var f=sorted[i];
     var fi=fleet.indexOf(f);
+    allIndices.push(fi);
     var fp=fuelPctMap[f.fuel]||50;
     var fc2=fp>50?'hi':fp>25?'mid':'lo';
     var latestLog=maintenanceServiceLogs.filter(function(s){return s.plate===f.plate&&s.mileage;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
@@ -2723,18 +2773,21 @@ function renderFleet(data){
     var insCell;
     if(!f.insured||f.insured==='No'){
       insCell='<span class="tag red" style="font-size:9px">⚠ NOT INSURED</span>';
-    } else if(f.insured==='Yes'&&f.insExpiry){
-      var ins=insExpiryStatus(f.insExpiry);
-      if(ins&&ins.days<0){insCell='<span class="tag red" style="font-size:9px">⚠ EXPIRED</span>';}
-      else if(ins&&ins.days<=30){insCell='<span class="tag orange" style="font-size:9px">⚠ '+ins.label+'</span>';}
-      else{insCell='<span class="tag green" style="font-size:9px">'+(ins?ins.label:'Valid')+'</span>';}
+    } else if(f.insured==='Yes'&&(f.insuredOn||f.insExpiry)){
+      var ins=f.insuredOn?insExpiryStatus(f):insExpiryStatus(f.insExpiry);
+      if(!ins||ins.days<=0){insCell='<span class="tag red" style="font-size:9px">⚠ EXPIRED</span>';}
+      else if(ins.cls==='red'){insCell='<span class="tag red" style="font-size:9px">⚠ '+ins.label+'</span>';}
+      else if(ins.cls==='orange'){insCell='<span class="tag orange" style="font-size:9px">⚠ '+ins.label+'</span>';}
+      else{insCell='<span class="tag green" style="font-size:9px">'+ins.label+'</span>';}
     } else if(f.insured==='Yes'){
       insCell='<span class="tag green" style="font-size:9px">Insured</span>';
     } else {
       insCell='<span class="tag dim" style="font-size:9px">Unknown</span>';
     }
-    var actionsCell=isAdmin()?('<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle('+fi+')">✏️ Edit</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle('+fi+')">🗑</button></div>'):'';
-    rows+='<tr style="animation:rowIn .3s ease '+(i*.05)+'s both;cursor:pointer" onclick="viewVehicle('+fi+')" title="Click to view">'
+    var chk=isAdmin()?('<td onclick="event.stopPropagation()"><input type="checkbox" class="fl-chk" '+(fleetSelection.has(fi)?'checked':'')+' onchange="toggleFleetRow('+fi+',this)"></td>'):'';
+    var actionsCell=isAdmin()?('<div style="display:flex;gap:6px"><button class="btn-sm" onclick="event.stopPropagation();editVehicle('+fi+')">✏️</button><button class="btn-sm danger" onclick="event.stopPropagation();delVehicle('+fi+')">🗑</button></div>'):'';
+    rows+='<tr style="animation:rowIn .3s ease '+(i*.03)+'s both;cursor:pointer'+(fleetSelection.has(fi)?';background:rgba(232,160,32,.06)':'')+'" onclick="viewVehicle('+fi+')" title="Click to view">'
+      +chk
       +'<td><span class="veh">🚛 '+f.plate+'</span></td>'
       +'<td><span class="tag '+(catCol[f.category]||'dim')+'">'+(f.category||'—')+'</span></td>'
       +'<td style="font-size:12px;color:var(--text-2)">'+(f.type||'—')+'</td>'
@@ -2747,7 +2800,56 @@ function renderFleet(data){
       +'<td>'+actionsCell+'</td>'
       +'</tr>';
   }
-  w.innerHTML='<table><thead><tr><th>Plate</th><th>Category</th><th>Type</th><th>Status</th><th>Condition</th><th>Maintenance</th><th>Fuel</th><th>Insurance</th><th>Mileage</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  var allChecked=allIndices.length>0&&allIndices.every(i=>fleetSelection.has(i));
+  var selectAllTh=isAdmin()?('<th onclick="event.stopPropagation()"><input type="checkbox" class="fl-chk" '+(allChecked?'checked':'')+' onchange="toggleAllFleet(this,['+allIndices.join(',')+'])" title="Select all"></th>'):'';
+  w.innerHTML='<table><thead><tr>'+selectAllTh+sortTh('plate','Plate')+sortTh('category','Category')+sortTh('type','Type')+sortTh('status','Status')+sortTh('condition','Condition')+sortTh('maint','Maintenance')+'<th>Fuel</th>'+sortTh('insurance','Insurance')+'<th>Mileage</th><th>Actions</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function updateBatchBar(){
+  const bar=document.getElementById('flBatchBar');
+  const cnt=document.getElementById('flSelCount');
+  if(!bar)return;
+  if(fleetSelection.size>0){bar.style.display='flex';if(cnt)cnt.textContent=fleetSelection.size+' selected';}
+  else{bar.style.display='none';}
+}
+function clearFleetSelection(){fleetSelection.clear();updateBatchBar();renderFleet(fleet);}
+function toggleFleetRow(fi,cb){if(cb.checked)fleetSelection.add(fi);else fleetSelection.delete(fi);updateBatchBar();}
+function toggleAllFleet(cb,indices){if(cb.checked)indices.forEach(i=>fleetSelection.add(i));else indices.forEach(i=>fleetSelection.delete(i));updateBatchBar();renderFleet(fleet);}
+function openBatchEdit(){
+  if(!fleetSelection.size){toast('⚠️','Select at least one vehicle.','var(--orange)');return;}
+  ['bf-insured','bf-status','bf-condition','bf-maint','bf-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  document.getElementById('bf-ins-expiry').value='';
+  document.getElementById('bf-ins-expiry-wrap').style.display='none';
+  openModal('batchFleetModal');
+}
+function applyBatchEdit(){
+  if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}
+  const ins=V('bf-insured'),days=document.getElementById('bf-ins-days').value.trim(),
+    st=V('bf-status'),cond=V('bf-condition'),maint=V('bf-maint'),fuel=V('bf-fuel');
+  if(!ins&&!st&&!cond&&!maint&&!fuel){toast('⚠️','Choose at least one field to update.','var(--orange)');return;}
+  fleetSelection.forEach(fi=>{
+    if(fi<0||fi>=fleet.length)return;
+    if(ins){fleet[fi].insured=ins;
+      if(ins==='Yes'&&days){fleet[fi].insuredOn=new Date().toISOString().slice(0,10);fleet[fi].insDays=days;}
+      if(ins==='No'){fleet[fi].insuredOn='';fleet[fi].insDays='';fleet[fi].insExpiry='';}
+    }
+    if(st)fleet[fi].status=st;
+    if(cond)fleet[fi].condition=cond;
+    if(maint)fleet[fi].maint=maint;
+    if(fuel)fleet[fi].fuel=fuel;
+  });
+  persist('fleet');closeModal('batchFleetModal');
+  const n=fleetSelection.size;clearFleetSelection();
+  updateFleetStats();toast('✅','Updated '+n+' vehicle'+(n>1?'s':'')+'!');
+}
+function batchDelete(){
+  if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}
+  if(!fleetSelection.size)return;
+  if(!confirm('Delete '+fleetSelection.size+' selected vehicle'+(fleetSelection.size>1?'s':'')+' ?'))return;
+  const indices=[...fleetSelection].sort((a,b)=>b-a);
+  indices.forEach(i=>fleet.splice(i,1));
+  persist('fleet');const n=indices.length;clearFleetSelection();
+  updateFleetStats();populateVehicleSelect();populateShiftVehicle();
+  toast('🗑','Deleted '+n+' vehicle'+(n>1?'s':'.')+'.','var(--text-3)');
 }
 function updateFleetStats(){
   document.getElementById('flST').textContent=fleet.length;
@@ -2758,12 +2860,12 @@ function updateFleetStats(){
   const insEl=document.getElementById('flSIns');const noInsEl=document.getElementById('flSNoIns');const expEl=document.getElementById('flSExp');
   if(insEl)insEl.textContent=fleet.filter(f=>f.insured==='Yes').length;
   if(noInsEl)noInsEl.textContent=fleet.filter(f=>!f.insured||f.insured==='No').length;
-  if(expEl)expEl.textContent=fleet.filter(f=>{if(f.insured!=='Yes'||!f.insExpiry)return false;const s=insExpiryStatus(f.insExpiry);return s&&s.days>=0&&s.days<=30;}).length;
+  if(expEl)expEl.textContent=fleet.filter(f=>{if(f.insured!=='Yes')return false;const s=f.insuredOn?insExpiryStatus(f):f.insExpiry?insExpiryStatus(f.insExpiry):null;return s&&s.days>=0&&s.days<=30;}).length;
 }
 function toggleCustomType(selId,inputId){const sel=document.getElementById(selId);const inp=document.getElementById(inputId);if(!sel||!inp)return;inp.style.display=sel.value==='__custom__'?'block':'none';if(sel.value!=='__custom__')inp.value='';}
-function addVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const rawType=V('fl-type');const customType=document.getElementById('fl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!V('fl-plate')||!finalType||!V('fl-status')||!V('fl-condition')||!V('fl-maint')||!V('fl-fuel')||!V('fl-category')){toast('⚠️','Fill in all fields.','var(--orange)');return;}fleet.unshift({plate:V('fl-plate').toUpperCase(),category:V('fl-category'),type:finalType,status:V('fl-status'),condition:V('fl-condition'),maint:V('fl-maint'),fuel:V('fl-fuel'),insured:V('fl-insured'),insExpiry:V('fl-ins-expiry')});persist('fleet');document.getElementById('fl-plate').value='';document.getElementById('fl-type-custom').value='';document.getElementById('fl-type-custom').style.display='none';['fl-category','fl-type','fl-status','fl-condition','fl-maint','fl-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);closeModal('fleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle added!');}
-function editVehicle(i){const f=fleet[i];document.getElementById('efl-idx').value=i;document.getElementById('efl-plate').value=f.plate;document.getElementById('efl-category').value=f.category||'Trucking';const knownTypes=['Semi Truck','Box Truck','Flatbed','Van','Pickup','Helicopter','Plane'];const typeEl=document.getElementById('efl-type');const typeCustomEl=document.getElementById('efl-type-custom');if(knownTypes.includes(f.type)){typeEl.value=f.type;typeCustomEl.style.display='none';typeCustomEl.value='';}else{typeEl.value='__custom__';typeCustomEl.style.display='block';typeCustomEl.value=f.type||'';}document.getElementById('efl-status').value=f.status||'Operational';document.getElementById('efl-condition').value=f.condition||'Good';document.getElementById('efl-maint').value=f.maint||'Green — No Issues';document.getElementById('efl-fuel').value=f.fuel||'>75% — Full';const eInsEl=document.getElementById('efl-insured');if(eInsEl)eInsEl.value=f.insured||'';const eInsExpWrap=document.getElementById('efl-ins-expiry-wrap');const eInsExp=document.getElementById('efl-ins-expiry');if(eInsExpWrap&&eInsExp){eInsExpWrap.style.display=f.insured==='Yes'?'block':'none';eInsExp.value=f.insExpiry||'';}openModal('editFleetModal');}
-function saveVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const i=parseInt(V('efl-idx'));const rawType=V('efl-type');const customType=document.getElementById('efl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!finalType){toast('⚠️','Please specify the vehicle type.','var(--orange)');return;}fleet[i]={plate:V('efl-plate').toUpperCase(),category:V('efl-category'),type:finalType,status:V('efl-status'),condition:V('efl-condition'),maint:V('efl-maint'),fuel:V('efl-fuel'),insured:V('efl-insured')||fleet[i].insured,insExpiry:V('efl-ins-expiry')||fleet[i].insExpiry};persist('fleet');closeModal('editFleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle updated!');}
+function addVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const rawType=V('fl-type');const customType=document.getElementById('fl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!V('fl-plate')||!finalType||!V('fl-status')||!V('fl-condition')||!V('fl-maint')||!V('fl-fuel')||!V('fl-category')){toast('⚠️','Fill in all fields.','var(--orange)');return;}const flIns=V('fl-insured');const flDays=document.getElementById('fl-ins-days').value.trim();fleet.unshift({plate:V('fl-plate').toUpperCase(),category:V('fl-category'),type:finalType,status:V('fl-status'),condition:V('fl-condition'),maint:V('fl-maint'),fuel:V('fl-fuel'),insured:flIns,insuredOn:flIns==='Yes'&&flDays?new Date().toISOString().slice(0,10):'',insDays:flIns==='Yes'&&flDays?flDays:''});persist('fleet');document.getElementById('fl-plate').value='';document.getElementById('fl-ins-days').value='';document.getElementById('fl-type-custom').value='';document.getElementById('fl-type-custom').style.display='none';['fl-category','fl-type','fl-status','fl-condition','fl-maint','fl-fuel','fl-insured'].forEach(id=>document.getElementById(id).selectedIndex=0);document.getElementById('fl-ins-expiry-wrap').style.display='none';closeModal('fleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle added!');}
+function editVehicle(i){const f=fleet[i];document.getElementById('efl-idx').value=i;document.getElementById('efl-plate').value=f.plate;document.getElementById('efl-category').value=f.category||'Trucking';const knownTypes=['Semi Truck','Box Truck','Flatbed','Van','Pickup','Helicopter','Plane'];const typeEl=document.getElementById('efl-type');const typeCustomEl=document.getElementById('efl-type-custom');if(knownTypes.includes(f.type)){typeEl.value=f.type;typeCustomEl.style.display='none';typeCustomEl.value='';}else{typeEl.value='__custom__';typeCustomEl.style.display='block';typeCustomEl.value=f.type||'';}document.getElementById('efl-status').value=f.status||'Operational';document.getElementById('efl-condition').value=f.condition||'Good';document.getElementById('efl-maint').value=f.maint||'Green — No Issues';document.getElementById('efl-fuel').value=f.fuel||'>75% — Full';const eInsEl=document.getElementById('efl-insured');const eInsDays=document.getElementById('efl-ins-days');const eInsWrap=document.getElementById('efl-ins-expiry-wrap');const eInsRem=document.getElementById('efl-ins-remaining');if(eInsEl)eInsEl.value=f.insured||'';if(eInsWrap)eInsWrap.style.display=f.insured==='Yes'?'block':'none';if(eInsDays)eInsDays.value=f.insDays||'';if(eInsRem){const s=f.insuredOn?insExpiryStatus(f):null;eInsRem.textContent=s&&s.days>0?s.days+'d remaining — enter new days to restart the clock':'Enter days to set new insurance period';}openModal('editFleetModal');}
+function saveVehicle(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const i=parseInt(V('efl-idx'));const rawType=V('efl-type');const customType=document.getElementById('efl-type-custom').value.trim();const finalType=rawType==='__custom__'?customType:rawType;if(!finalType){toast('⚠️','Please specify the vehicle type.','var(--orange)');return;}const eIns=V('efl-insured');const eDays=document.getElementById('efl-ins-days').value.trim();const prev=fleet[i];fleet[i]={plate:V('efl-plate').toUpperCase(),category:V('efl-category'),type:finalType,status:V('efl-status'),condition:V('efl-condition'),maint:V('efl-maint'),fuel:V('efl-fuel'),insured:eIns,insuredOn:eIns==='Yes'&&eDays?new Date().toISOString().slice(0,10):(eIns==='Yes'?prev.insuredOn||'':''),insDays:eIns==='Yes'&&eDays?eDays:(eIns==='Yes'?prev.insDays||'':'')};persist('fleet');closeModal('editFleetModal');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('✅','Vehicle updated!');}
 function delVehicle(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}fleet.splice(i,1);persist('fleet');updateFleetStats();renderFleet(fleet);populateVehicleSelect();populateShiftVehicle();toast('🗑','Vehicle removed.','var(--text-3)');}
 function viewVehicle(i){
   const f=fleet[i];if(!f)return;
@@ -2806,14 +2908,15 @@ function renderOrders(data){
 
 function updateOrderStats(){document.getElementById('orST').textContent=orders.length;document.getElementById('orSP').textContent=orders.filter(o=>o.status==='Pending').length;document.getElementById('orSI').textContent=orders.filter(o=>o.status==='In Transit').length;document.getElementById('orSD').textContent=orders.filter(o=>o.status==='Completed').length;}
 function markOrderComplete(i){if(!isAdmin())return;orders[i].status='Completed';orders[i].completedAt=nowDate()+' '+nowTime();orders[i].completedBy=currentUser?.name||'—';persist('orders');updateOrderStats();renderOrders(orders);toast('✅','Order marked as complete!','var(--green)');}
-function addOrder(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}if(!V('ord-number')||!V('ord-title')||!V('ord-type')||!V('ord-division')){toast('⚠️','Fill in Order #, Division, Title and Type.','var(--orange)');return;}const ordTypeVal=V('ord-type')==='Other — Please Specify'?(V('ord-type-other')||V('ord-type')):V('ord-type');orders.unshift({date:nowDate(),time:nowTime(),number:V('ord-number'),division:V('ord-division'),title:V('ord-title'),client:V('ord-client'),type:ordTypeVal,priority:V('ord-priority')||'Normal',driver:V('ord-driver'),status:V('ord-status')||'Pending',notes:V('ord-notes')});persist('orders');['ord-number','ord-title','ord-client','ord-notes','ord-type-other'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});['ord-type','ord-division'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});closeModal('orderModal');updateOrderStats();renderOrders(orders);populateOrderRefSelects();toast('✅','Order created!');}
+function addOrder(){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}if(!V('ord-number')||!V('ord-title')||!V('ord-type')||!V('ord-division')){toast('⚠️','Fill in Order #, Division, Title and Type.','var(--orange)');return;}const ordTypeVal=V('ord-type')==='Other — Please Specify'?(V('ord-type-other')||V('ord-type')):V('ord-type');orders.unshift({date:nowDate(),time:nowTime(),number:V('ord-number'),division:V('ord-division'),title:V('ord-title'),client:V('ord-client'),type:ordTypeVal,priority:V('ord-priority')||'Normal',driver:V('ord-driver'),status:V('ord-status')||'Pending',notes:V('ord-notes'),locationImg:V('ord-location-img')});persist('orders');['ord-number','ord-title','ord-client','ord-notes','ord-type-other','ord-location-img'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});['ord-type','ord-division'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});closeModal('orderModal');updateOrderStats();renderOrders(orders);populateOrderRefSelects();toast('✅','Order created!');}
 function cycleOrder(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}const s=orders[i].status;orders[i].status=s==='Pending'?'In Transit':s==='In Transit'?'Completed':'Pending';persist('orders');updateOrderStats();renderOrders(orders);toast('🔄',`Status: ${orders[i].status}`,'var(--blue)');}
 function delOrder(i){if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}orders.splice(i,1);persist('orders');updateOrderStats();renderOrders(orders);toast('🗑','Order removed.','var(--text-3)');}
 function viewOrder(i){
   const o=orders[i];if(!o)return;
   const pC={'Low':'var(--text-2)','Normal':'var(--blue)','High':'var(--orange)','Urgent':'var(--red)'};
   document.getElementById('prevTitle').textContent='Order — '+(o.number?o.number+' · ':'')+o.title;
-  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${o.title}</div><div class="mono" style="font-size:11px;color:var(--amber)">${o.number||'No Order #'} · ${o.division||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${o.date} at ${o.time}</div></div>${pGrid(pRow('ORDER #',o.number||'—'),pRow('DIVISION',o.division||'—'),pRow('CLIENT',o.client||'—'),pRow('TYPE',o.type||'—'),pRow('PRIORITY',`<span style="color:${pC[o.priority]||'var(--text-2)'};font-weight:700">${o.priority||'—'}</span>`),pRow('ASSIGNED TO',o.driver||'Unassigned'),pRow('STATUS',o.status),o.completedAt?pRow('COMPLETED',o.completedAt+' by '+o.completedBy):'')}`+`${o.notes?`<div style="margin-top:8px">${pRow('DETAILS',o.notes)}</div>`:''}`;
+  const imgBlock=o.locationImg?`<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:8px">📍 LOCATION IMAGE</div><img src="${o.locationImg}" alt="Location" style="width:100%;max-height:320px;object-fit:cover;border-radius:var(--r);border:1px solid var(--border)" onerror="this.parentElement.innerHTML='<div style=\'font-size:11px;color:var(--red);font-family:JetBrains Mono,monospace\'>⚠ Could not load image — check the URL is a valid direct Imgur link.</div>'"></div>`:'';
+  document.getElementById('prevBody').innerHTML=`<div style="padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-family:Space Grotesk,sans-serif;font-size:16px;font-weight:600;margin-bottom:3px">${o.title}</div><div class="mono" style="font-size:11px;color:var(--amber)">${o.number||'No Order #'} · ${o.division||'—'}</div><div class="mono" style="font-size:11px;color:var(--text-3)">${o.date} at ${o.time}</div></div>${pGrid(pRow('ORDER #',o.number||'—'),pRow('DIVISION',o.division||'—'),pRow('CLIENT',o.client||'—'),pRow('TYPE',o.type||'—'),pRow('PRIORITY',`<span style="color:${pC[o.priority]||'var(--text-2)'};font-weight:700">${o.priority||'—'}</span>`),pRow('ASSIGNED TO',o.driver||'Unassigned'),pRow('STATUS',o.status),o.completedAt?pRow('COMPLETED',o.completedAt+' by '+o.completedBy):'')}`+`${o.notes?`<div style="margin-top:8px">${pRow('DETAILS',o.notes)}</div>`:''}${imgBlock}`;
   openModal('prevModal');
 }document.getElementById('orSrch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderOrders(orders.filter(o=>o.title.toLowerCase().includes(q)||o.client.toLowerCase().includes(q)));});
 
@@ -3111,19 +3214,44 @@ function populateOrderRefSelects(){
 // ════════════════════════════════════════════
 // INSURANCE EXPIRY HELPERS
 // ════════════════════════════════════════════
-function insExpiryStatus(expiry){
-  if(!expiry)return null;
-  const exp=new Date(expiry);const now=new Date();
-  const diff=Math.ceil((exp-now)/(1000*60*60*24));
-  if(diff<0)return{label:'EXPIRED',cls:'red',days:diff};
-  if(diff<=30)return{label:'Expires in '+diff+'d',cls:'orange',days:diff};
-  return{label:'Valid until '+exp.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),cls:'green',days:diff};
+function insExpiryStatus(v){
+  // v can be a vehicle object {insuredOn, insDays} or legacy date string
+  if(!v)return null;
+  var insuredOn,insDays;
+  if(typeof v==='object'&&v.insuredOn){insuredOn=v.insuredOn;insDays=parseInt(v.insDays)||30;}
+  else if(typeof v==='string'){// legacy date string fallback
+    const exp=new Date(v);const now=new Date();
+    const diff=Math.ceil((exp-now)/(1000*60*60*24));
+    if(diff<0)return{label:'EXPIRED',cls:'red',days:diff};
+    if(diff<=7)return{label:'Expires in '+diff+'d',cls:'red',days:diff};
+    if(diff<=30)return{label:'Expires in '+diff+'d',cls:'orange',days:diff};
+    return{label:'Valid ('+diff+'d left)',cls:'green',days:diff};
+  } else return null;
+  const start=new Date(insuredOn);const now=new Date();
+  const elapsed=Math.floor((now-start)/(1000*60*60*24));
+  const remaining=insDays-elapsed;
+  if(remaining<=0)return{label:'EXPIRED',cls:'red',days:remaining};
+  if(remaining<=7)return{label:'Expires in '+remaining+'d',cls:'red',days:remaining};
+  if(remaining<=30)return{label:'Expires in '+remaining+'d',cls:'orange',days:remaining};
+  return{label:remaining+'d remaining',cls:'green',days:remaining};
+}
+// Auto-expire insurance: check all vehicles and set insured=No if expired
+function checkInsuranceExpiry(){
+  let changed=false;
+  fleet.forEach(f=>{
+    if(f.insured==='Yes'&&(f.insuredOn||f.insExpiry)){
+      const s=f.insuredOn?insExpiryStatus(f):insExpiryStatus(f.insExpiry);
+      if(s&&s.days<=0){f.insured='No';f.insuredOn='';f.insDays='';f.insExpiry='';changed=true;}
+    }
+  });
+  if(changed){persist('fleet');updateFleetStats();}
 }
 
 // ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
 function refreshAll(){
+  checkInsuranceExpiry();
   renderDL(deliveryLogs);renderFR(fieldReports);renderIR(incidentReports);
   renderClients(clients);renderFleet(fleet);renderOrders(orders);
   renderShiftHistory(shiftHistory);updateDLStats();updateFRStats();
@@ -3171,4 +3299,4 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
 })();
 </script>
 </body>
-  if(!data||!data.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🤝</div><div class="empty-t">No Clients</div><div class="empty-s">Add your first client.</div><button class="empty-btn" onclick="renderClientsAddBtn()">+ Add Client</button></div>';return;}
+</html>
