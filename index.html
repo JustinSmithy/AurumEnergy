@@ -2818,7 +2818,7 @@ function toggleAllFleet(cb,indices){if(cb.checked)indices.forEach(i=>fleetSelect
 function openBatchEdit(){
   if(!fleetSelection.size){toast('⚠️','Select at least one vehicle.','var(--orange)');return;}
   ['bf-insured','bf-status','bf-condition','bf-maint','bf-fuel'].forEach(id=>document.getElementById(id).selectedIndex=0);
-  document.getElementById('bf-ins-expiry').value='';
+  document.getElementById('bf-ins-days').value='';
   document.getElementById('bf-ins-expiry-wrap').style.display='none';
   openModal('batchFleetModal');
 }
@@ -2840,7 +2840,7 @@ function applyBatchEdit(){
   });
   persist('fleet');closeModal('batchFleetModal');
   const n=fleetSelection.size;clearFleetSelection();
-  updateFleetStats();toast('✅','Updated '+n+' vehicle'+(n>1?'s':'')+'!');
+  updateFleetStats();renderFleet(fleet);toast('✅','Updated '+n+' vehicle'+(n>1?'s':'')+'!');
 }
 function batchDelete(){
   if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}
