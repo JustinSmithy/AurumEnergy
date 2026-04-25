@@ -251,6 +251,94 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 .ph-t{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--text-3);}
 .ph-s{font-size:12px;color:var(--text-3);opacity:.4;}
 
+/* ── IC EMAIL PORTAL ── */
+#icPortal{position:fixed;inset:0;z-index:9200;display:none;background:var(--bg);}
+#icPortal.on{display:flex;flex-direction:column;}
+.icp-topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;}
+.icp-logo{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.3px;}
+.icp-logo .au{color:var(--amber);}
+.icp-badge{background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.25);border-radius:20px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:1px;}
+.icp-user{margin-left:auto;display:flex;align-items:center;gap:9px;}
+.icp-av{width:30px;height:30px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#000;}
+.icp-name{font-size:13px;font-weight:600;}
+.icp-role{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
+.icp-logout{background:none;border:1px solid var(--border);color:var(--text-3);padding:5px 12px;border-radius:var(--r);font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;}
+.icp-logout:hover{border-color:rgba(239,68,68,.4);color:var(--red);}
+.icp-body{flex:1;display:flex;overflow:hidden;}
+.icp-sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:14px 0;}
+.icp-sb-sec{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2.5px;color:var(--text-3);text-transform:uppercase;padding:8px 18px 4px;}
+.icp-sb-item{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-2);transition:all .15s;position:relative;}
+.icp-sb-item:hover{color:var(--text);background:rgba(255,255,255,.03);}
+.icp-sb-item.on{color:var(--amber);background:var(--amber-pale);}
+.icp-sb-item.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber);}
+.icp-sb-item .icp-ico{font-size:14px;width:18px;text-align:center;}
+.icp-sb-count{margin-left:auto;background:var(--amber);color:#000;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:'JetBrains Mono',monospace;}
+.icp-main{flex:1;display:flex;overflow:hidden;}
+/* Email list pane */
+.icp-list{width:300px;min-width:300px;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.icp-list-head{padding:14px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.icp-list-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;}
+.icp-compose-btn{background:var(--amber);color:#000;border:none;padding:5px 12px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+.icp-compose-btn:hover{background:#f0b030;}
+.icp-emails{flex:1;overflow-y:auto;}
+.icp-email-row{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .12s;position:relative;}
+.icp-email-row:hover{background:rgba(255,255,255,.03);}
+.icp-email-row.on{background:var(--amber-pale);}
+.icp-email-row.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber);}
+.icp-email-row.unread .icp-em-subject{color:var(--text);font-weight:600;}
+.icp-email-row.unread::after{content:'';position:absolute;right:12px;top:50%;transform:translateY(-50%);width:7px;height:7px;background:var(--amber);border-radius:50%;}
+.icp-em-from{font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:2px;font-family:'Space Grotesk',sans-serif;}
+.icp-em-subject{font-size:12px;color:var(--text-3);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.icp-em-preview{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.6;}
+.icp-em-time{position:absolute;right:12px;top:12px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);}
+/* Email viewer pane */
+.icp-viewer{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.icp-viewer-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.icp-viewer-subject{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.icp-viewer-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.icp-viewer-from{font-size:12px;color:var(--text-2);}
+.icp-viewer-from strong{color:var(--text);}
+.icp-viewer-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);}
+.icp-viewer-body{flex:1;overflow-y:auto;padding:24px;font-size:13px;color:var(--text-2);line-height:1.8;white-space:pre-wrap;}
+.icp-viewer-reply{border-top:1px solid var(--border);padding:14px 24px;flex-shrink:0;display:flex;flex-direction:column;gap:9px;}
+.icp-reply-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;}
+.icp-reply-row{display:flex;gap:9px;}
+.icp-reply-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;resize:none;min-height:72px;transition:border-color .15s;}
+.icp-reply-input:focus{border-color:var(--border-hi);}
+.icp-reply-send{background:var(--amber);color:#000;border:none;padding:9px 18px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;align-self:flex-end;transition:all .15s;}
+.icp-reply-send:hover{background:#f0b030;}
+.icp-empty-viewer{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:.3;}
+.icp-empty-viewer .ico{font-size:42px;}
+.icp-empty-viewer .lbl{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;}
+/* Compose modal */
+.icp-compose-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9300;display:none;align-items:flex-end;justify-content:flex-end;padding:20px;pointer-events:none;}
+.icp-compose-overlay.open{display:flex;pointer-events:all;}
+.icp-compose-box{width:460px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);box-shadow:0 24px 60px rgba(0,0,0,.6);animation:fadeUp .25s ease;}
+.icp-compose-head{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.icp-compose-t{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;}
+.icp-compose-x{background:none;border:none;color:var(--text-3);cursor:pointer;font-size:16px;transition:color .15s;}
+.icp-compose-x:hover{color:var(--red);}
+.icp-compose-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.icp-compose-field{display:flex;flex-direction:column;gap:4px;}
+.icp-compose-field label{font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:2px;color:var(--amber);text-transform:uppercase;}
+.icp-compose-field input,.icp-compose-field textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;width:100%;transition:border-color .15s;}
+.icp-compose-field input:focus,.icp-compose-field textarea:focus{border-color:var(--border-hi);}
+.icp-compose-field textarea{resize:vertical;min-height:100px;}
+.icp-compose-foot{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+/* HR Messages Modal */
+.hr-msg-modal .modal-box{width:680px;}
+.hr-thread{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow-y:auto;padding:4px 0 12px;}
+.hr-msg{padding:10px 14px;border-radius:var(--rl);max-width:80%;font-size:13px;line-height:1.6;white-space:pre-wrap;}
+.hr-msg.from-hr{background:var(--amber-pale);border:1px solid var(--border-hi);color:var(--text);align-self:flex-start;}
+.hr-msg.from-applicant{background:var(--surface2);border:1px solid var(--border);color:var(--text-2);align-self:flex-end;}
+.hr-msg-meta{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--text-3);margin-top:3px;}
+.hr-msg-meta.right{text-align:right;}
+.hr-send-row{display:flex;gap:9px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.hr-send-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;resize:none;min-height:62px;transition:border-color .15s;}
+.hr-send-input:focus{border-color:var(--border-hi);}
+.hr-send-btn{background:var(--amber);color:#000;border:none;padding:9px 16px;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;align-self:flex-end;transition:all .15s;}
+.hr-send-btn:hover{background:#f0b030;}
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--surface2);border:1px solid var(--green);border-radius:var(--rl);padding:11px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
 .toast.show{transform:none;opacity:1;}
@@ -362,6 +450,10 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       <div class="af-divider">or</div>
       <button class="af-btn sec" onclick="authTab('recover')">Forgot Password?</button>
       <button class="af-btn sec" onclick="authTab('apply')" style="margin-top:4px;border-color:rgba(232,160,32,0.3);color:var(--amber)">📝 Apply to Join Aurum Energy</button>
+      <div style="margin-top:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);border-radius:var(--r);padding:9px 12px;font-size:11px;color:#93c5fd;font-family:'JetBrains Mono',monospace;line-height:1.6">
+        <strong style="letter-spacing:1px;font-size:9px;display:block;margin-bottom:3px;color:var(--blue)">📅 INTERVIEW APPLICANTS</strong>
+        Use your in-game phone number as your username and your character name as your password to access your applicant inbox.
+      </div>
       <div class="af-foot">Aurum Energy · Authorized Personnel Only</div>
     </div>
 
@@ -477,6 +569,114 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       <button class="af-btn sec" onclick="authTab('login')">← Back to Sign In</button>
       <div class="af-foot">Aurum Energy · GTA World RP</div>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════ IC EMAIL PORTAL ══════════════════ -->
+<div id="icPortal">
+  <div class="icp-topbar">
+    <div class="icp-logo"><span class="au">Aurum</span> Energy</div>
+    <div class="icp-badge">✉ IC INTRANET · INTERVIEW PORTAL</div>
+    <div class="icp-user">
+      <div class="icp-av" id="icpAv">?</div>
+      <div><div class="icp-name" id="icpName">—</div><div class="icp-role">Applicant</div></div>
+      <button class="icp-logout" onclick="icpLogout()">⏻ Sign Out</button>
+    </div>
+  </div>
+  <div class="icp-body">
+    <div class="icp-sidebar">
+      <div class="icp-sb-sec">Mailbox</div>
+      <div class="icp-sb-item on" onclick="icpSwitchFolder('inbox')"><span class="icp-ico">📥</span>Inbox <span class="icp-sb-count" id="icpUnreadCount" style="display:none">0</span></div>
+      <div class="icp-sb-item" onclick="icpSwitchFolder('sent')"><span class="icp-ico">📤</span>Sent</div>
+      <div class="icp-sb-sec" style="margin-top:14px">Info</div>
+      <div class="icp-sb-item" onclick="icpSwitchFolder('status')"><span class="icp-ico">📋</span>My Application</div>
+    </div>
+    <div class="icp-main">
+      <!-- Email list -->
+      <div class="icp-list">
+        <div class="icp-list-head">
+          <div class="icp-list-title" id="icpFolderTitle">Inbox</div>
+          <button class="icp-compose-btn" onclick="icpOpenCompose()" id="icpComposeBtn">✏ Compose</button>
+        </div>
+        <div class="icp-emails" id="icpEmailList"></div>
+      </div>
+      <!-- Viewer -->
+      <div class="icp-viewer" id="icpViewer">
+        <div class="icp-empty-viewer" id="icpViewerEmpty">
+          <div class="ico">✉️</div>
+          <div class="lbl">Select a message to read</div>
+        </div>
+        <div id="icpViewerContent" style="display:none;flex:1;display:flex;flex-direction:column;overflow:hidden;">
+          <div class="icp-viewer-head">
+            <div class="icp-viewer-subject" id="icpMsgSubject">—</div>
+            <div class="icp-viewer-meta">
+              <div class="icp-viewer-from">From: <strong id="icpMsgFrom">—</strong></div>
+              <div class="icp-viewer-date" id="icpMsgDate">—</div>
+            </div>
+          </div>
+          <div class="icp-viewer-body" id="icpMsgBody">—</div>
+          <div class="icp-viewer-reply" id="icpReplyArea">
+            <div class="icp-reply-label">Reply</div>
+            <textarea class="icp-reply-input" id="icpReplyText" placeholder="Type your reply…"></textarea>
+            <button class="icp-reply-send" onclick="icpSendReply()">Send Reply ↗</button>
+          </div>
+        </div>
+        <!-- Application status view -->
+        <div id="icpStatusView" style="display:none;flex:1;overflow-y:auto;padding:24px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:22px 24px;max-width:560px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--amber);margin-bottom:10px;text-transform:uppercase">Application Status</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-bottom:6px" id="icpStatusName">—</div>
+            <div style="font-size:12px;color:var(--text-3);margin-bottom:18px" id="icpStatusRole">—</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(232,160,32,.07);border:1px solid rgba(232,160,32,.2);border-radius:var(--r);margin-bottom:18px">
+              <div style="font-size:22px">🔔</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:2px">Interview Stage</div>
+                <div style="font-size:12px;color:var(--text-2)">Your application has progressed to the interview stage. HR will be in contact via this inbox shortly.</div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--text-3);line-height:1.7">Please check your inbox regularly and reply to any messages from the HR team. This portal is for official Aurum Energy communications only.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IC Email Compose overlay -->
+<div class="icp-compose-overlay" id="icpComposeOverlay">
+  <div class="icp-compose-box">
+    <div class="icp-compose-head">
+      <div class="icp-compose-t">✏ New Message to HR</div>
+      <button class="icp-compose-x" onclick="icpCloseCompose()">✕</button>
+    </div>
+    <div class="icp-compose-body">
+      <div class="icp-compose-field"><label>To</label><input type="text" value="HR Department — Aurum Energy" readonly style="opacity:.6;cursor:not-allowed"></div>
+      <div class="icp-compose-field"><label>Subject</label><input type="text" id="icpComposeSubject" placeholder="e.g. Interview Availability, Question re: Position…"></div>
+      <div class="icp-compose-field"><label>Message</label><textarea id="icpComposeBody" placeholder="Type your message here…"></textarea></div>
+    </div>
+    <div class="icp-compose-foot">
+      <button style="background:transparent;border:1px solid var(--border);color:var(--text-3);padding:7px 14px;border-radius:var(--r);font-size:12px;cursor:pointer" onclick="icpCloseCompose()">Cancel</button>
+      <button class="icp-reply-send" onclick="icpSendCompose()">Send ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- HR Messages Modal (shown in admin Applications panel) -->
+<div class="modal-overlay hr-msg-modal" id="hrMsgModal">
+  <div class="modal-box wide">
+    <div class="modal-head">
+      <div class="modal-t">✉ IC Messages — <span id="hrMsgApplicantName">—</span></div>
+      <button class="modal-x" onclick="closeModal('hrMsgModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-3);margin-bottom:10px;letter-spacing:1px">CONVERSATION THREAD</div>
+      <div class="hr-thread" id="hrMsgThread"></div>
+      <div class="hr-send-row">
+        <textarea class="hr-send-input" id="hrMsgInput" placeholder="Type a message to the applicant from HR…"></textarea>
+        <button class="hr-send-btn" onclick="hrSendMessage()">Send ↗</button>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn-can" onclick="closeModal('hrMsgModal')">Close</button></div>
   </div>
 </div>
 
@@ -1392,7 +1592,7 @@ const LS_KEYS={
   deliveryLogs:'ae_deliveryLogs',fieldReports:'ae_fieldReports',incidentReports:'ae_incidentReports',
   clients:'ae_clients',fleet:'ae_fleet',orders:'ae_orders',shiftHistory:'ae_shiftHistory',
   assignedShifts:'ae_assignedShifts',customRoles:'ae_customRoles',
-  maintenanceServiceLogs:'ae_maintenanceLogs',roleLogs:'ae_roleLogs',session:'ae_session'
+  maintenanceServiceLogs:'ae_maintenanceLogs',roleLogs:'ae_roleLogs',session:'ae_session',icMessages:'ae_icMessages',icSession:'ae_icSession'
 };
 function lsLoad(key,fallback){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
 function lsSave(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
@@ -1402,7 +1602,7 @@ function persist(key){
     deliveryLogs:()=>deliveryLogs,fieldReports:()=>fieldReports,incidentReports:()=>incidentReports,
     clients:()=>clients,fleet:()=>fleet,orders:()=>orders,shiftHistory:()=>shiftHistory,
     assignedShifts:()=>assignedShifts,customRoles:()=>customRoles,
-    maintenanceServiceLogs:()=>maintenanceServiceLogs,roleLogs:()=>roleLogs
+    maintenanceServiceLogs:()=>maintenanceServiceLogs,roleLogs:()=>roleLogs,icMessages:()=>icMessages
   };
   if(_dataMap[key])lsSave(LS_KEYS[key],_dataMap[key]());
 }
@@ -1561,6 +1761,14 @@ function authTab(tab){
 function doLogin(){
   const u=document.getElementById('lUser').value.trim().toLowerCase();
   const p=document.getElementById('lPass').value;
+  // Check for interview applicant login (phone as username, name as password)
+  const uNorm=u.replace(/[^a-z0-9]/g,'');
+  const appl=applications.find(a=>{
+    const phoneNorm=(a.phone||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const nameNorm=(a.name||'').toLowerCase().trim();
+    return a.status==='interview'&&(phoneNorm===uNorm||a.phone.toLowerCase().trim()===u)&&(p.toLowerCase().trim()===nameNorm);
+  });
+  if(appl){icpEnter(appl);return;}
   const acc=accounts.find(a=>a.username===u&&a.password===p&&a.status==='verified');
   if(!acc){document.getElementById('lErr').style.display='block';return;}
   document.getElementById('lErr').style.display='none';
@@ -1608,6 +1816,13 @@ function doLogout(){
   currentUser=null;activeShift=null;totalBreakMs=0;
   lsSave(LS_KEYS.session,null);
   document.getElementById('app').classList.remove('on');
+  document.getElementById('authWrap').style.display='flex';
+  document.getElementById('lUser').value='';document.getElementById('lPass').value='';
+  authTab('login');
+}
+function icpLogout(){
+  lsSave(LS_KEYS.icSession,null);
+  document.getElementById('icPortal').classList.remove('on');
   document.getElementById('authWrap').style.display='flex';
   document.getElementById('lUser').value='';document.getElementById('lPass').value='';
   authTab('login');
@@ -2577,9 +2792,10 @@ function renderApplications(){
   applications.forEach(function(a,i){
     var isCorpDiv=a.division&&a.division.includes('Corporation');
     var divTag='<span class="tag '+(isCorpDiv?'purple':'amber')+'" style="font-size:10px;white-space:nowrap">'+(isCorpDiv?'🏢 Corp':'⚡ Ops')+'</span>';
-    var stTag='<span class="tag '+(a.status==='accepted'?'green':a.status==='rejected'?'red':'orange')+'">'+a.status.charAt(0).toUpperCase()+a.status.slice(1)+'</span>';
+    var stTag='<span class="tag '+(a.status==='accepted'?'green':a.status==='rejected'?'red':a.status==='interview'?'blue':'orange')+'">'+a.status.charAt(0).toUpperCase()+a.status.slice(1)+'</span>';
     var acts='<button class="btn-sm" onclick="event.stopPropagation();viewApplication('+i+')">👁 View</button>';
-    if(a.status==='pending') acts+='<button class="btn-sm ok" onclick="event.stopPropagation();acceptApplication('+i+')">✓ Accept</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectApplication('+i+')">✕ Reject</button>';
+    if(a.status==='pending') acts+='<button class="btn-sm" style="border-color:rgba(59,130,246,.4);color:var(--blue)" onclick="event.stopPropagation();moveToInterview('+i+')">📅 Interview</button><button class="btn-sm ok" onclick="event.stopPropagation();acceptApplication('+i+')">✓ Accept</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectApplication('+i+')">✕ Reject</button>';
+    if(a.status==='interview') acts+='<button class="btn-sm" style="border-color:rgba(59,130,246,.4);color:var(--blue)" onclick="event.stopPropagation();openHrMessages('+i+')">✉ Messages</button><button class="btn-sm ok" onclick="event.stopPropagation();acceptApplication('+i+')">✓ Accept</button><button class="btn-sm danger" onclick="event.stopPropagation();rejectApplication('+i+')">✕ Reject</button>';
     rows+='<tr style="animation:rowIn .3s ease '+(i*.04)+'s both;cursor:pointer" onclick="viewApplication('+i+')" title="Click to view">'
       +'<td><div class="dn">'+a.name+'</div></td>'
       +'<td class="mono" style="font-size:11px;color:var(--text-2)">'+a.phone+'</td>'
@@ -2604,7 +2820,7 @@ function viewApplication(i){
         <div class="mono" style="font-size:11px;color:var(--text-3)">Applied: ${a.submittedAt}</div>
         <span class="tag ${isCorp?'purple':'amber'}" style="margin-top:6px;display:inline-flex">${a.division||'Aurum Energy — Operations'}</span>
       </div>
-      <span class="tag ${a.status==='accepted'?'green':a.status==='rejected'?'red':'orange'}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span>
+      <span class="tag ${a.status==='accepted'?'green':a.status==='rejected'?'red':a.status==='interview'?'blue':'orange'}">${a.status==='interview'?'📅 Interview':a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span>
     </div>
     ${pGrid(pRow('POSITION APPLYING FOR',a.role),pRow('PHONE NUMBER',a.phone),pRow('AGE',a.age||'—'),pRow('NATIONALITY',a.nationality||'—'))}
     ${isCorp?pGrid(
@@ -2615,9 +2831,13 @@ function viewApplication(i){
     <div style="margin-top:8px">${pRow('WHY AURUM?',a.reason)}</div>
     ${a.notes?`<div style="margin-top:8px">${pRow('ADDITIONAL NOTES',a.notes)}</div>`:''}`;
   const foot=document.getElementById('applPrevFoot');
-  foot.innerHTML=a.status==='pending'?
-    `<button class="btn-can" onclick="closeModal('applPrevModal')">Close</button><button class="btn-save" style="background:var(--red);color:#fff" onclick="rejectApplication(${i});closeModal('applPrevModal')">✕ Reject</button><button class="btn-save" onclick="acceptApplication(${i});closeModal('applPrevModal')">✓ Accept</button>`:
-    `<button class="btn-save" onclick="closeModal('applPrevModal')">Close</button>`;
+  if(a.status==='pending'){
+    foot.innerHTML=`<button class="btn-can" onclick="closeModal('applPrevModal')">Close</button><button class="btn-save" style="background:var(--blue);color:#fff" onclick="moveToInterview(${i});closeModal('applPrevModal')">📅 Interview</button><button class="btn-save" style="background:var(--red);color:#fff" onclick="rejectApplication(${i});closeModal('applPrevModal')">✕ Reject</button><button class="btn-save" onclick="acceptApplication(${i});closeModal('applPrevModal')">✓ Accept</button>`;
+  } else if(a.status==='interview'){
+    foot.innerHTML=`<button class="btn-can" onclick="closeModal('applPrevModal')">Close</button><button class="btn-save" style="background:var(--blue);color:#fff" onclick="closeModal('applPrevModal');openHrMessages(${i})">✉ Messages</button><button class="btn-save" style="background:var(--red);color:#fff" onclick="rejectApplication(${i});closeModal('applPrevModal')">✕ Reject</button><button class="btn-save" onclick="acceptApplication(${i});closeModal('applPrevModal')">✓ Accept</button>`;
+  } else {
+    foot.innerHTML=`<button class="btn-save" onclick="closeModal('applPrevModal')">Close</button>`;
+  }
   openModal('applPrevModal');
 }
 function acceptApplication(i){
@@ -3276,6 +3496,12 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
 (function bootApp(){
   const _bm=document.querySelector('.main');
   if(_bm){_bm.style.backgroundImage='url('+_BG_DL+')';_bm.style.backgroundSize='cover';_bm.style.backgroundPosition='center';}
+  // Check for saved IC portal session (interview applicant)
+  const savedIcPhone=lsLoad(LS_KEYS.icSession,null);
+  if(savedIcPhone){
+    const appl=applications.find(a=>a.status==='interview'&&a.phone===savedIcPhone);
+    if(appl){icpEnter(appl,true);return;}
+  }
   const savedUsername=lsLoad(LS_KEYS.session,null);
   if(savedUsername){
     const acc=accounts.find(a=>a.username===savedUsername&&a.status==='verified');
@@ -3299,6 +3525,241 @@ document.head.insertAdjacentHTML('beforeend','<style>@keyframes rowIn{from{opaci
   refreshAll();
   authTab('login');
 })();
+
+// ════════════════════════════════════════════
+// IC EMAIL PORTAL — DATA
+// ════════════════════════════════════════════
+const icMessages=lsLoad(LS_KEYS.icMessages,[]);
+// icMessages format: {id, applicantPhone, from:'hr'|'applicant', subject, body, date, time, read:bool}
+let icCurrentApplicant=null; // applicant object for currently logged-in IC user or HR-viewing thread
+let icSelectedMsgId=null;
+let icCurrentFolder='inbox';
+let icHrViewApplicantPhone=null; // which applicant HR is messaging
+
+// ════════════════════════════════════════════
+// IC EMAIL PORTAL — ENTRY / EXIT
+// ════════════════════════════════════════════
+function icpEnter(appl, fromRestore){
+  icCurrentApplicant=appl;
+  if(!fromRestore) lsSave(LS_KEYS.icSession, appl.phone);
+  document.getElementById('authWrap').style.display='none';
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('icPortal').classList.add('on');
+  // Set header info
+  const initials=(appl.name.split(' ').map(w=>w[0]||'').join('')).toUpperCase().slice(0,2);
+  document.getElementById('icpAv').textContent=initials;
+  document.getElementById('icpName').textContent=appl.name;
+  // Render inbox
+  icpSwitchFolder('inbox');
+  // Send welcome message if first login (no messages yet for this applicant)
+  const existing=icMessages.filter(m=>m.applicantPhone===appl.phone);
+  if(!existing.length){
+    icMessages.unshift({
+      id:'msg_'+Date.now(),
+      applicantPhone:appl.phone,
+      from:'hr',
+      subject:'Welcome to the Aurum Energy Interview Process',
+      body:'Dear '+appl.name+',\n\nThank you for your application to join Aurum Energy.\n\nWe are pleased to inform you that your application for the position of '+appl.role+' has progressed to the interview stage.\n\nThis inbox is your official communication channel with the Aurum Energy HR team during this process. Please check here regularly for updates, scheduling information, and any questions we may have for you.\n\nIf you have any questions in the meantime, please use the Compose button to reach us directly.\n\nWe look forward to speaking with you soon.\n\nKind regards,\nHR Department\nAurum Energy',
+      date:nowDate(),
+      time:nowTime(),
+      read:false
+    });
+    persist('icMessages');
+  }
+  icpRenderFolder();
+}
+
+// ════════════════════════════════════════════
+// IC EMAIL PORTAL — FOLDER / RENDER
+// ════════════════════════════════════════════
+function icpSwitchFolder(folder){
+  icCurrentFolder=folder;
+  icSelectedMsgId=null;
+  document.querySelectorAll('.icp-sb-item').forEach(el=>el.classList.remove('on'));
+  const idx={'inbox':0,'sent':1,'status':2}[folder]||0;
+  document.querySelectorAll('.icp-sb-item')[idx]?.classList.add('on');
+  const listEl=document.getElementById('icpEmailList');
+  const titleEl=document.getElementById('icpFolderTitle');
+  const composeBtn=document.getElementById('icpComposeBtn');
+  const viewerContent=document.getElementById('icpViewerContent');
+  const viewerEmpty=document.getElementById('icpViewerEmpty');
+  const statusView=document.getElementById('icpStatusView');
+  if(viewerContent) viewerContent.style.display='none';
+  if(statusView) statusView.style.display='none';
+  if(viewerEmpty) viewerEmpty.style.display='flex';
+  if(folder==='status'){
+    titleEl.textContent='My Application';
+    composeBtn.style.display='none';
+    listEl.innerHTML='';
+    if(statusView){
+      statusView.style.display='flex';
+      if(viewerEmpty) viewerEmpty.style.display='none';
+      document.getElementById('icpStatusName').textContent=icCurrentApplicant?.name||'—';
+      document.getElementById('icpStatusRole').textContent=(icCurrentApplicant?.role||'—')+' · '+( icCurrentApplicant?.division||'Aurum Energy — Operations');
+    }
+    return;
+  }
+  titleEl.textContent=folder==='inbox'?'Inbox':'Sent';
+  composeBtn.style.display=folder==='sent'?'none':'block';
+  icpRenderFolder();
+}
+function icpRenderFolder(){
+  const listEl=document.getElementById('icpEmailList');
+  if(!listEl||!icCurrentApplicant)return;
+  const phone=icCurrentApplicant.phone;
+  let msgs;
+  if(icCurrentFolder==='inbox'){
+    msgs=icMessages.filter(m=>m.applicantPhone===phone&&m.from==='hr');
+  } else {
+    msgs=icMessages.filter(m=>m.applicantPhone===phone&&m.from==='applicant');
+  }
+  msgs=msgs.slice().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  // Update unread badge
+  const unread=icMessages.filter(m=>m.applicantPhone===phone&&m.from==='hr'&&!m.read).length;
+  const ub=document.getElementById('icpUnreadCount');
+  if(ub){ub.style.display=unread>0?'inline':'none';ub.textContent=unread;}
+  if(!msgs.length){
+    listEl.innerHTML='<div style="padding:28px 16px;text-align:center;color:var(--text-3);font-size:12px;font-family:JetBrains Mono,monospace">'+(icCurrentFolder==='inbox'?'No messages yet':'Nothing sent yet')+'</div>';
+    return;
+  }
+  listEl.innerHTML=msgs.map(m=>{
+    const isUnread=!m.read&&m.from==='hr';
+    const preview=m.body.replace(/\n/g,' ').slice(0,55)+'…';
+    const fromLabel=m.from==='hr'?'HR Department — Aurum Energy':icCurrentApplicant.name;
+    return `<div class="icp-email-row${isUnread?' unread':''}${icSelectedMsgId===m.id?' on':''}" onclick="icpOpenMsg('${m.id}')">
+      <div class="icp-em-from">${fromLabel}</div>
+      <div class="icp-em-subject">${m.subject}</div>
+      <div class="icp-em-preview">${preview}</div>
+      <div class="icp-em-time">${m.date}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+// IC EMAIL PORTAL — OPEN / REPLY
+// ════════════════════════════════════════════
+function icpOpenMsg(id){
+  icSelectedMsgId=id;
+  const msg=icMessages.find(m=>m.id===id);
+  if(!msg)return;
+  // Mark as read
+  if(!msg.read){msg.read=true;persist('icMessages');}
+  icpRenderFolder();
+  // Populate viewer
+  document.getElementById('icpViewerEmpty').style.display='none';
+  document.getElementById('icpStatusView').style.display='none';
+  const vc=document.getElementById('icpViewerContent');
+  vc.style.cssText='display:flex;flex:1;flex-direction:column;overflow:hidden;';
+  document.getElementById('icpMsgSubject').textContent=msg.subject;
+  document.getElementById('icpMsgFrom').textContent=msg.from==='hr'?'HR Department — Aurum Energy':icCurrentApplicant?.name||'You';
+  document.getElementById('icpMsgDate').textContent=msg.date+' at '+msg.time;
+  document.getElementById('icpMsgBody').textContent=msg.body;
+  // Only show reply in inbox (reply to HR)
+  const replyArea=document.getElementById('icpReplyArea');
+  if(replyArea) replyArea.style.display=msg.from==='hr'?'flex':'none';
+  if(replyArea) replyArea.style.flexDirection='column';
+  document.getElementById('icpReplyText').value='';
+}
+function icpSendReply(){
+  const text=document.getElementById('icpReplyText').value.trim();
+  if(!text){toast('⚠️','Please type a reply first.','var(--orange)');return;}
+  const origMsg=icMessages.find(m=>m.id===icSelectedMsgId);
+  icMessages.unshift({
+    id:'msg_'+Date.now(),
+    applicantPhone:icCurrentApplicant.phone,
+    from:'applicant',
+    subject:'Re: '+(origMsg?.subject||''),
+    body:text,
+    date:nowDate(),
+    time:nowTime(),
+    read:true
+  });
+  persist('icMessages');
+  document.getElementById('icpReplyText').value='';
+  toast('📤','Reply sent to HR.','var(--green)');
+  icpRenderFolder();
+}
+function icpOpenCompose(){
+  document.getElementById('icpComposeOverlay').classList.add('open');
+  document.getElementById('icpComposeSubject').value='';
+  document.getElementById('icpComposeBody').value='';
+}
+function icpCloseCompose(){document.getElementById('icpComposeOverlay').classList.remove('open');}
+function icpSendCompose(){
+  const subj=document.getElementById('icpComposeSubject').value.trim();
+  const body=document.getElementById('icpComposeBody').value.trim();
+  if(!subj||!body){toast('⚠️','Please fill in subject and message.','var(--orange)');return;}
+  icMessages.unshift({
+    id:'msg_'+Date.now(),
+    applicantPhone:icCurrentApplicant.phone,
+    from:'applicant',
+    subject:subj,
+    body:body,
+    date:nowDate(),
+    time:nowTime(),
+    read:true
+  });
+  persist('icMessages');
+  icpCloseCompose();
+  toast('📤','Message sent to HR.','var(--green)');
+  icpSwitchFolder('sent');
+}
+
+// ════════════════════════════════════════════
+// HR MESSAGES (admin side)
+// ════════════════════════════════════════════
+function moveToInterview(i){
+  if(!isAdmin()){toast('🚫','Supervisors and Managers only.','var(--red)');return;}
+  applications[i].status='interview';
+  persist('applications');
+  renderApplications();
+  updateChips();
+  toast('📅',applications[i].name+' moved to Interview stage.','var(--blue)');
+}
+function openHrMessages(i){
+  const a=applications[i];if(!a)return;
+  icHrViewApplicantPhone=a.phone;
+  document.getElementById('hrMsgApplicantName').textContent=a.name+' — '+a.role;
+  hrRenderThread();
+  openModal('hrMsgModal');
+}
+function hrRenderThread(){
+  const w=document.getElementById('hrMsgThread');if(!w||!icHrViewApplicantPhone)return;
+  const msgs=icMessages.filter(m=>m.applicantPhone===icHrViewApplicantPhone)
+    .slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  if(!msgs.length){w.innerHTML='<div style="text-align:center;padding:18px;color:var(--text-3);font-size:12px;font-family:JetBrains Mono,monospace">No messages yet. Send one below.</div>';return;}
+  w.innerHTML=msgs.map(m=>`
+    <div style="display:flex;flex-direction:column;align-items:${m.from==='hr'?'flex-start':'flex-end'}">
+      <div class="hr-msg ${m.from==='hr'?'from-hr':'from-applicant'}">
+        <div style="font-size:10px;font-family:JetBrains Mono,monospace;color:${m.from==='hr'?'var(--amber)':'var(--text-3)'};margin-bottom:4px;letter-spacing:1px">${m.subject}</div>
+        ${m.body}
+      </div>
+      <div class="hr-msg-meta ${m.from==='hr'?'':'right'}">${m.from==='hr'?'HR · ':'Applicant · '}${m.date} ${m.time}</div>
+    </div>
+  `).join('');
+  w.scrollTop=w.scrollHeight;
+}
+function hrSendMessage(){
+  const text=document.getElementById('hrMsgInput').value.trim();
+  if(!text||!icHrViewApplicantPhone){toast('⚠️','Type a message first.','var(--orange)');return;}
+  const appl=applications.find(a=>a.phone===icHrViewApplicantPhone);
+  icMessages.unshift({
+    id:'msg_'+Date.now(),
+    applicantPhone:icHrViewApplicantPhone,
+    from:'hr',
+    subject:'Message from HR — Aurum Energy',
+    body:text,
+    date:nowDate(),
+    time:nowTime(),
+    read:false
+  });
+  persist('icMessages');
+  document.getElementById('hrMsgInput').value='';
+  hrRenderThread();
+  toast('📤','Message sent to applicant.','var(--green)');
+}
+// Close compose overlay on outside click
+document.getElementById('icpComposeOverlay')?.addEventListener('click',function(e){if(e.target===this)icpCloseCompose();});
 </script>
 </body>
 </html>
