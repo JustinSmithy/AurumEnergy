@@ -25,6 +25,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 /* ── AUTH — FULL BLEED LAYOUT ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.auth-animated-gradient{
+  position:absolute;inset:0;z-index:1;opacity:.18;pointer-events:none;
+  background:linear-gradient(135deg,#e8a020,#00c9a7,#a855f7,#e8a020,#3b82f6,#00c9a7);
+  background-size:400% 400%;
+  animation:gradShift 18s ease infinite;
+  mix-blend-mode:screen;
+}
 
 .auth-wrap{
   position:fixed;inset:0;z-index:9100;
@@ -178,18 +186,19 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 /* Right login card */
 .auth-panel-right{
-  width:400px;flex-shrink:0;
+  width:440px;flex-shrink:0;
   display:flex;flex-direction:column;align-items:stretch;justify-content:center;
   max-height:100%;overflow-y:auto;
   padding:20px 0;
   scrollbar-width:none;
+  margin-right:60px;
 }
 .auth-panel-right::-webkit-scrollbar{display:none;}
 .auth-card{
   background:rgba(14,19,24,0.88);
   border:1px solid rgba(255,255,255,.1);
   border-radius:16px;
-  padding:28px 28px 24px;
+  padding:32px 34px 28px;
   box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(232,160,32,.08);
   backdrop-filter:blur(18px);
   animation:fadeUp .45s cubic-bezier(.16,1,.3,1);
@@ -225,7 +234,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
   border-radius:6px;cursor:pointer;color:rgba(255,255,255,.35);
   transition:all .15s;font-family:'Space Grotesk',sans-serif;
 }
-.atab.on{background:var(--amber);color:#000;}
+.atab.on{background:var(--amber);color:#000;font-weight:800;box-shadow:0 2px 12px rgba(232,160,32,.35);letter-spacing:.2px;}
 
 /* Form fields */
 .af{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
@@ -258,7 +267,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .af-btn.amber-outline:hover{background:rgba(232,160,32,.08);}
 .af-err{font-size:11px;color:var(--red);padding:8px 12px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:var(--r);display:none;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
 .af-ok{font-size:11px;color:var(--green);padding:8px 12px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:var(--r);display:none;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
-.af-foot{text-align:center;margin-top:14px;font-size:10px;color:rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.af-foot{text-align:center;margin-top:14px;font-size:10px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:6px;}
 .af-foot::before{content:'🛡';font-size:11px;opacity:.5;}
 .af-link{color:var(--amber);cursor:pointer;text-decoration:underline;}
 .af-divider{display:flex;align-items:center;gap:10px;margin:12px 0;color:rgba(255,255,255,.2);font-size:11px;}
@@ -446,7 +455,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .tb-crumb{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;}
 .tb-crumb span{color:var(--amber);}
 .tb-r{display:flex;align-items:center;gap:10px;}
-.tb-s{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:6px 12px;width:180px;}
+.tb-s{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:6px 12px;width:240px;}
 .tb-s:focus-within{border-color:var(--border-hi);}
 .tb-s input{background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--text);width:100%;}
 .tb-s input::placeholder{color:var(--text-3);}
@@ -474,6 +483,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.35;}
 .sc-l{font-size:10px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'JetBrains Mono',monospace;}
 .sc-v{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1;}
+.sc-v-row{display:flex;align-items:baseline;gap:8px;}
+.sc-trend{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;display:inline-flex;align-items:center;gap:2px;}
+.sc-trend.up{color:var(--green);}
+.sc-trend.down{color:var(--red);}
+.sc-trend.neutral{color:var(--text-3);}
 .sc-s{font-size:10px;color:var(--text-3);margin-top:3px;}
 .sc-i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:24px;opacity:.06;}
 
@@ -617,7 +631,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 .icp-logout{background:none;border:1px solid var(--border);color:var(--text-3);padding:5px 12px;border-radius:var(--r);font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;}
 .icp-logout:hover{border-color:rgba(239,68,68,.4);color:var(--red);}
 .icp-body{flex:1;display:flex;overflow:hidden;}
-.icp-sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:14px 0;}
+.icp-sidebar{width:200px;min-width:200px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:14px 0;}
 .icp-sb-sec{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2.5px;color:var(--text-3);text-transform:uppercase;padding:8px 18px 4px;}
 .icp-sb-item{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-2);transition:all .15s;position:relative;}
 .icp-sb-item:hover{color:var(--text);background:rgba(255,255,255,.03);}
@@ -787,7 +801,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 .icp-logout{background:none;border:1px solid var(--border);color:var(--text-3);padding:5px 12px;border-radius:var(--r);font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;}
 .icp-logout:hover{border-color:rgba(239,68,68,.4);color:var(--red);}
 .icp-body{flex:1;display:flex;overflow:hidden;}
-.icp-sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:14px 0;}
+.icp-sidebar{width:200px;min-width:200px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:14px 0;}
 .icp-sb-sec{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2.5px;color:var(--text-3);text-transform:uppercase;padding:8px 18px 4px;}
 .icp-sb-item{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-2);transition:all .15s;position:relative;}
 .icp-sb-item:hover{color:var(--text);background:rgba(255,255,255,.03);}
@@ -867,6 +881,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
   <!-- BACKGROUND -->
   <div class="auth-bg"></div>
+  <div class="auth-animated-gradient"></div>
   <div class="auth-bg-overlay"></div>
   <div class="auth-grain"></div>
 
@@ -977,7 +992,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
         <div style="position:relative">
           <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.2);font-size:13px;pointer-events:none">🔒</span>
           <input type="password" id="lPass" placeholder="Enter your password" style="padding-left:36px;padding-right:36px">
-          <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.2);font-size:13px;cursor:pointer" onclick="togglePw('lPass',this)">👁</span>
+          <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);font-size:13px;cursor:pointer;display:flex;align-items:center" onclick="togglePw('lPass',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
         </div>
       </div>
       <div class="af-err" id="lErr">⚠ Invalid credentials or account pending verification.</div>
@@ -985,9 +1000,9 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       <div class="af-divider">or</div>
       <button class="af-btn sec" onclick="authTab('recover')">Forgot Password?</button>
       <button class="af-btn sec" onclick="authTab('apply')" style="margin-top:4px;border-color:rgba(232,160,32,0.3);color:var(--amber)">☑ Apply to Join Aurum Energy</button>
-      <div style="margin-top:10px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);border-radius:var(--r);padding:9px 12px;font-size:11px;color:#93c5fd;font-family:'JetBrains Mono',monospace;line-height:1.6">
-        <strong style="letter-spacing:1px;font-size:9px;display:block;margin-bottom:3px;color:#60a5fa">📅 INTERVIEW APPLICANTS</strong>
-        Use your <strong style="color:#93c5fd">in-game phone number</strong> as your username and your <strong style="color:#93c5fd">character name</strong> as your password to access your applicant inbox.
+      <div style="margin-top:10px;background:rgba(232,160,32,.07);border:1px solid rgba(232,160,32,.22);border-radius:var(--r);padding:9px 12px;font-size:11px;color:rgba(255,255,255,.6);font-family:'JetBrains Mono',monospace;line-height:1.6">
+        <strong style="letter-spacing:1px;font-size:9px;display:block;margin-bottom:3px;color:var(--amber)">📅 INTERVIEW APPLICANTS</strong>
+        Use your <strong style="color:rgba(255,255,255,.8)">in-game phone number</strong> as your username and your <strong style="color:rgba(255,255,255,.8)">character name</strong> as your password to access your applicant inbox.
       </div>
       <div class="af-foot">Secure. Reliable. Proven.</div>
     </div>
@@ -1617,7 +1632,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
     <!-- ══ DELIVERY LOGS ══ -->
     <div id="page-delivery-logs" class="page">
       <div class="topbar">
-        <div class="tb-l"><div class="tb-title">Delivery Logs</div></div>
+        <div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Logistics</div><div class="tb-title">Delivery Logs</div></div>
         <div class="tb-r">
           <div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="dlSrch" placeholder="Search..."></div>
           <div class="ftabs"><div class="ftab on">All</div><div class="ftab">Week <span id="dlWC">0</span></div><div class="ftab">Month <span id="dlMC">0</span></div></div>
@@ -1677,7 +1692,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ FIELD REPORTS ══ -->
     <div id="page-field-reports" class="page">
-      <div class="topbar"><div class="tb-title">Field Reports</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="frSrch" placeholder="Search..."></div><button class="btn-p" onclick="showPage('field-report-form')">+ New Report</button></div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Operations</div><div class="tb-title">Field Reports</div></div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="frSrch" placeholder="Search..."></div><button class="btn-p" onclick="showPage('field-report-form')">+ New Report</button></div></div>
       <div class="sc-strip c4">
         <div class="sc"><div class="sc-l">Total Reports</div><div class="sc-v" id="frST">0</div><div class="sc-i">📄</div></div>
         <div class="sc"><div class="sc-l">Refinery</div><div class="sc-v" id="frSTow">0</div><div class="sc-i">🏭</div></div>
@@ -1719,7 +1734,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ INCIDENT REPORTS ══ -->
     <div id="page-incident-reports" class="page">
-      <div class="topbar"><div class="tb-title">Incident Reports</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="irSrch" placeholder="Search..."></div><button class="btn-p" onclick="showPage('incident-form')">+ New Incident</button></div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Safety</div><div class="tb-title">Incident Reports</div></div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="irSrch" placeholder="Search..."></div><button class="btn-p" onclick="showPage('incident-form')">+ New Incident</button></div></div>
       <div class="sc-strip c4">
         <div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="irST">0</div><div class="sc-i">🚨</div></div>
         <div class="sc"><div class="sc-l">Open</div><div class="sc-v" id="irSO" style="color:var(--orange)">0</div><div class="sc-i">🔍</div></div>
@@ -1758,7 +1773,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ SHIFT SYSTEM ══ -->
     <div id="page-shift" class="page">
-      <div class="topbar"><div class="tb-title">Shift System</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Workforce</div><div class="tb-title">Shift System</div></div></div>
       <div class="shift-board">
         <div class="clocks">
           <div class="clock-card"><div class="clock-val" id="shClock">00:00:00</div><div class="clock-lbl">Current Time</div></div>
@@ -1819,7 +1834,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ MY SHIFTS ══ -->
     <div id="page-my-shifts" class="page">
-      <div class="topbar"><div class="tb-title">My Shifts</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">My Profile <span>›</span> Workforce</div><div class="tb-title">My Shifts</div></div></div>
       <div class="shift-board">
         <div class="shift-panel"><div class="shift-panel-t">Assigned Shifts — Upcoming & Active</div><div id="myAssignedWrap"></div></div>
         <div class="shift-panel"><div class="shift-panel-t">My Shift History</div><div id="myHistWrap"></div></div>
@@ -1828,7 +1843,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ MY STATS ══ -->
     <div id="page-my-stats" class="page">
-      <div class="topbar"><div class="tb-title">My Stats</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">My Profile <span>›</span> Performance</div><div class="tb-title">My Stats</div></div></div>
       <div class="my-board">
         <div class="my-header">
           <div class="my-av" id="msAv">?</div>
@@ -1848,7 +1863,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ COMPANY OVERVIEW ══ -->
     <div id="page-stats" class="page on">
-      <div class="topbar"><div class="tb-title">Company Overview</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Analytics</div><div class="tb-title">Company Overview</div></div></div>
       <div class="stats-board">
         <div class="ov-grid">
           <div class="ov-cell"><div class="ov-v" id="ovDL">0</div><div class="ov-l">Delivery Logs</div></div>
@@ -1868,7 +1883,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ LEADERBOARD ══ -->
     <div id="page-leaderboard" class="page">
-      <div class="topbar"><div class="tb-title">Leaderboard</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Rankings</div><div class="tb-title">Leaderboard</div></div></div>
       <div class="stats-board">
         <div class="lb-grid">
           <div class="lb-card"><div class="lb-head"><div class="lb-head-t">📦 Most Deliveries</div><div class="lb-head-s">All time</div></div><div id="lbDel"></div></div>
@@ -1881,14 +1896,14 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ CLIENTS ══ -->
     <div id="page-clients" class="page">
-      <div class="topbar"><div class="tb-title">Active Clients</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="clSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('clientModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Client</button></div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Business</div><div class="tb-title">Active Clients</div></div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="clSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('clientModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Client</button></div></div>
       <div class="sc-strip c3"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="clST">0</div></div><div class="sc"><div class="sc-l">Active</div><div class="sc-v" id="clSA" style="color:var(--green)">0</div></div><div class="sc"><div class="sc-l">Pending</div><div class="sc-v" id="clSP" style="color:var(--orange)">0</div></div></div>
       <div class="card-area"><div class="card-grid" id="clientGrid"></div></div>
     </div>
 
     <!-- ══ FLEET ══ -->
     <div id="page-fleet" class="page">
-      <div class="topbar"><div class="tb-title">Active Fleet</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="flSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('fleetModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Vehicle</button></div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Logistics</div><div class="tb-title">Active Fleet</div></div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="flSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('fleetModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Add Vehicle</button></div></div>
       <div class="sc-strip c4"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="flST">0</div></div><div class="sc"><div class="sc-l">Operational</div><div class="sc-v" id="flSOp" style="color:var(--green)">0</div></div><div class="sc"><div class="sc-l">Maintenance</div><div class="sc-v" id="flSMaint" style="color:var(--orange)">0</div></div><div class="sc"><div class="sc-l">Off Duty</div><div class="sc-v" id="flSOff">0</div></div></div>
       <div class="sc-strip" style="grid-template-columns:1fr 1fr 1fr;padding-top:0"><div class="sc"><div class="sc-l">Insured</div><div class="sc-v" id="flSIns" style="color:var(--green)">0</div><div class="sc-i">🛡️</div></div><div class="sc"><div class="sc-l">Not Insured</div><div class="sc-v" id="flSNoIns" style="color:var(--red)">0</div><div class="sc-i">⚠️</div></div><div class="sc"><div class="sc-l">Expiring Soon</div><div class="sc-v" id="flSExp" style="color:var(--orange)">0</div><div class="sc-i">⏳</div></div></div>
       <div class="tbl-wrap"><div class="tbl-box" id="fleetWrap"></div></div>
@@ -1897,7 +1912,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ ORDERS ══ -->
     <div id="page-orders" class="page">
-      <div class="topbar"><div class="tb-title">Company Orders</div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="orSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('orderModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ New Order</button></div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Logistics</div><div class="tb-title">Company Orders</div></div><div class="tb-r"><div class="tb-s"><span style="color:var(--text-3)">🔍</span><input type="text" id="orSrch" placeholder="Search..."></div><button class="btn-p" onclick="if(isAdmin())openModal('orderModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ New Order</button></div></div>
       <div class="sc-strip c4"><div class="sc"><div class="sc-l">Total</div><div class="sc-v" id="orST">0</div></div><div class="sc"><div class="sc-l">Pending</div><div class="sc-v" id="orSP" style="color:var(--orange)">0</div></div><div class="sc"><div class="sc-l">In Transit</div><div class="sc-v" id="orSI" style="color:var(--blue)">0</div></div><div class="sc"><div class="sc-l">Completed</div><div class="sc-v" id="orSD" style="color:var(--green)">0</div></div></div>
       <div class="tbl-wrap"><div class="tbl-box" id="orderWrap"></div></div>
     </div>
@@ -2131,7 +2146,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
       </div>
     </div>
     <div id="page-information" class="page">
-      <div class="topbar"><div class="tb-title">Information</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Aurum Energy <span>›</span> Resources</div><div class="tb-title">Information</div></div></div>
       <div class="info-area">
         <div class="info-sec"><div class="info-sec-t">About Aurum Energy</div><p style="font-size:13px;color:var(--text-2);line-height:1.8">Aurum Energy is a premier logistics and energy distribution company operating throughout Los Santos and Blaine County on GTA World RP.</p></div>
         <div class="info-sec"><div class="info-sec-t">Role Structure</div><div id="infoRoles"></div></div>
@@ -2141,14 +2156,14 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ ADMIN: ASSIGN SHIFTS ══ -->
     <div id="page-admin-shifts" class="page">
-      <div class="topbar"><div class="tb-title">Assign Shifts</div><div class="tb-r"><button class="btn-p" onclick="if(isAdmin())openModal('assignShiftModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Assign Shift</button></div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Admin <span>›</span> Workforce</div><div class="tb-title">Assign Shifts</div></div><div class="tb-r"><button class="btn-p" onclick="if(isAdmin())openModal('assignShiftModal');else toast('🚫','Supervisors and Managers only.','var(--red)')">+ Assign Shift</button></div></div>
       <div class="admin-notice"><strong>Admin</strong>Assigned shifts appear on the employee's My Shifts page and Shift System start screen.</div>
       <div class="tbl-wrap"><div class="tbl-box" id="assignedWrap"></div></div>
     </div>
 
     <!-- ══ ADMIN: ACCOUNTS ══ -->
     <div id="page-admin-accounts" class="page">
-      <div class="topbar"><div class="tb-title">Account Management</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Admin <span>›</span> Access Control</div><div class="tb-title">Account Management</div></div></div>
       <div class="admin-notice"><strong>Admin</strong>Review and verify new account requests. Only verified accounts can log in. Password resets can be managed here.</div>
       <div class="sc-strip c3" style="padding-top:14px">
         <div class="sc"><div class="sc-l">Total Accounts</div><div class="sc-v" id="acST">0</div></div>
@@ -2160,7 +2175,7 @@ td{padding:9px 13px;color:var(--text);vertical-align:middle;white-space:nowrap;}
 
     <!-- ══ ADMIN: APPLICATIONS ══ -->
     <div id="page-admin-applications" class="page">
-      <div class="topbar"><div class="tb-title">Job Applications</div></div>
+      <div class="topbar"><div class="tb-l"><div class="tb-crumb">Admin <span>›</span> HR</div><div class="tb-title">Job Applications</div></div></div>
       <div class="admin-notice"><strong>Admin</strong>Review applications submitted from the login screen. Accept to create a pending account, or reject to remove.</div>
       <div class="sc-strip c4" style="padding-top:14px">
         <div class="sc"><div class="sc-l">Total Applications</div><div class="sc-v" id="apST">0</div></div>
@@ -2694,6 +2709,9 @@ function authTab(tab){
 function doLogin(){
   const u=document.getElementById('lUser').value.trim().toLowerCase();
   const p=document.getElementById('lPass').value;
+  const btn=document.querySelector('.af-btn[onclick="doLogin()"]');
+  if(btn){btn.textContent='Signing in…';btn.disabled=true;btn.style.opacity='.7';}
+  setTimeout(()=>{
   // Check for interview applicant login (phone as username, name as password)
   const uNorm=u.replace(/[^a-z0-9]/g,'');
   const appl=applications.find(a=>{
@@ -2701,9 +2719,9 @@ function doLogin(){
     const nameNorm=(a.name||'').toLowerCase().trim();
     return a.status==='interview'&&(phoneNorm===uNorm||a.phone.toLowerCase().trim()===u)&&(p.toLowerCase().trim()===nameNorm);
   });
-  if(appl){icpEnter(appl);return;}
+  if(appl){if(btn){btn.textContent='Sign In';btn.disabled=false;btn.style.opacity='';}icpEnter(appl);return;}
   const acc=accounts.find(a=>a.username===u&&a.password===p&&a.status==='verified');
-  if(!acc){document.getElementById('lErr').style.display='block';return;}
+  if(!acc){if(btn){btn.textContent='Sign In';btn.disabled=false;btn.style.opacity='';}document.getElementById('lErr').style.display='block';return;}
   document.getElementById('lErr').style.display='none';
   document.getElementById('authWrap').style.display='none';
   document.getElementById('app').classList.add('on');
@@ -2717,6 +2735,7 @@ function doLogin(){
   ['dl-badge','fr-badge','ir-badge','sf-badge','rr-badge'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.badge;});
   ['dl-name','fr-name','ir-name','sf-name','rr-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.name;});
   ['dl-rank','fr-rank','ir-rank','sf-role','rr-rank'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=acc.role;});
+  },400);
 }
 ['lPass','lUser'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});});
 
@@ -2986,12 +3005,24 @@ function renderDL(data){
 
 function updateDLStats(){
   const now=new Date(),mon=now.getMonth(),wa=new Date(now-7*24*60*60*1000);
-  document.getElementById('dlST').textContent=deliveryLogs.length;
-  document.getElementById('dlSM').textContent=deliveryLogs.filter(r=>new Date(r.date).getMonth()===mon).length;
-  document.getElementById('dlSD').textContent=deliveryLogs.filter(r=>r.rep!=='none').length;
-  document.getElementById('dlSF').textContent=fleet.filter(f=>f.status==='Operational').length;
+  const total=deliveryLogs.length;
+  const thisMonth=deliveryLogs.filter(r=>new Date(r.date).getMonth()===mon).length;
+  const lastMonth=deliveryLogs.filter(r=>new Date(r.date).getMonth()===((mon-1+12)%12)).length;
+  const dmg=deliveryLogs.filter(r=>r.rep!=='none').length;
+  const fleet_op=fleet.filter(f=>f.status==='Operational').length;
+  setStatWithTrend('dlST',total,total>0?'up':'neutral');
+  setStatWithTrend('dlSM',thisMonth,thisMonth>lastMonth?'up':thisMonth<lastMonth?'down':'neutral');
+  setStatWithTrend('dlSD',dmg,dmg>0?'down':'up');
+  setStatWithTrend('dlSF',fleet_op,fleet_op>0?'up':'neutral');
   document.getElementById('dlWC').textContent=deliveryLogs.filter(r=>new Date(r.date)>=wa).length;
-  document.getElementById('dlMC').textContent=deliveryLogs.filter(r=>new Date(r.date).getMonth()===mon).length;
+  document.getElementById('dlMC').textContent=thisMonth;
+}
+function setStatWithTrend(id,val,direction){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const arrow=direction==='up'?'▲':direction==='down'?'▼':'—';
+  const cls=direction==='up'?'up':direction==='down'?'down':'neutral';
+  el.innerHTML=`<div class="sc-v-row"><span>${val}</span><span class="sc-trend ${cls}">${arrow}</span></div>`;
 }
 function submitDelivery(){
   // Auto-fill badge/name if empty (catches edge cases where boot didn't fire)
@@ -4736,7 +4767,7 @@ document.getElementById('icpComposeOverlay')?.addEventListener('click',function(
 
 </script>
 <style>
-.sb{width:220px;min-width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+.sb{width:200px;min-width:200px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
 .sb-logo{padding:18px 18px 14px;border-bottom:1px solid var(--border);}
 .sb-foot{margin-top:auto;padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px;}
 #authFooter{display:none;}
